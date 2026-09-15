@@ -1,5 +1,6 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import hashlib
 import json
 import subprocess
 import sys
@@ -7,6 +8,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SYNC = ROOT / "scripts" / "vaoferi_sync.py"
+DESIGN_LOCK = ROOT / "vendor" / "design-skill.lock.json"
 
 
 class SyncTest(unittest.TestCase):
@@ -34,6 +36,13 @@ class SyncTest(unittest.TestCase):
             self.assertEqual(project_rules.read_text(encoding="utf-8"), "PROJECT ONLY\n")
             manifest = json.loads((target / ".vaoferi" / "manifest.json").read_text())
             self.assertEqual(manifest["schema"], 1)
+
+            design_lock = json.loads(DESIGN_LOCK.read_text(encoding="utf-8"))
+            for rel, expected in design_lock["files_sha256"].items():
+                installed = target / ".agents" / "skills" / "vaoferi-design-skill" / rel
+                self.assertTrue(installed.is_file(), rel)
+                actual = hashlib.sha256(installed.read_bytes()).hexdigest()
+                self.assertEqual(actual, expected, rel)
 
     def test_update_fails_closed_on_manual_universal_edit(self):
         with TemporaryDirectory() as td:
