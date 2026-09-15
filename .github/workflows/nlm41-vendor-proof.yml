@@ -1,0 +1,28 @@
+name: NLM-41 design vendor proof
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tests/test_design_vendor.py'
+      - 'tests/test_sync.py'
+      - 'scripts/vendor_design_skill.py'
+      - 'scripts/vaoferi_sync.py'
+      - 'vendor/**'
+      - '.github/workflows/nlm41-vendor-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  design-vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Start Here
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Run design vendor contract
+        run: python -m unittest tests.test_design_vendor -v
