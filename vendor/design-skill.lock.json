@@ -1,0 +1,17 @@
+{
+  "commit": "81f1f59b379fe366cafb3ab56d84ad4cbf1b662c",
+  "files_sha256": {
+    "SKILL.md": "b52a9ca85e8dd6005d8e2d65deba184374f3543bd415fdf3b4e4a586aed1610f",
+    "config/component-libraries.json": "2d82a306cd6097e83ee074347f3fba5938b2f7a2659f487364f3f2be1d7c48f8",
+    "references/action-contract.md": "bc3efa41fc99ecb883ec17121cce43124914c7e772b0e588474241c4c3a798dc",
+    "references/component-sources.md": "f76b2f17e7a3d5963b80547ff01c380bb175203e6442b8f087708e1486088dff",
+    "references/quality-gates.md": "2705c7e8d57e0910e405fa32b0ad4dd71635d434f6668ada1c0f9fa2309b6b59",
+    "references/skillopt-and-architecture.md": "8a595ab82b27869ffd890712f54a7d27d34ae0db54f4aa2cae1afe54d74f9951",
+    "scripts/check_skill_structure.py": "dc2775deb342c3666c8c181320804af10c1a93995365c88f4965fb6692b1ecc0",
+    "scripts/get_component_snippet.py": "45ae9515cbe7794bce119bd5a4b0375cca10a1a281865c59d25d32273b0ea448",
+    "scripts/validate_snippets_source.py": "dbc56e178632d70277376c82976c1188b8abe0ac37bcc793cf0dcc8ae3faf563"
+  },
+  "repository": "vaoferi/vaoferi-design-skill",
+  "schema": 1,
+  "version": "0.3.2"
+}
