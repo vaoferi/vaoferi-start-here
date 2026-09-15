@@ -1,6 +1,8 @@
 name: NLM-41 design vendor proof
 
 on:
+  push:
+    branches: [feat/nlm-41-design-vendor]
   pull_request:
     branches: [main]
     paths:
