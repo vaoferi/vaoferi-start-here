@@ -3,11 +3,21 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 
 ALLOWED_ENV = {".env.example", ".env.sample", ".env.template"}
 TEXT_SUFFIXES = {".md", ".py", ".json", ".toml", ".yml", ".yaml", ".txt"}
+MAX_SECRET_SCAN_BYTES = 2 * 1024 * 1024
+SECRET_PATTERNS = (
+    ("AWS_ACCESS_KEY_ID", re.compile(rb"\bAKIA[0-9A-Z]{16}\b")),
+    ("GITHUB_CLASSIC_TOKEN", re.compile(rb"\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{36,}\b")),
+    ("GITHUB_FINE_GRAINED_TOKEN", re.compile(rb"\bgithub_pat_[A-Za-z0-9_]{50,}\b")),
+    ("PRIVATE_KEY", re.compile(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")),
+    ("SLACK_TOKEN", re.compile(rb"\bxox[baprs]-[A-Za-z0-9-]{20,}\b")),
+)
+MOJIBAKE_MARKERS = ("\ufffd",)
 
 
 def sha256_file(path: Path) -> str:
@@ -44,6 +54,36 @@ def is_real_env(path: str) -> bool:
     return name == ".env" or name.startswith(".env.")
 
 
+def check_owned_text(rel: str, path: Path, data: bytes) -> list[str]:
+    errors: list[str] = []
+    if path.suffix.lower() not in TEXT_SUFFIXES:
+        return errors
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return [f"utf8 check failed: {rel}"]
+    if path.suffix.lower() == ".md" and data.startswith(b"\xef\xbb\xbf"):
+        errors.append(f"bom check failed: {rel}")
+    if any(marker in text for marker in MOJIBAKE_MARKERS):
+        errors.append(f"mojibake check failed: {rel}")
+    return errors
+
+
+def check_tracked_secret_patterns(root: Path, rel: str) -> list[str]:
+    path = root / rel
+    try:
+        if not path.is_file() or path.stat().st_size > MAX_SECRET_SCAN_BYTES:
+            return []
+        data = path.read_bytes()
+    except OSError:
+        return []
+    errors: list[str] = []
+    for rule_id, pattern in SECRET_PATTERNS:
+        if pattern.search(data):
+            errors.append(f"secret pattern {rule_id}: {rel}")
+    return errors
+
+
 def verify(root: Path) -> list[str]:
     errors: list[str] = []
     try:
@@ -60,22 +100,16 @@ def verify(root: Path) -> list[str]:
         if not path.is_file():
             errors.append(f"hash check failed: missing {rel}")
             continue
-        actual = sha256_file(path)
+        data = path.read_bytes()
+        errors.extend(check_owned_text(rel, path, data))
+        actual = hashlib.sha256(data).hexdigest()
         if actual != expected:
             errors.append(f"hash check failed: {rel}")
-            continue
-        if path.suffix.lower() in TEXT_SUFFIXES:
-            data = path.read_bytes()
-            try:
-                data.decode("utf-8")
-            except UnicodeDecodeError:
-                errors.append(f"utf8 check failed: {rel}")
-            if path.suffix.lower() == ".md" and data.startswith(b"\xef\xbb\xbf"):
-                errors.append(f"bom check failed: {rel}")
 
     for rel in tracked_files(root):
         if is_real_env(rel):
             errors.append(f"tracked env forbidden: {rel}")
+        errors.extend(check_tracked_secret_patterns(root, rel))
 
     return errors
 
@@ -86,7 +120,7 @@ def main() -> int:
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print("OK: Start Here manifest and centrally-owned files verified")
+    print("OK: Start Here manifest and repository hygiene verified")
     return 0
 
 
