@@ -36,3 +36,31 @@ class AgentsContractTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+SKILLS = (
+    "vaoferi-bootstrap",
+    "vaoferi-engineering",
+    "vaoferi-dependencies",
+    "vaoferi-security",
+    "vaoferi-task-tracking",
+)
+
+
+class SkillStructureTest(unittest.TestCase):
+    def test_required_skills_exist_with_frontmatter(self):
+        for name in SKILLS:
+            path = ROOT / ".agents" / "skills" / name / "SKILL.md"
+            text = path.read_text(encoding="utf-8")
+            self.assertTrue(text.startswith("---\n"))
+            self.assertIn(f"name: {name}", text)
+            self.assertIn("description:", text)
+
+
+class ProviderOverlayTest(unittest.TestCase):
+    def test_provider_templates_are_thin_overlays(self):
+        for name in ("codex", "claude", "gemini"):
+            path = ROOT / "templates" / "provider" / f"{name}.md"
+            text = path.read_text(encoding="utf-8")
+            self.assertIn("does not replace `AGENTS.md` or `PROJECT_RULES.md`", text)
+            self.assertIn("provider-specific", text)
+            self.assertLess(len(text.encode("utf-8")), 3 * 1024)
