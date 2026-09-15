@@ -1,0 +1,41 @@
+name: Vaoferi repository checks
+
+on:
+  workflow_call:
+    inputs:
+      project-check-command:
+        description: Optional project-owned lint/test/build command to run after universal verification.
+        required: false
+        type: string
+        default: ''
+      require-project-checks:
+        description: Fail when no project-check-command was supplied.
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  vaoferi-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Verify Start Here contract
+        run: python .vaoferi/verify.py
+      - name: Fail if required project checks are missing
+        if: ${{ inputs.require-project-checks && inputs.project-check-command == '' }}
+        shell: bash
+        run: |
+          echo "Project checks are required but no project-check-command was provided." >&2
+          exit 1
+      - name: Run project checks
+        if: ${{ inputs.project-check-command != '' }}
+        shell: bash
+        run: ${{ inputs.project-check-command }}
