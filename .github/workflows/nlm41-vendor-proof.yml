@@ -20,9 +20,24 @@ jobs:
     steps:
       - name: Checkout Start Here
         uses: actions/checkout@v7
+      - name: Checkout canonical design source
+        uses: actions/checkout@v7
+        with:
+          repository: vaoferi/vaoferi-design-skill
+          ref: eb95923b2ca493faad503ee6c721713364f4c4a9
+          path: _design
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: '3.11'
-      - name: Run design vendor contract
-        run: python -m unittest tests.test_design_vendor -v
+      - name: Generate pinned design snapshot
+        run: python scripts/vendor_design_skill.py --source _design --commit eb95923b2ca493faad503ee6c721713364f4c4a9 --version 0.3.2
+      - name: Run focused vendor and sync tests
+        run: python -m unittest tests.test_design_vendor tests.test_sync -v
+      - name: Upload generated vendor snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: nlm41-design-vendor
+          path: |
+            vendor/design-skill.lock.json
+            vendor/vaoferi-design-skill
