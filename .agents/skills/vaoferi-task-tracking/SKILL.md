@@ -7,7 +7,7 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 
 ## Invariant
 
-`Linear` — єдине активне джерело робочих задач. `Trello` — legacy input, який поступово очищається.
+`Linear` — єдине активне джерело робочих задач. `Trello` — тимчасове legacy input для міграції, не planner і не довгостроковий archive.
 
 ## Trello → Linear Procedure
 
@@ -16,7 +16,8 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 3. Перенеси кожну ще корисну незавершену дію в Linear або в уже існуючу Linear issue.
 4. Durable facts/decisions, яким не місце у task tracker, перенеси в canonical docs/tests/code comments лише коли це правильний long-term source.
 5. Перевір parity: у Trello не залишилось унікальної корисної інформації чи незавершеної роботи.
-6. Після parity прибери card з активного Trello: archive; якщо безпечний hard-delete окремо підтримується й доречний, він може бути наступним cleanup step.
-7. У Linear зафіксуй migration destination/evidence настільки коротко, наскільки потрібно для traceability.
+6. Після parity фінальний стан — hard-delete card з Trello. Архівування не є завершенням cleanup і не перетворює Trello на історичний archive.
+7. Якщо поточний connector/tool не вміє hard-delete, не маскуй це як Done: зафіксуй blocker/pending deletion і використай інший підтримуваний шлях видалення, коли він доступний.
+8. У Linear зафіксуй migration destination/evidence настільки коротко, наскільки потрібно для traceability.
 
-Не роби bulk-delete без вичитки. Мета — максимально очистити Trello без silent loss.
+Не роби bulk-delete без вичитки. Мета — повністю очистити Trello без silent loss; історія, яку справді треба зберегти, має жити в Linear або canonical docs/tests, а не в Trello.
