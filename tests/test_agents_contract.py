@@ -1,4 +1,5 @@
 from pathlib import Path
+import tomllib
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -6,6 +7,11 @@ AGENTS = ROOT / "AGENTS.md"
 
 
 class AgentsContractTest(unittest.TestCase):
+    def test_release_version_is_0_2_0(self):
+        with (ROOT / "pyproject.toml").open("rb") as fh:
+            project = tomllib.load(fh)["project"]
+        self.assertEqual(project["version"], "0.2.0")
+
     def test_agents_is_small_and_universal(self):
         data = AGENTS.read_bytes()
         self.assertLessEqual(len(data), 12 * 1024)
