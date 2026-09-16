@@ -51,6 +51,7 @@ class AgentsContractTest(unittest.TestCase):
         self.assertIn("видал", agents.lower())
         self.assertIn("hard-delete", tracking.lower())
         self.assertIn("архівування не є завершенням", tracking.lower())
+        self.assertIn("не запускай окремий повний sweep", tracking.lower())
         self.assertIn("Linear", tracking)
 
 
