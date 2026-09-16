@@ -7,10 +7,10 @@ Public canonical source for Vaoferi-wide AI-agent behavior, conditional local sk
 - `AGENTS.md` — compact universal owner/agent contract copied byte-for-byte into participating repositories.
 - `PROJECT_RULES.md` — rules for this repository only; each target repository owns its own `PROJECT_RULES.md`.
 - `.agents/skills/vaoferi-*` — conditional procedures loaded only when relevant.
-- `vaoferi-design-skill` — separate canonical design source, vendored here later for local/offline use.
-- Linear — active work tracker. Trello — legacy read-and-retire input only.
+- `vaoferi-design-skill` — separate canonical design source; a reviewed snapshot is vendored here and synced into target repositories for local/offline use.
+- Linear — active work tracker. Trello — incremental legacy input only: migrate relevant cards as they are encountered; delete when supported, otherwise archive/close after parity.
 
-The target architecture is intentionally local-first: after bootstrap, ordinary work in a target repository must not depend on network access to this repository.
+The architecture is intentionally local-first: after bootstrap/update, ordinary work in a target repository must not depend on network access to this repository.
 
 ## Development
 
@@ -20,6 +20,20 @@ Requires Python 3.11+ and no runtime dependencies for the core tooling.
 python -m unittest discover -s tests -v
 python scripts/check_agents_contract.py AGENTS.md
 ```
+
+`Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## Bootstrap / update / verify
+
+The canonical sync entrypoint is `scripts/vaoferi_sync.py`:
+
+```bash
+python scripts/vaoferi_sync.py bootstrap --target /path/to/repository
+python scripts/vaoferi_sync.py update --target /path/to/repository
+python scripts/vaoferi_sync.py verify --target /path/to/repository
+```
+
+Bootstrap/update copies centrally-owned rules and skills into the target repository and records exact hashes/source version in `.vaoferi/manifest.json`. Project-owned files such as `PROJECT_RULES.md`, `DESIGN.md`, `docs/` and `tests/` are not silently overwritten.
 
 ## Reusable GitHub checks
 
