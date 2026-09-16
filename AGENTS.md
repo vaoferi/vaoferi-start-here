@@ -87,6 +87,7 @@ Persistent SPEC для дрібної очевидної правки не по�
 
 - Спочатку прочитай локальний `PROJECT_RULES.md`, якщо він існує: там живуть факти й небезпечні інваріанти конкретного репозиторію.
 - Новий repo / відсутній контекст / setup → завантаж `vaoferi-bootstrap`.
+- Існуючий repo з legacy/nested/duplicated/conflicting rules або docs → після базового discovery завантаж `vaoferi-project-adaptation` до cleanup чи переписування project instructions.
 - UI, layout, responsive, components, tokens, typography або design docs → завантаж `vaoferi-design-skill` до design-рішень.
 - Dependencies, versions, upgrades, beta/preview compatibility → завантаж `vaoferi-dependencies`.
 - Secrets, auth, credentials, permissions, privacy або security-sensitive зміни → завантаж `vaoferi-security`.
