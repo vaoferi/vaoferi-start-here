@@ -45,12 +45,12 @@ class AgentsContractTest(unittest.TestCase):
         ):
             self.assertIn(required, text)
 
-    def test_trello_is_retired_after_parity_not_kept_as_archive(self):
+    def test_trello_is_retired_incrementally_after_parity(self):
         agents = AGENTS.read_text(encoding="utf-8")
         tracking = (ROOT / ".agents" / "skills" / "vaoferi-task-tracking" / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("видал", agents.lower())
+        self.assertIn("архів", agents.lower())
         self.assertIn("hard-delete", tracking.lower())
-        self.assertIn("архівування не є завершенням", tracking.lower())
+        self.assertIn("якщо hard-delete недоступний", tracking.lower())
         self.assertIn("не запускай окремий повний sweep", tracking.lower())
         self.assertIn("Linear", tracking)
 
