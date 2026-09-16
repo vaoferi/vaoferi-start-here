@@ -37,15 +37,12 @@ Bootstrap/update copies centrally-owned rules and skills into the target reposit
 
 ## Reusable GitHub checks
 
-Target repositories can call the shared verification workflow from a reviewed Start Here release/tag:
+Target repositories should pin the shared verification workflow to a reviewed **exact commit SHA** (or an intentionally created release tag once one exists), rather than assuming a tag name exists:
 
 ```yaml
 jobs:
   vaoferi:
-    uses: vaoferi/vaoferi-start-here/.github/workflows/vaoferi-checks.yml@v0.1.0
-    with:
-      require-project-checks: true
-      project-check-command: npm test
+    uses: vaoferi/vaoferi-start-here/.github/workflows/vaoferi-checks.yml@<reviewed-commit-sha>
 ```
 
 `project-check-command` is project-owned: Start Here never guesses a repo's lint/test/build command. Set `require-project-checks: true` when the repository must fail closed if that command is missing. Universal checks always run first and cover manifest/hash drift, UTF-8/BOM hygiene, tracked real `.env` files and a deliberately narrow set of high-confidence secret patterns.
