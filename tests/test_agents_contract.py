@@ -33,6 +33,18 @@ class AgentsContractTest(unittest.TestCase):
         ):
             self.assertIn(required, text)
 
+    def test_owner_profile_preferences_survive_pilot_migration(self):
+        text = AGENTS.read_text(encoding="utf-8")
+        for required in (
+            "80/20",
+            "**Рекомендую:**",
+            "**Альтернатива:**",
+            "**Компроміс:**",
+            "18+",
+            "шахрай",
+        ):
+            self.assertIn(required, text)
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -54,6 +66,16 @@ class SkillStructureTest(unittest.TestCase):
             self.assertTrue(text.startswith("---\n"))
             self.assertIn(f"name: {name}", text)
             self.assertIn("description:", text)
+
+    def test_engineering_preserves_high_value_pilot_rules(self):
+        text = (ROOT / ".agents" / "skills" / "vaoferi-engineering" / "SKILL.md").read_text(encoding="utf-8")
+        for required in (
+            "SOLID",
+            "не видаляй test",
+            "admin/API/БД",
+            "powershell.exe",
+        ):
+            self.assertIn(required, text)
 
 
 class ProviderOverlayTest(unittest.TestCase):
