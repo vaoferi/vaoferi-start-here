@@ -28,6 +28,7 @@ class AgentsContractTest(unittest.TestCase):
             "vaoferi-design-skill",
             "vaoferi-security",
             "vaoferi-dependencies",
+            "vaoferi-project-adaptation",
             "Linear",
             "Trello",
         ):
@@ -64,6 +65,7 @@ SKILLS = (
     "vaoferi-dependencies",
     "vaoferi-security",
     "vaoferi-task-tracking",
+    "vaoferi-project-adaptation",
 )
 
 
@@ -83,6 +85,31 @@ class SkillStructureTest(unittest.TestCase):
             "не видаляй test",
             "admin/API/БД",
             "powershell.exe",
+            "bulk rewrite",
+            "явним UTF-8",
+            "mojibake",
+        ):
+            self.assertIn(required, text)
+
+    def test_project_adaptation_has_lossless_lifecycle(self):
+        text = (ROOT / ".agents" / "skills" / "vaoferi-project-adaptation" / "SKILL.md").read_text(encoding="utf-8")
+        for required in (
+            "inventory -> classify -> conflicts -> owner decisions -> migrate -> machine-enforce -> parity -> cleanup -> verify",
+            "UNIVERSAL_CORE",
+            "UNIVERSAL_CONDITIONAL",
+            "DESIGN",
+            "PROJECT_SPECIFIC",
+            "PROVIDER_OVERLAY",
+            "MACHINE_ENFORCEABLE",
+            "DUPLICATE",
+            "CONFLICT_REQUIRES_REVIEW",
+            "DELETE_CANDIDATE",
+            "No silent rule loss",
+            "Рекомендую",
+            "Альтернатива",
+            "Компроміс",
+            "recursive",
+            "history",
         ):
             self.assertIn(required, text)
 
