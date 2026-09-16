@@ -37,6 +37,8 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 ## Text And Windows Hygiene
 
 - Текстові файли зберігай UTF-8 без BOM, якщо project не задає інше; після масових текстових змін перевір mojibake.
+- Для multilingual/Cyrillic source не роби `bulk rewrite` через shell one-liner/pipeline з неявним encoding. Спочатку зафіксуй target-file list, а для широких замін використовуй editor/file tooling, Python або інший шлях з **явним UTF-8** read/write.
+- Після broad text rewrite перевір diff і запусти project mojibake/encoding scan, якщо він існує; за відсутності project check зроби вузький scan типових replacement-character/mojibake patterns у змінених user-facing файлах.
 - На Windows для encoding-sensitive читання/запису не використовуй legacy `powershell.exe`, якщо доступні `pwsh`, Python або file tools із явним UTF-8 handling.
 
 ## Documentation
