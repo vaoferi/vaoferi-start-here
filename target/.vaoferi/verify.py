@@ -7,7 +7,7 @@ import re
 import subprocess
 import sys
 
-ALLOWED_ENV = {".env.example", ".env.sample", ".env.template"}
+SAFE_ENV_TEMPLATE_SUFFIXES = (".example", ".sample", ".template")
 TEXT_SUFFIXES = {".md", ".py", ".json", ".toml", ".yml", ".yaml", ".txt"}
 MAX_SECRET_SCAN_BYTES = 2 * 1024 * 1024
 SECRET_PATTERNS = (
@@ -49,9 +49,11 @@ def tracked_files(root: Path) -> list[str]:
 
 def is_real_env(path: str) -> bool:
     name = Path(path).name
-    if name in ALLOWED_ENV:
+    if name == ".env":
+        return True
+    if not name.startswith(".env."):
         return False
-    return name == ".env" or name.startswith(".env.")
+    return not name.endswith(SAFE_ENV_TEMPLATE_SUFFIXES)
 
 
 def check_owned_text(rel: str, path: Path, data: bytes) -> list[str]:
