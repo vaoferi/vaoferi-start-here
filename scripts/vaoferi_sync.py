@@ -12,7 +12,9 @@ import tomllib
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_REL = Path(".vaoferi/manifest.json")
 PROJECT_OWNED = ["PROJECT_RULES.md", "DESIGN.md", "docs/", "tests/"]
-OWNED_SOURCES = {
+DESIGN_LOCK = ROOT / "vendor" / "design-skill.lock.json"
+DESIGN_VENDOR = ROOT / "vendor" / "vaoferi-design-skill"
+BASE_OWNED_SOURCES = {
     "AGENTS.md": ROOT / "AGENTS.md",
     ".agents/skills/vaoferi-bootstrap/SKILL.md": ROOT / ".agents/skills/vaoferi-bootstrap/SKILL.md",
     ".agents/skills/vaoferi-engineering/SKILL.md": ROOT / ".agents/skills/vaoferi-engineering/SKILL.md",
@@ -33,6 +35,40 @@ def sha256_bytes(data: bytes) -> str:
 
 def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
+
+
+def design_vendor_sources() -> dict[str, Path]:
+    try:
+        lock = json.loads(DESIGN_LOCK.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise SyncError(f"canonical design lock missing: {DESIGN_LOCK}") from exc
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise SyncError(f"canonical design lock invalid: {DESIGN_LOCK}: {exc}") from exc
+    if lock.get("schema") != 1:
+        raise SyncError(f"unsupported design lock schema: {lock.get('schema')!r}")
+    hashes = lock.get("files_sha256")
+    if not isinstance(hashes, dict) or not hashes:
+        raise SyncError("design lock files_sha256 must be a non-empty object")
+
+    sources: dict[str, Path] = {}
+    for rel, expected in sorted(hashes.items()):
+        if not isinstance(rel, str) or not isinstance(expected, str):
+            raise SyncError("design lock paths and hashes must be strings")
+        source = DESIGN_VENDOR / rel
+        if not source.is_file():
+            raise SyncError(f"canonical design vendor file missing: {rel}")
+        actual = sha256_file(source)
+        if actual != expected:
+            raise SyncError(f"canonical design vendor drift: {rel}")
+        target_rel = (Path(".agents/skills/vaoferi-design-skill") / rel).as_posix()
+        sources[target_rel] = source
+    return sources
+
+
+def owned_sources() -> dict[str, Path]:
+    sources = dict(BASE_OWNED_SOURCES)
+    sources.update(design_vendor_sources())
+    return sources
 
 
 def read_version() -> str:
@@ -71,8 +107,8 @@ def load_manifest(target: Path) -> dict:
     return data
 
 
-def write_manifest(target: Path, installed_at: str) -> bytes:
-    owned = {rel: sha256_file(target / rel) for rel in sorted(OWNED_SOURCES)}
+def write_manifest(target: Path, installed_at: str, sources: dict[str, Path]) -> bytes:
+    owned = {rel: sha256_file(target / rel) for rel in sorted(sources)}
     data = {
         "schema": 1,
         "start_here": {
@@ -90,8 +126,8 @@ def write_manifest(target: Path, installed_at: str) -> bytes:
     return payload
 
 
-def copy_owned(target: Path, previous_owned: dict[str, str] | None) -> None:
-    for rel, source in OWNED_SOURCES.items():
+def copy_owned(target: Path, previous_owned: dict[str, str] | None, sources: dict[str, Path]) -> None:
+    for rel, source in sources.items():
         if not source.is_file():
             raise SyncError(f"canonical source missing: {source}")
         dest = target / rel
@@ -120,31 +156,33 @@ def assert_no_drift(target: Path, manifest: dict) -> None:
         raise SyncError("\n".join(errors))
 
 
-def retire_removed_owned_files(target: Path, previous_owned: dict[str, str]) -> None:
-    for rel in sorted(set(previous_owned) - set(OWNED_SOURCES)):
+def retire_removed_owned_files(target: Path, previous_owned: dict[str, str], sources: dict[str, Path]) -> None:
+    for rel in sorted(set(previous_owned) - set(sources)):
         path = target / rel
         if path.exists():
             path.unlink()
 
 
 def bootstrap(target: Path) -> None:
+    sources = owned_sources()
     target.mkdir(parents=True, exist_ok=True)
     if manifest_path(target).exists():
         raise SyncError("bootstrap conflict: manifest already exists; use update")
-    copy_owned(target, previous_owned=None)
+    copy_owned(target, previous_owned=None, sources=sources)
     installed_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    write_manifest(target, installed_at)
+    write_manifest(target, installed_at, sources)
     print(f"Bootstrapped Start Here into {target}")
 
 
 def update(target: Path) -> None:
+    sources = owned_sources()
     manifest = load_manifest(target)
     assert_no_drift(target, manifest)
     previous_owned = dict(manifest["owned_files"])
-    copy_owned(target, previous_owned=previous_owned)
-    retire_removed_owned_files(target, previous_owned)
+    copy_owned(target, previous_owned=previous_owned, sources=sources)
+    retire_removed_owned_files(target, previous_owned, sources)
     before = manifest_path(target).read_bytes()
-    after = write_manifest(target, manifest["installed_at"])
+    after = write_manifest(target, manifest["installed_at"], sources)
     if before == after:
         print(f"Start Here already current in {target}")
     else:
