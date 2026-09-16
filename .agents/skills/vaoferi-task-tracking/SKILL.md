@@ -17,8 +17,8 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 4. Перенеси кожну ще корисну незавершену дію в Linear або в уже існуючу Linear issue.
 5. Durable facts/decisions, яким не місце у task tracker, перенеси в canonical docs/tests/code comments лише коли це правильний long-term source.
 6. Перевір parity: у Trello не залишилось унікальної корисної інформації чи незавершеної роботи.
-7. Після parity фінальний стан — hard-delete card з Trello. Архівування не є завершенням cleanup і не перетворює Trello на історичний archive.
-8. Якщо поточний connector/tool не вміє hard-delete, не маскуй це як Done: зафіксуй blocker/pending deletion і використай інший підтримуваний шлях видалення, коли він доступний.
+7. Після parity спробуй hard-delete card, якщо доступний інструмент це підтримує.
+8. Якщо hard-delete недоступний, архівуй/закрий card і вважай Trello-side cleanup завершеним для поточної роботи; не створюй окремий blocker лише заради фізичного delete.
 9. У Linear зафіксуй migration destination/evidence настільки коротко, наскільки потрібно для traceability.
 
-Не роби bulk-delete без вичитки. Мета — поступово повністю очистити Trello без silent loss, не відволікаючи поточну роботу окремою масовою міграцією; історія, яку справді треба зберегти, має жити в Linear або canonical docs/tests, а не в Trello.
+Не роби bulk-delete або bulk-archive без вичитки. Мета — поступово прибрати Trello з активного процесу без silent loss і без окремого проєкту з очищення дошки; історія, яку справді треба зберегти, має жити в Linear або canonical docs/tests, а не в Trello.
