@@ -26,14 +26,14 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: vaoferi/vaoferi-design-skill
-          ref: 81f1f59b379fe366cafb3ab56d84ad4cbf1b662c
+          ref: 03bf403992df459f3cf85cf000d27ce9ed36f698
           path: _design
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: '3.11'
       - name: Generate pinned design snapshot
-        run: python scripts/vendor_design_skill.py --source _design --commit 81f1f59b379fe366cafb3ab56d84ad4cbf1b662c --version 0.3.2
+        run: python scripts/vendor_design_skill.py --source _design --commit 03bf403992df459f3cf85cf000d27ce9ed36f698 --version 0.4.0
       - name: Run full Start Here test suite
         run: python -m unittest discover -s tests -v
       - name: Check compact universal contract
