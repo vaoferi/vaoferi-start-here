@@ -6,7 +6,7 @@ This addendum records evidence discovered after `migration/rule-ledger/nlm.help.
 
 `vaoferi/nlm.help@master:docs/core/PROJECT_RULES.md`, blob `693d84c7592e5f5183a1846a33830d3b3adaafd6`.
 
-Disposition: `DUPLICATE + STALE_SOURCE + CONFLICT_REQUIRES_REVIEW`, with a future `DELETE_CANDIDATE` gate only after its unique useful content is migrated or explicitly rejected.
+Disposition: `DUPLICATE + STALE_SOURCE + CONFLICT_REQUIRES_REVIEW`, then `DELETE_CANDIDATE` after its unique useful content was classified.
 
 Why it cannot remain an active rules source:
 
@@ -18,14 +18,16 @@ Why it cannot remain an active rules source:
 
 Ruling for topology: current root `PROJECT_RULES.md` + `DOCUMENTATION_MAP.md` win. `docs/core/PROJECT_RULES.md` is not listed by the current documentation map as an active source and must not override current project rules.
 
-Useful content that must not be silently lost before retirement:
+Useful content was classified before retirement:
 
-- `ru == ua` / `/ru` and `/uk` redirect behavior;
-- Yii2/Hyper/Bootstrap facts and frontend/backend separation;
-- HTML/CSS/PHP/security guidance that is either project-specific or already covered by canonical engineering/security/design skills;
-- historical technical-debt candidates: Composer 2, `facebook/graph-sdk`, `yiisoft/yii2-bootstrap5`, external team styles. These are **not** active requirements until revalidated against current dependency state;
-- documentation/history and backup-suffix conventions where still current;
-- responsive intent, after reconciliation with canonical Design Skill and the owner-wide 48px target.
+- `ru == ua` / `/ru` and `/uk` redirect behavior stays project-specific;
+- Yii2/Hyper/Bootstrap facts and frontend/backend separation stay project-specific;
+- generic HTML/CSS/PHP/security guidance is covered by canonical engineering/security/design skills where appropriate;
+- historical technical-debt candidates such as Composer 2, `facebook/graph-sdk`, `yiisoft/yii2-bootstrap5`, and external team styles are not active requirements until revalidated against current dependency state;
+- documentation/history and backup-suffix conventions remain project-owned where current;
+- responsive intent is reconciled with canonical Design Skill and the owner-wide 48px target.
+
+Pilot ruling: the stale duplicate was removed from `nlm-43-start-here-pilot` after classification so agents cannot accidentally load contradictory topology.
 
 ## Conflict resolutions
 
@@ -58,26 +60,48 @@ Owner-wide project instruction is 48px minimum for important touch targets. Ther
 
 Resolution: use **48px preferred minimum** for interactive touch targets; a smaller platform/library standard is only an explicit exception when the existing component/system requires it and usability remains acceptable.
 
-Disposition: old 44px rule = `SUPERSEDED`; future NLM project rules/design references should say 48px.
+Disposition: old 44px rule = `SUPERSEDED`; canonical Design Skill now carries the 48px preference.
 
-## CLAUDE.md comparison checkpoint
+## Provider files
 
-Windowed comparison of current `AGENTS.md` and `CLAUDE.md` shows:
+### CLAUDE.md
 
-- lines through the generic deploy section are identical in the inspected ranges;
-- `AGENTS.md` contains an NLM-only subsection `16.1. Буквальний порядок команд для Windows, NAS і production` with exact NAS/deploy/migration commands and local secret-loader paths;
-- `CLAUDE.md` jumps directly from generic deploy rules to section 17;
-- the later sections (17–23, MCP inventory, related files) match in the inspected ranges apart from the line shift caused by that insertion.
+Windowed comparison of the old `AGENTS.md` and `CLAUDE.md` showed the only substantive delta found was the NLM-only deploy subsection `16.1. Буквальний порядок команд для Windows, NAS і production`; later sections matched apart from the line shift.
 
-Repository search for the `16.1` heading returns `AGENTS.md`, not `CLAUDE.md`.
+That subsection is project-specific and belongs in NLM deploy/project rules, not in a provider file. Pilot `CLAUDE.md` is therefore reduced to a thin router to root/project rules rather than retaining a second giant copy.
 
-Current conclusion: the only **substantive delta found** is the NLM deploy subsection. Do not call the files byte-identical; exact byte-level parity has not been proven by a local diff. The missing subsection is project-specific and already belongs in NLM deploy/project rules, not in a future Claude overlay.
+### .gemini_rules.md
+
+Pilot overlay is reduced to provider/runtime quirks only:
+
+- native file/search tools preferred for simple file work when available;
+- terminal actions may wait for Gemini/Antigravity approval;
+- verify actual tool availability before declaring MCP unavailable;
+- do not rewrite IDE/MCP config merely because a tool is not visible in one context;
+- preserve UTF-8/no-BOM and avoid diagnosing mojibake from one bad terminal rendering.
+
+Universal engineering/design/security/dependency/task-tracking and NLM project rules are no longer duplicated there.
 
 ## Trello cards encountered during NLM-43
 
 No board sweep was performed.
 
-- `[00][BOARD-RULES]`: full description + its one comment read; no checklists/attachments. Unique useful behavior mapped into canonical Start Here/NLM rules and recorded in Linear NLM-43. Card archived because the current connector has no hard-delete action; archive is pending-delete, not a permanent archive.
-- `[CLI S] [Процес/Lightrack]`: full card read; no comments/checklists/attachments. Active work and all unique requirements are in Linear NLM-36. Card archived for the same connector limitation.
+- `[00][BOARD-RULES]`: full description + its one comment read; no checklists/attachments. Unique useful behavior mapped into canonical Start Here/NLM rules and recorded in Linear NLM-43. Card archived/closed after parity because the current connector has no hard-delete action.
+- `[CLI S] [Процес/Lightrack]`: full card read; no comments/checklists/attachments. Active work and all unique requirements are in Linear NLM-36. Card archived/closed after parity for the same connector limitation.
 
-No other Trello card enters scope merely because it exists on the board.
+Current owner rule: hard-delete after parity when supported; otherwise archive/close and continue. Physical delete is not a separate blocker. No other Trello card enters scope merely because it exists on the board.
+
+## Pilot rollout evidence
+
+Pilot branch: `vaoferi/nlm.help@nlm-43-start-here-pilot`.
+
+The real repository was bootstrapped against `vaoferi-start-here` source commit `a73f1de71e13a0b2676d4811c23c1bd994e4b328`, version `0.1.0`. `.vaoferi/manifest.json` records exact hashes for:
+
+- canonical root `AGENTS.md`;
+- five conditional skills;
+- the full pinned/vendored `vaoferi-design-skill` snapshot;
+- `.vaoferi/verify.py`.
+
+The pilot exposed one universal verifier bug: safe named templates such as `.env.vault.example` were incorrectly treated as real env files. A failing central test was added first, then the canonical verifier was fixed to allow `.example`, `.sample`, and `.template` suffixes while still rejecting real `.env` / `.env.*` files. Central `Start Here self-test` passed on commit `a73f1de71e13a0b2676d4811c23c1bd994e4b328`.
+
+NLM pilot sync/verify then passed against that same canonical commit. The generated manifest was committed by the pilot automation. The temporary self-mutating sync workflow is removed before merge, and NLM now has a permanent reusable verification workflow pinned to the exact reviewed canonical SHA.
