@@ -1,0 +1,25 @@
+name: Start Here self-test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Check universal AGENTS contract
+        run: python scripts/check_agents_contract.py AGENTS.md
