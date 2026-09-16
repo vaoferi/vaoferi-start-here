@@ -7,9 +7,9 @@ ROOT = Path(__file__).resolve().parents[1]
 LOCK = ROOT / "vendor" / "design-skill.lock.json"
 VENDOR = ROOT / "vendor" / "vaoferi-design-skill"
 AGENTS = ROOT / "AGENTS.md"
-EXPECTED_VERSION = "0.4.0"
-EXPECTED_COMMIT = "03bf403992df459f3cf85cf000d27ce9ed36f698"
-REQUIRED_V040_REFERENCES = (
+EXPECTED_VERSION = "0.4.1"
+EXPECTED_COMMIT = "264991d7a6c79322b39567391634f1045ccb170d"
+REQUIRED_V041_REFERENCES = (
     "references/scopes.md",
     "references/lifecycle.md",
     "references/stages.md",
@@ -38,17 +38,22 @@ class DesignVendorTest(unittest.TestCase):
             actual = hashlib.sha256(path.read_bytes()).hexdigest()
             self.assertEqual(actual, expected, rel)
 
-    def test_vendor_contains_v040_contract_and_preserved_policy(self):
+    def test_vendor_contains_v041_contract_and_preserved_policy(self):
         skill = (VENDOR / "SKILL.md").read_text(encoding="utf-8")
         quality = (VENDOR / "references" / "quality-gates.md").read_text(encoding="utf-8")
+        stages = (VENDOR / "references" / "stages.md").read_text(encoding="utf-8")
         catalog = VENDOR / "config" / "component-libraries.json"
 
         self.assertIn(f"version: {EXPECTED_VERSION}", skill)
         self.assertIn("contract architecture v1.2", skill)
         self.assertIn("48x48 CSS px", quality)
         self.assertIn("strong heuristic failure", quality)
+        self.assertIn("style owner", stages)
+        self.assertIn("override layer", stages)
+        self.assertIn("whole dependency/library", stages)
+        self.assertIn("trivial visual", stages)
         self.assertTrue(catalog.is_file())
-        for rel in REQUIRED_V040_REFERENCES:
+        for rel in REQUIRED_V041_REFERENCES:
             self.assertTrue((VENDOR / rel).is_file(), rel)
 
     def test_root_contract_routes_design_conditionally_without_embedding_doctrine(self):

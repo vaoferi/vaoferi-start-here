@@ -1,4 +1,5 @@
 from pathlib import Path
+import tomllib
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -6,6 +7,11 @@ AGENTS = ROOT / "AGENTS.md"
 
 
 class AgentsContractTest(unittest.TestCase):
+    def test_release_version_is_0_2_0(self):
+        with (ROOT / "pyproject.toml").open("rb") as fh:
+            project = tomllib.load(fh)["project"]
+        self.assertEqual(project["version"], "0.2.0")
+
     def test_agents_is_small_and_universal(self):
         data = AGENTS.read_bytes()
         self.assertLessEqual(len(data), 12 * 1024)
@@ -28,6 +34,7 @@ class AgentsContractTest(unittest.TestCase):
             "vaoferi-design-skill",
             "vaoferi-security",
             "vaoferi-dependencies",
+            "vaoferi-project-adaptation",
             "Linear",
             "Trello",
         ):
@@ -64,6 +71,7 @@ SKILLS = (
     "vaoferi-dependencies",
     "vaoferi-security",
     "vaoferi-task-tracking",
+    "vaoferi-project-adaptation",
 )
 
 
@@ -83,6 +91,31 @@ class SkillStructureTest(unittest.TestCase):
             "не видаляй test",
             "admin/API/БД",
             "powershell.exe",
+            "bulk rewrite",
+            "явним UTF-8",
+            "mojibake",
+        ):
+            self.assertIn(required, text)
+
+    def test_project_adaptation_has_lossless_lifecycle(self):
+        text = (ROOT / ".agents" / "skills" / "vaoferi-project-adaptation" / "SKILL.md").read_text(encoding="utf-8")
+        for required in (
+            "inventory -> classify -> conflicts -> owner decisions -> migrate -> machine-enforce -> parity -> cleanup -> verify",
+            "UNIVERSAL_CORE",
+            "UNIVERSAL_CONDITIONAL",
+            "DESIGN",
+            "PROJECT_SPECIFIC",
+            "PROVIDER_OVERLAY",
+            "MACHINE_ENFORCEABLE",
+            "DUPLICATE",
+            "CONFLICT_REQUIRES_REVIEW",
+            "DELETE_CANDIDATE",
+            "No silent rule loss",
+            "Рекомендую",
+            "Альтернатива",
+            "Компроміс",
+            "recursive",
+            "history",
         ):
             self.assertIn(required, text)
 

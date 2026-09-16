@@ -36,6 +36,14 @@ description: Use when starting work in a new or unsynchronized repository, or wh
 
 Не вигадуй значення для "повноти".
 
+## Existing Repository Handoff
+
+Bootstrap discovers facts; it does not decide that old project documentation is disposable.
+
+If an existing repository contains legacy, nested, duplicated, stale or conflicting governance/design/provider/task documentation, load `vaoferi-project-adaptation` before cleanup or replacement. Let that skill perform recursive inventory, classification, conflict resolution, migration, parity and retirement checks.
+
+A clean/new repository can skip that heavier adaptation pass when there is no pre-existing knowledge to reconcile.
+
 ## Output
 
 Після discovery:
@@ -44,4 +52,5 @@ description: Use when starting work in a new or unsynchronized repository, or wh
 - окремо переліч unresolved/conflicting decisions;
 - постав тільки питання, що реально блокують наступний крок;
 - якщо `PROJECT_RULES.md` уже існує, не перезаписуй його мовчки;
-- bootstrap/update universal-owned files роби через canonical sync mechanism, коли він доступний.
+- bootstrap/update universal-owned files роби через canonical sync mechanism, коли він доступний;
+- якщо потрібна legacy-doc reconciliation, передай confirmed context у `vaoferi-project-adaptation`, а не починай cleanup навмання.

@@ -37,6 +37,13 @@ class SyncTest(unittest.TestCase):
             manifest = json.loads((target / ".vaoferi" / "manifest.json").read_text())
             self.assertEqual(manifest["schema"], 1)
 
+            adaptation = target / ".agents" / "skills" / "vaoferi-project-adaptation" / "SKILL.md"
+            self.assertTrue(adaptation.is_file())
+            self.assertIn(
+                ".agents/skills/vaoferi-project-adaptation/SKILL.md",
+                manifest["owned_files"],
+            )
+
             design_lock = json.loads(DESIGN_LOCK.read_text(encoding="utf-8"))
             for rel, expected in design_lock["files_sha256"].items():
                 installed = target / ".agents" / "skills" / "vaoferi-design-skill" / rel
