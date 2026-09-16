@@ -15,6 +15,30 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 6. Запусти релевантні tests/lint/build/runtime checks, потім перевір diff.
 7. Поясни результат outcome-first; явно назви неперевірене.
 
+## Architecture And Data Flow
+
+- SOLID використовуй як захист від coupling/хаосу, а не як церемонію: interface/service/adapter потрібні лише коли реально зменшують ризик змін або полегшують тестування.
+- Якщо однакова логіка повторюється приблизно 3+ рази, перевір, чи спільне виділення справді спростить підтримку; не створюй abstraction лише через число повторів.
+- Перед зміною API, schema або data flow знайди consumers і source of truth. Не зашивай у frontend дані, які за задумом належать admin/API/БД.
+- Зберігай backward compatibility, коли це практично; якщо contract змінюється навмисно, онови consumers і tests разом.
+- Workaround допустимий як явно названий тимчасовий шлях із зрозумілим ризиком і шляхом нормального виправлення, а не як прихований substitute для root cause.
+
+## Tests And CI
+
+- Tests — довготривала частина product code: не видаляй test і не послаблюй assertion лише для того, щоб приховати реальний failure.
+- Для critical logic має бути зрозуміло, який user/process flow вона захищає, який test це перевіряє і якою командою його повторити.
+- Якщо CI існує — не обходь його. Якщо повторювані tests/build gates є, а CI відсутній, запропонуй найменший корисний automation path замість ручного ритуалу.
+
+## Comments
+
+- Коментуй не очевидний синтаксис, а ризиковий invariant: чому зроблено саме так, що зламається при неправильному спрощенні, і який flow/test це захищає, якщо відомо.
+- Не створюй overcommenting; застарілий коментар онови або прибери разом зі зміною поведінки.
+
+## Text And Windows Hygiene
+
+- Текстові файли зберігай UTF-8 без BOM, якщо project не задає інше; після масових текстових змін перевір mojibake.
+- На Windows для encoding-sensitive читання/запису не використовуй legacy `powershell.exe`, якщо доступні `pwsh`, Python або file tools із явним UTF-8 handling.
+
 ## Documentation
 
 - ADR створюй лише для durable/hard-to-reverse architecture or domain decision.
