@@ -68,6 +68,15 @@ class VerifyTest(unittest.TestCase):
             verify = self.run_verifier(target)
             self.assertEqual(verify.returncode, 0, verify.stderr)
 
+    def test_named_env_example_is_allowed(self):
+        with TemporaryDirectory() as td:
+            target = Path(td)
+            self.assertEqual(self.run_sync("bootstrap", target).returncode, 0)
+            (target / ".env.vault.example").write_text("VAULT_ADDR=https://example.invalid\n", encoding="utf-8")
+            self.init_git_and_track_all(target)
+            verify = self.run_verifier(target)
+            self.assertEqual(verify.returncode, 0, verify.stderr)
+
     def test_high_confidence_secret_pattern_fails_without_echoing_value(self):
         with TemporaryDirectory() as td:
             target = Path(td)
