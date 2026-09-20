@@ -1,5 +1,5 @@
 {
-  "commit": "264991d7a6c79322b39567391634f1045ccb170d",
+  "commit": "423c0df121b6be947214f650c4d8cf60c459aa9a",
   "files_sha256": {
     "SKILL.md": "d206cd46d042f477b97391bfaf9b589c01df97a2438df3142dab27532379ed8d",
     "config/component-libraries.json": "2d82a306cd6097e83ee074347f3fba5938b2f7a2659f487364f3f2be1d7c48f8",
@@ -9,7 +9,7 @@
     "references/lifecycle.md": "dc07c59620ca92834c8f6295bccd37f0c7e9bb525e85333549b537af65322258",
     "references/quality-gates.md": "2705c7e8d57e0910e405fa32b0ad4dd71635d434f6668ada1c0f9fa2309b6b59",
     "references/scopes.md": "7a07ed12c59ad8ddd9d1878a5d57b609b98989899a8a49a2a203652bc0739a16",
-    "references/skillopt-and-architecture.md": "8a595ab82b27869ffd890712f54a7d27d34ae0db54f4aa2cae1afe54d74f9951",
+    "references/skillopt-and-architecture.md": "18d7f1285d35c06b52c2cb1b8a42f2ca453053971f844f7d0b8521a8fdf23542",
     "references/stages.md": "5c546e1d0d7ad496bc9d52924a943ccae6797dc1f40ba8d051011f84f4da5c10",
     "references/verification.md": "4d0eab3feea729a925408f50ed698dc61b8190bc463bdcaf473b8747a29b9b7d",
     "scripts/check_skill_structure.py": "dc2775deb342c3666c8c181320804af10c1a93995365c88f4965fb6692b1ecc0",
@@ -18,5 +18,5 @@
   },
   "repository": "vaoferi/vaoferi-design-skill",
   "schema": 1,
-  "version": "0.4.1"
+  "version": "0.4.2"
 }
