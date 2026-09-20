@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.0**
+**Current release: 0.2.1**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -51,7 +51,7 @@ python scripts/vaoferi_sync.py verify --target /path/to/repository
 
 Bootstrap/update copies centrally-owned rules and skills into the target repository and records exact hashes/source version in `.vaoferi/manifest.json`. Project-owned files such as `PROJECT_RULES.md`, `DESIGN.md`, `docs/` and `tests/` are not silently overwritten.
 
-The synced package includes the reviewed Vaoferi Design Skill snapshot, currently **0.4.1 / contract architecture 1.2**, pinned by exact Git commit and SHA-256 hashes.
+The synced package includes the reviewed Vaoferi Design Skill snapshot, currently **0.4.2 / contract architecture 1.2**, pinned by exact Git commit and SHA-256 hashes.
 
 ## Reusable GitHub checks
 
