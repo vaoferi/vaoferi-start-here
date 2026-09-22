@@ -101,12 +101,8 @@ Persistent SPEC для дрібної очевидної правки не по�
 
 ## Task Tracking
 
-- `Linear` — єдине активне джерело робочих задач.
-- Executor переводить task у `In Review` тільки як **Ready for Review**: implementation завершена настільки, наскільки заявлено, і handoff містить acceptance/evidence. Failed або blocked робота лишається `In Progress`; blocked handoff має бути **детальнішим** за success handoff.
-- `Definition of Done` формулюй outcome-first, **мовою користувача**; files/functions/API/commands належать у technical evidence.
-- Reviewer не довіряє executor summary як proof: він незалежно перевіряє acceptance. FAIL → comment + `In Progress`; PASS без owner-only gate → `Done`; PASS з owner-only acceptance → лишається `In Review`.
-- Повний Executor → Reviewer lifecycle, blocked-first selection і handoff schema живуть у `vaoferi-task-tracking`.
-- `Trello` — лише тимчасове legacy input: не запускай окремий повний sweep без прямого запиту. Коли релевантна card трапляється в поточній роботі, прочитай її повністю, перенеси всі унікальні корисні факти й незавершену роботу в `Linear` або canonical docs/tests і перевір parity.
-- Після parity видали card, якщо hard-delete підтримується; якщо ні — архівуй/закрий її і продовжуй основну роботу без окремого blocker-а на фізичне видалення.
-- Ніколи не створюй нові робочі картки в `Trello`.
+- `Linear` — єдине активне джерело задач. `In Review` = **Ready for Review**; failed/blocked лишається `In Progress`, а blocked handoff має бути **детальнішим** за success.
+- `Definition of Done` формулюй outcome-first, **мовою користувача**. Reviewer незалежно перевіряє acceptance: FAIL → `In Progress`; PASS без owner-only gate → `Done`; owner-only acceptance → лишається `In Review`.
+- Повний Executor → Reviewer lifecycle і blocked-first rules — у `vaoferi-task-tracking`.
+- `Trello` — лише legacy input: релевантну card прочитай повністю, перенеси корисне в `Linear`/canonical docs/tests, перевір parity; після parity hard-delete, а якщо недоступний — архів/close. Не роби окремий full sweep без прямого запиту і не створюй нових Trello cards.
 - Не підтримуй кілька активних джерел правди для однієї задачі.
