@@ -55,13 +55,24 @@ Key rules now fail closed:
 
 ### Codex global instructions
 
-Codex reads a global instruction file from `$CODEX_HOME/AGENTS.md`; by default that is `~/.codex/AGENTS.md`. The canonical compact Vaoferi mirror lives at:
+Codex reads global instructions from `$CODEX_HOME/AGENTS.md`; when `CODEX_HOME` is unset, the default home is `~/.codex`. Repository `AGENTS.md` / `PROJECT_RULES.md` are then layered with the project context.
 
-`templates/provider/codex.md`
+The canonical compact Vaoferi mirror is `templates/provider/codex.md`. Install and verify its managed block with:
 
-It is intentionally small and duplicates only the highest-risk working rules. Repository `AGENTS.md` + `PROJECT_RULES.md` remain the authoritative project context.
+```bash
+python scripts/codex_global.py status
+python scripts/codex_global.py install
+python scripts/codex_global.py verify
+```
 
-Do not blindly overwrite an existing global Codex file. Reconcile it first; if its provenance/content is unknown, preserve it and merge the critical guardrails intentionally.
+The installer is fail-closed:
+
+- missing/empty global file → create the managed block;
+- existing managed Vaoferi block → update only that block and preserve surrounding personal content;
+- existing non-empty unmanaged `AGENTS.md` → refuse to overwrite so an agent/owner can reconcile it intentionally;
+- `verify` fails on missing/drifted managed content.
+
+Use `--codex-home /path/to/home` for an explicit profile. The global block stays small and universal; project-specific paths, ports and product facts stay out of it.
 
 ## Bootstrap / update / verify
 
