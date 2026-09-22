@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.2**
+**Current release: 0.2.3**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,24 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.3: Executor ↔ Reviewer protocol
+
+This release makes independent review a first-class part of the universal workflow.
+
+- `In Review` means **Ready for Review**, never “the executor got stuck”.
+- blocked/failed work stays `In Progress` with a detailed blocked handoff;
+- blocked handoff preserves expected vs actual behavior, exact reproduction, failed attempts, errors/evidence, inspected files/functions/commits, what was ruled out, and the next recommended experiment;
+- reviewer selection is **blocked-first**, then ordinary `In Review`; one issue per run;
+- reviewer independently checks Linear + GitHub + Opera Browser Connector + Context7 relevance + Superpowers instead of trusting executor summaries;
+- owner-requested `Wayfinder` and `I have ADHD` helpers are explicit preflight items: use them when the harness exposes them, otherwise report them unavailable rather than pretending;
+- review FAIL returns/keeps the issue in `In Progress`; full independent PASS with no owner-only gate may move to `Done`; owner-only visual/business acceptance keeps the issue in `In Review`;
+- Linear history is never auto-deleted by the reviewer loop.
+
+Canonical reviewer prompt:
+`templates/reviewer/linear-reviewer.md`
+
+The prompt is cadence-neutral. ChatGPT scheduled tasks currently support a maximum recurring frequency of once per hour, so a 30-minute reviewer cadence cannot be created directly by ChatGPT Tasks.
 
 ## 0.2.2: Fail-closed acceptance and Codex global guardrails
 
