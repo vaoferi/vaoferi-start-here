@@ -6,6 +6,7 @@ AGENTS = ROOT / "AGENTS.md"
 SECURITY = ROOT / ".agents" / "skills" / "vaoferi-security" / "SKILL.md"
 TRACKING = ROOT / ".agents" / "skills" / "vaoferi-task-tracking" / "SKILL.md"
 CODEX = ROOT / "templates" / "provider" / "codex.md"
+REVIEWER = ROOT / "templates" / "reviewer" / "linear-reviewer.md"
 SYNC = ROOT / "scripts" / "vaoferi_sync.py"
 
 
@@ -60,6 +61,11 @@ class SecretAndGitContractTest(unittest.TestCase):
             "Vaultwarden",
             "project-root `.env`",
         ):
+            self.assertIn(required, text)
+
+    def test_reviewer_requires_remote_pushed_sha(self):
+        text = REVIEWER.read_text(encoding="utf-8")
+        for required in ("pushed SHA", "remote", "FAIL"):
             self.assertIn(required, text)
 
     def test_sync_owns_security_and_tracking_contracts(self):
