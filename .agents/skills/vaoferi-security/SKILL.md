@@ -7,11 +7,49 @@ description: Use for secrets, credentials, authentication, authorization, permis
 
 ## Practical Local Secret Policy
 
-- A local `.env`, `.env.local` or project-equivalent secret file is an **approved normal working store** for deploy, migration, API and tool credentials when the file is private to the intended machine/workspace and ignored by Git.
-- Prefer an existing project-local secret convention over introducing a new secret manager or making the owner re-enter keys repeatedly.
-- Do **not** delete, blank, rotate or migrate a working local secret file to Vaultwarden/another manager merely because it contains real credentials.
-- Agents may read approved local env/config values when the task needs them and tool access permits it. Do not echo the values into chat, logs, issues, docs or reports.
-- Convenience wins over additional secret-management ceremony when the credential remains local/private and the current mechanism is reliable.
+### Canonical two-copy model
+
+Working secret values use exactly **two controlled canonical copies**:
+
+1. **Vaultwarden** — the global credential inventory/backup for all projects and infrastructure. Every validated working credential belongs here, even if it is unrelated to the current project.
+2. **project-root `.env`** — the local working copy containing only credentials actually required by that project.
+
+Do not create a third canonical secret-value store. `.env.example`, docs and inventories may contain variable names, account/service names and Vaultwarden references, but never the secret value.
+
+A project-root `.env` is an approved normal working store when it is private to the intended workspace and ignored by Git. Agents may read and use it when the task needs the credential and tool access permits it.
+
+### Working credential discovery
+
+A **working credential** is a password/token/API key/SSH credential/etc. that the agent has actually validated against the intended service or successful task flow, not merely a string that looks secret.
+
+When a working credential is discovered in source files, configs, old notes, local files, runtime configuration, deployment scripts or another accessible location:
+
+1. identify what service/account it belongs to;
+2. determine whether the **current project** needs it;
+3. if current project needs it → persist/sync to **BOTH** Vaultwarden and project-root `.env`;
+4. if current project does not need it → persist/sync to **Vaultwarden only**;
+5. **не чекати**, що owner повторно надасть working credential, який agent already found and validated;
+6. **не echo** secret values into chat, Linear, Trello, docs, screenshots, logs, tests or commit messages.
+
+If Vaultwarden already has a different value, do not blindly destroy history or the known-working value. Verify which credential currently works for the intended consumer, then reconcile the Vaultwarden record and project `.env` so the active working value is recoverable.
+
+For multiline credentials such as an SSH private key, preserve the two-copy rule. Use a lossless `.env` representation compatible with the project (for example a base64 value) rather than inventing a third permanent secret store. A temporary runtime file may be materialized with strict permissions when a client requires a file path, but it is not a third canonical store.
+
+### Vaultwarden access unavailable
+
+If the harness/CLI cannot write Vaultwarden:
+
+- do not claim Vaultwarden persistence succeeded;
+- when the credential belongs to the current project, preserve the validated working value in the ignored project-root `.env`;
+- leave an explicit BLOCKED/follow-up with only non-secret destination metadata: service/account name, Vaultwarden folder/item naming target and required owner/tool action;
+- when the credential does not belong to the current project, Vaultwarden persistence remains incomplete until access exists; never leak the value into Linear/chat as a workaround.
+
+### Exposure versus availability
+
+Finding a validated credential in tracked/shared/public code is still a security exposure.
+
+Preserve availability first according to the two-copy model, then flag exposure/rotation work. Do not silently delete, blank or rotate a credential before its consumers and rollback path are understood.
+
 
 ## Hard Boundaries
 
