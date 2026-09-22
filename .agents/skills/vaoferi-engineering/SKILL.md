@@ -47,6 +47,8 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 
 ### Reviewer handoff
 
+This section is the canonical **reviewer handoff** evidence contract.
+
 Перед передачею в review збережи достатньо evidence, щоб інший агент міг перевірити роботу без довіри до твого висновку.
 
 Якщо був **failed attempt** або task лишається blocked, handoff має явно містити:
