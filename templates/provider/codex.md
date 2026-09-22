@@ -16,7 +16,8 @@ It does not replace repository `AGENTS.md` or `PROJECT_RULES.md`. Project/direct
 - If required browser/runtime verification cannot run, report **BLOCKED** and keep the task out of Review/Done. Never call missing proof a pass.
 - If the task/project requires `VISUAL APPROVAL`, get explicit owner approval on a production-faithful current UI/prototype before visible implementation.
 - In authored UI, new `!important` is a hard failure unless there is an exact approved/documented exception.
-- Run the project-required lint/build/tests plus real browser/responsive checks relevant to the acceptance. Check Console/Network when they can reveal user-facing failures.
+- For equal visible peer groups, treat accidental orphan rows such as `2+1`, `3+1`, or `2+2+1` as a design failure unless there is a documented semantic/compositional/accessibility reason; three equal peers should normally be one row or one column.
+- Run the project-required lint/build/tests plus all browser/responsive/device states required by the project/design contract. Do not replace an exhaustive responsive gate with a couple of representative widths. Check Console/Network when they can reveal user-facing failures.
 - Review must point to the exact SHA/version and a **reviewer-accessible** current artifact/preview when visual/runtime review is required. A stale preview is not evidence.
 - Never weaken/delete tests or verification merely to make a gate green.
 - Never claim verified behavior, deployment, access, or test results that did not actually run.
