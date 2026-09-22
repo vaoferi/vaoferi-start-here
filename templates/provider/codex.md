@@ -12,6 +12,7 @@ It does not replace repository `AGENTS.md` or `PROJECT_RULES.md`. Project/direct
 - Explain and verify work **outcome-first**: say what the user/process can actually do, then the internal function/module details if needed.
 - For behavior changes and bug fixes use **TDD**: reproduce with a failing test, prove RED, implement the minimum GREEN fix, then run regressions.
 - Every relevant **acceptance criterion** needs its own proof before `In Review` or `Done`.
+- Executor uses `In Review` only as **Ready for Review**. `Blocked`/failed work stays `In Progress` with a detailed handoff; reviewer independently verifies instead of trusting executor claims.
 - If the criterion is a user action/UI behavior, execute that action on the actual **topmost user-facing target** in a real rendered/runtime surface. Source/string/DOM-presence checks are not a substitute.
 - If required browser/runtime verification cannot run, report **BLOCKED** and keep the task out of Review/Done. Never call missing proof a pass.
 - If the task/project requires `VISUAL APPROVAL`, get explicit owner approval on a production-faithful current UI/prototype before visible implementation.
