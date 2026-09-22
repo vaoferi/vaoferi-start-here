@@ -22,3 +22,99 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 9. У Linear зафіксуй migration destination/evidence настільки коротко, наскільки потрібно для traceability.
 
 Не роби bulk-delete або bulk-archive без вичитки. Мета — поступово прибрати Trello з активного процесу без silent loss і без окремого проєкту з очищення дошки; історія, яку справді треба зберегти, має жити в Linear або canonical docs/tests, а не в Trello.
+
+## Executor → Reviewer Protocol
+
+### Status semantics
+
+- `In Progress` = work is being implemented, diagnosed, or is blocked.
+- `Ready for Review` is the handoff state represented by Linear `In Review`.
+- Never move a failed/blocked task to `In Review` just to attract help.
+- `Done` = independent review evidence satisfies every relevant acceptance criterion and no owner-only gate remains.
+- If owner visual/business approval is still required, reviewer may record technical PASS but the issue remains `In Review`.
+
+### Executor handoff
+
+A success handoff must include:
+
+1. user/process outcome;
+2. changed files and branch/commit/PR;
+3. acceptance ledger;
+4. commands/tests/browser/runtime checks with exact observed results;
+5. reviewer-accessible artifact/URL + exact SHA/version where relevant;
+6. known risks and anything unverified;
+7. exact owner action still required, if any.
+
+Definition of Done stays outcome-first and in user language. Technical evidence may name functions, files, APIs, selectors, commands, commits and logs.
+
+### Blocked handoff
+
+A **Blocked handoff** must be more detailed than a success handoff. Preserve failed attempts as diagnostic evidence instead of compressing them away.
+
+Required fields:
+
+- `BLOCKED ON`
+- expected outcome
+- actual outcome
+- exact reproduction
+- confirmed root cause or current root-cause hypothesis
+- `WHAT WAS TRIED` in chronological order
+- commands/tools/environment used
+- exact errors/output/evidence
+- files/functions/commits inspected
+- **what was ruled out**
+- next recommended experiment/fix
+- whether another agent can continue without owner input
+- exact owner action only when physically required
+
+Do not write “could not finish” without the failed attempt trail. The reviewer should be able to understand what the executor tried, why it failed, and where to continue without repeating the same blind path.
+
+## Independent Reviewer Protocol
+
+### Candidate selection
+
+Each reviewer run handles **one issue per run**.
+
+Use **blocked-first** selection:
+
+1. blocked / explicitly failed `In Progress` work needing reviewer diagnosis;
+2. then `In Review`;
+3. inside each bucket: `Urgent` → `High` → `Medium` → `Low`;
+4. tie-breaker: **oldest waiting first**.
+
+A blocked issue is more urgent for the reviewer than an ordinary `In Review` issue because the executor cannot progress.
+
+### Mandatory review cycle
+
+Do not trust the executor comment as proof. Build a fresh acceptance → evidence ledger and use the available stack:
+
+- **Linear**: read issue description, comments, relations, labels/status, owner decisions and prior failed attempts. Write the final review comment/state here.
+- **GitHub**: inspect relevant repository, exact commits/diff, current source and tests. Do not infer implementation from a handoff summary.
+- **Opera Browser Connector**: for user-visible behavior, exercise the live/reviewer artifact when accessible; also inspect the project filesystem when the connector exposes exact file URLs/paths. Prefer concrete links/known paths; never guess a filesystem location.
+- **Context7**: always perform a relevance check. If the verdict depends on framework/library/API/version-sensitive behavior, fetch current official documentation before deciding.
+- **Superpowers**: mandatory process layer. At minimum use `using-superpowers` and `verification-before-completion`; for blocked/failing behavior also use `systematic-debugging`.
+
+Owner-requested helper preflight:
+
+- **Wayfinder**
+- **I have ADHD**
+
+Attempt to resolve/invoke those exact helpers when the harness provides them. If they are unavailable, say so explicitly in reviewer evidence; never pretend they ran. Their absence does not replace the mandatory Linear/GitHub/Opera/Context7/Superpowers evidence cycle.
+
+For UI/interaction acceptance, act on the actual **topmost user-facing target**. Source/string/DOM-presence checks can support a verdict but cannot substitute for real behavioral evidence when that evidence is required.
+
+### Reviewer outcomes
+
+For blocked work:
+- diagnose root cause as far as evidence allows;
+- point to the likely file/function/flow only when supported;
+- give concrete next steps that avoid repeating failed attempts;
+- keep the issue `In Progress` unless the reviewer actually completes and re-verifies the implementation under the project contract.
+
+For `In Review`:
+- independent FAIL → detailed review comment + `In Progress`;
+- technical PASS but owner-only visual/business acceptance still pending → keep `In Review`, state exact owner action;
+- full PASS with no owner-only gate → `Done`.
+
+Never auto-delete Linear issues from the reviewer loop. Issue retention/archive is a separate policy. Historical evidence is valuable for debugging recurring failures.
+
