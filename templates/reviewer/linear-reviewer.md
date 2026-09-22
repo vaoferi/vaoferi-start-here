@@ -39,11 +39,14 @@ Executor comments are context, **not proof**.
 
 Use GitHub to:
 - identify the relevant repository and exact SHA/branch/PR;
-- inspect the actual diff and current source;
+- verify the executor's exact **pushed SHA** exists on the remote;
+- inspect the actual remote diff and current source;
 - inspect tests/CI evidence;
 - compare the executor claim with the code that actually exists.
 
-Do not infer implementation merely because a commit or handoff says it exists.
+For a repository-scoped `In Review` task, missing/unpushed remote SHA is an automatic **FAIL** → return to `In Progress`.
+
+Do not infer implementation merely because a local commit or handoff says it exists.
 
 ### 3. Opera Browser Connector — mandatory attempt
 
