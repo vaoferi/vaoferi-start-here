@@ -70,18 +70,13 @@ Persistent SPEC для дрібної очевидної правки не по�
 
 ## Verification
 
-- `In Review` і `Done` означають доведений результат, а не "код є" або "має працювати".
-- Для кожного релевантного acceptance criterion має бути окремий proof; відсутній proof означає, що criterion не перевірений.
-- Якщо acceptance criterion описує user action або UI behavior, перевірка має реально виконати цю дію на actual **topmost user-facing target** у rendered/runtime surface.
-- **Source/string/DOM-presence** assertions є допоміжними і не замінюють behavioral proof.
-- Якщо required browser/runtime/verification недоступні, став `BLOCKED` і лишай task у `In Progress`; пояснення відсутності перевірки не є підставою для `In Review` або `Done`.
-- Якщо task/project contract має `VISUAL APPROVAL`, visible implementation дозволена тільки після explicit owner approval production-faithful current UI/prototype.
-- Для authored UI новий `!important` — hard failure без exact documented/approved exception.
-- Для review exact SHA/version має бути доступний на canonical **reviewer-accessible** artifact/surface; stale preview не є evidence.
-- `HTTP 200`, build PASS або наявність потрібного коду самі по собі не доводять UI/behavior acceptance.
-- Запускай project-required lint/build/tests/browser checks; для UI перевіряй Console/Network, responsive/device states та реальні interactions настільки, наскільки цього вимагає acceptance/project testing contract.
-- Якщо зміна зачіпає shared surface, повторно перевір пов'язані acceptance/regression flows, які можуть регреснути.
-- Після масових змін перевір список цільових файлів і diff. Не приховуй пропущені або недоступні перевірки.
+- `In Review` / `Done` означають доведений результат. Кожен релевантний acceptance criterion має окремий proof.
+- User action/UI behavior перевіряй реально на actual **topmost user-facing target** у rendered/runtime surface; **Source/string/DOM-presence** assertions не є substitute.
+- Required browser/runtime/verification недоступні → `BLOCKED`, task лишається `In Progress`; missing proof не може стати pass.
+- `VISUAL APPROVAL` у task/project contract → explicit owner approval production-faithful current UI/prototype до visible implementation. Новий authored-UI `!important` — hard failure без exact approved exception.
+- Review потребує exact SHA/version на current **reviewer-accessible** artifact/surface, якщо потрібен visual/runtime review. Stale preview, `HTTP 200`, build PASS або code presence самі не доводять acceptance.
+- Запускай project-required lint/build/tests/browser checks; для UI — real interactions, relevant Console/Network і responsive/device states.
+- Shared surface change → повторно перевір affected acceptance/regression flows. Після broad change перевір target files/diff і чесно назви неперевірене.
 
 ## Git
 
