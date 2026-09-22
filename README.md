@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.1**
+**Current release: 0.2.2**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,30 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.2: Fail-closed acceptance and Codex global guardrails
+
+This release hardens the boundary between “code exists” and “user-facing work is actually verified”.
+
+Key rules now fail closed:
+
+- every relevant acceptance criterion needs its own evidence before `In Review` / `Done`;
+- user-action criteria must be exercised on the real topmost user-facing target in a rendered/runtime surface;
+- source/string/DOM-presence checks are supplementary, not substitutes for behavioral proof;
+- required browser/runtime unavailable means `BLOCKED`, not a soft warning;
+- behavior changes and bug fixes use TDD RED → minimal GREEN → regressions;
+- reviewer-facing UI/runtime work must point to the exact SHA/version on a current reviewer-accessible artifact;
+- `VISUAL APPROVAL`, browser verification and authored-UI `!important` hard-stop rules are mirrored in the compact Codex global guardrails.
+
+### Codex global instructions
+
+Codex reads a global instruction file from `$CODEX_HOME/AGENTS.md`; by default that is `~/.codex/AGENTS.md`. The canonical compact Vaoferi mirror lives at:
+
+`templates/provider/codex.md`
+
+It is intentionally small and duplicates only the highest-risk working rules. Repository `AGENTS.md` + `PROJECT_RULES.md` remain the authoritative project context.
+
+Do not blindly overwrite an existing global Codex file. Reconcile it first; if its provenance/content is unknown, preserve it and merge the critical guardrails intentionally.
 
 ## Bootstrap / update / verify
 
