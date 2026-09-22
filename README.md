@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.3**
+**Current release: 0.2.4**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,32 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.4: Remote handoff + durable credential redundancy
+
+This release makes review freshness and credential availability hard workflow invariants.
+
+- every repository-scoped Linear task requires **commit + push** before `In Review` or `Done`;
+- the Linear handoff records the exact **pushed SHA** and reviewer verifies that remote commit/diff independently;
+- a local-only commit is never review-ready evidence;
+- if a repository-scoped task has no file delta, it still uses an explicit pushed task-evidence commit so the reviewer has remote traceability;
+- validated credentials use two controlled canonical copies:
+  - **Vaultwarden** is the global inventory/backup for all projects and infrastructure;
+  - project-root `.env` contains only credentials required by that project;
+- when an agent discovers and actually validates a working credential, it persists it without waiting for the owner to re-enter it:
+  - current project needs it → BOTH Vaultwarden + project-root `.env`;
+  - current project does not need it → Vaultwarden only;
+- `.env.example`/docs contain variable names and non-secret references only;
+- real `.env` remains private/gitignored and secret values are never echoed to Linear/chat/docs/logs;
+- if Vaultwarden write access is unavailable, the agent must report the persistence gap instead of pretending the backup succeeded;
+- a secret found in tracked/shared/public code is still an exposure: preserve availability first, then flag rotation/remediation without silently destroying the working credential.
+
+The sync package already centrally owns:
+- `AGENTS.md`;
+- `.agents/skills/vaoferi-security/SKILL.md`;
+- `.agents/skills/vaoferi-task-tracking/SKILL.md`.
+
+Therefore the next canonical `vaoferi_sync.py update` propagates these rules into participating repositories.
 
 ## 0.2.3: Executor ↔ Reviewer protocol
 
