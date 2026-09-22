@@ -76,7 +76,6 @@ class AgentsContractTest(unittest.TestCase):
             "!important",
             "HTTP 200",
             "reviewer-accessible",
-            "2+1",
         ):
             self.assertIn(required, text)
 
@@ -175,6 +174,7 @@ class ProviderOverlayTest(unittest.TestCase):
             "VISUAL APPROVAL",
             "!important",
             "reviewer-accessible",
+            "2+1",
         ):
             self.assertIn(required, text)
         self.assertLess(len(text.encode("utf-8")), 4 * 1024)
