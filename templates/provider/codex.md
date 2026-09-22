@@ -12,6 +12,9 @@ It does not replace repository `AGENTS.md` or `PROJECT_RULES.md`. Project/direct
 - Explain and verify work **outcome-first**: say what the user/process can actually do, then the internal function/module details if needed.
 - For behavior changes and bug fixes use **TDD**: reproduce with a failing test, prove RED, implement the minimum GREEN fix, then run regressions.
 - Every relevant **acceptance criterion** needs its own proof before `In Review` or `Done`.
+- Executor uses `In Review` only as **Ready for Review**. `Blocked`/failed work stays `In Progress` with a detailed handoff; reviewer independently verifies instead of trusting executor claims.
+- Every repository-scoped task requires **commit + push** before `In Review`/`Done`; record the exact **pushed SHA** in Linear. Local-only commits are not review evidence.
+- Secret availability uses two controlled copies: **Vaultwarden** stores all validated credentials globally; project-root `.env` stores only credentials needed by that project. A discovered validated credential needed by the current project goes to BOTH; otherwise Vaultwarden only. Never echo secret values into task/chat/docs/logs.
 - If the criterion is a user action/UI behavior, execute that action on the actual **topmost user-facing target** in a real rendered/runtime surface. Source/string/DOM-presence checks are not a substitute.
 - If required browser/runtime verification cannot run, report **BLOCKED** and keep the task out of Review/Done. Never call missing proof a pass.
 - If the task/project requires `VISUAL APPROVAL`, get explicit owner approval on a production-faithful current UI/prototype before visible implementation.
