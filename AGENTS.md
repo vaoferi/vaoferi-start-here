@@ -66,14 +66,22 @@ Persistent SPEC для дрібної очевидної правки не по�
 - Зберігай існуючі контракти, посилання, data flow і сусідню робочу поведінку.
 - Якщо зачеплена сусідня проблема прямо впливає на якість або стабільність рішення — повідом про неї; не роби великий scope creep мовчки.
 - Version-sensitive факти перевіряй за актуальною офіційною документацією або іншим надійним current source.
+- Для behavior change або bug fix застосовуй TDD: спочатку failing test, що відтворює потрібний user/process behavior, підтвердь **RED**, потім зроби мінімальний GREEN і regression checks. Не пиши production fix до підтвердженого RED, якщо тест технічно можливий.
 
 ## Verification
 
-- `Done` означає перевірений результат, а не "має працювати".
-- Перевірка має відповідати ризику: unit/integration/build/browser/smoke/manual evidence — що реально потрібно задачі.
-- UI-зміни потребують реального render/interaction evidence або явного пояснення, чому воно недоступне.
-- Після масових змін перевір список цільових файлів, diff і релевантні тести.
-- Не приховуй пропущені або недоступні перевірки.
+- `In Review` і `Done` означають доведений результат, а не "код є" або "має працювати".
+- Для кожного релевантного acceptance criterion має бути окремий proof; відсутній proof означає, що criterion не перевірений.
+- Якщо acceptance criterion описує user action або UI behavior, перевірка має реально виконати цю дію на actual **topmost user-facing target** у rendered/runtime surface.
+- **Source/string/DOM-presence** assertions є допоміжними і не замінюють behavioral proof.
+- Якщо required browser/runtime/verification недоступні, став `BLOCKED` і лишай task у `In Progress`; пояснення відсутності перевірки не є підставою для `In Review` або `Done`.
+- Якщо task/project contract має `VISUAL APPROVAL`, visible implementation дозволена тільки після explicit owner approval production-faithful current UI/prototype.
+- Для authored UI новий `!important` — hard failure без exact documented/approved exception.
+- Для review exact SHA/version має бути доступний на canonical **reviewer-accessible** artifact/surface; stale preview не є evidence.
+- `HTTP 200`, build PASS або наявність потрібного коду самі по собі не доводять UI/behavior acceptance.
+- Запускай project-required lint/build/tests/browser checks; для UI перевіряй Console/Network, responsive/device states та реальні interactions настільки, наскільки цього вимагає acceptance/project testing contract.
+- Якщо зміна зачіпає shared surface, повторно перевір пов'язані acceptance/regression flows, які можуть регреснути.
+- Після масових змін перевір список цільових файлів і diff. Не приховуй пропущені або недоступні перевірки.
 
 ## Git
 
@@ -91,7 +99,7 @@ Persistent SPEC для дрібної очевидної правки не по�
 - UI, layout, responsive, components, tokens, typography або design docs → завантаж `vaoferi-design-skill` до design-рішень.
 - Dependencies, versions, upgrades, beta/preview compatibility → завантаж `vaoferi-dependencies`.
 - Secrets, auth, credentials, permissions, privacy або security-sensitive зміни → завантаж `vaoferi-security`.
-- Нетипова engineering/testing/docs процедура → завантаж відповідний локальний skill, якщо він є.
+- Нетривіальний implementation, bug fix, behavior change, refactor або tests → завантаж `vaoferi-engineering`.
 - Task tracking / migration із legacy tracker → завантаж `vaoferi-task-tracking`.
 
 Не завантажуй спеціалізовані правила без потреби: core має лишатися коротким, а conditional knowledge — підключатися за тригером.
