@@ -29,6 +29,7 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 
 - `In Progress` = work is being implemented, diagnosed, or is blocked.
 - `Ready for Review` is the handoff state represented by Linear `In Review`.
+- For every repository-scoped task, `Ready for Review` requires **commit + push** and the exact **pushed SHA** in the Linear handoff. A local-only commit is not reviewable evidence.
 - Never move a failed/blocked task to `In Review` just to attract help.
 - `Done` = independent review evidence satisfies every relevant acceptance criterion and no owner-only gate remains.
 - If owner visual/business approval is still required, reviewer may record technical PASS but the issue remains `In Review`.
@@ -39,13 +40,19 @@ A success handoff must include:
 
 1. user/process outcome;
 2. changed files and branch/commit/PR;
-3. acceptance ledger;
-4. commands/tests/browser/runtime checks with exact observed results;
-5. reviewer-accessible artifact/URL + exact SHA/version where relevant;
-6. known risks and anything unverified;
-7. exact owner action still required, if any.
+3. exact remote branch/PR and **pushed SHA**; verify the commit exists on the remote before handoff;
+4. acceptance ledger;
+5. commands/tests/browser/runtime checks with exact observed results;
+6. reviewer-accessible artifact/URL + exact SHA/version where relevant;
+7. known risks and anything unverified;
+8. exact owner action still required, if any.
 
 Definition of Done stays outcome-first and in user language. Technical evidence may name functions, files, APIs, selectors, commands, commits and logs.
+
+For a repository-scoped Linear task, the commit/push rule is unconditional at handoff:
+- implementation/change task → commit intended changes and push;
+- verification/no-code task → create and push an explicit task evidence commit when no file delta exists, so reviewer still has remote traceability;
+- if push is impossible, task stays `In Progress/BLOCKED` and must not be presented as review-ready.
 
 ### Blocked handoff
 
@@ -112,6 +119,7 @@ For blocked work:
 - keep the issue `In Progress` unless the reviewer actually completes and re-verifies the implementation under the project contract.
 
 For `In Review`:
+- first verify the executor's **pushed SHA** exists on the remote and matches the described task scope; missing/unpushed SHA = FAIL → `In Progress`;
 - independent FAIL → detailed review comment + `In Progress`;
 - technical PASS but owner-only visual/business acceptance still pending → keep `In Review`, state exact owner action;
 - full PASS with no owner-only gate → `Done`.
