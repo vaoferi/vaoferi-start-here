@@ -81,10 +81,17 @@ Persistent SPEC для дрібної очевидної правки не по�
 ## Git
 
 - Перед змінами і комітом перевіряй status/diff настільки, наскільки дозволяє середовище.
+- Для кожної repository-scoped Linear task перед `In Review` або `Done` обов'язкові **commit + push**; у Linear handoff запиши exact **pushed SHA**. Локальний непушений commit не є completion/review evidence.
 - Не коміть secrets, реальні `.env`, cookies, dumps, випадкові тимчасові файли або dependency directories, якщо проєкт не вимагає протилежного.
 - Не роби destructive cleanup чужих змін.
 - Логічно пов'язані зміни тримай зрозумілими; не змішуй без потреби feature, refactor, dependency upgrade, deploy і косметику.
 - За замовчуванням працюй у простому main-branch workflow; branch/worktree використовуй, коли цього потребує паралельність, ризик або інструмент.
+
+## Secret Availability
+
+- Робочі secret values мають **дві** контрольовані копії: глобальний Vaultwarden містить усі credentials, а project-root `.env` — тільки secrets, потрібні конкретному project.
+- Знайдений і фактично validated working credential не губи: якщо потрібен current project — синхронізуй у BOTH Vaultwarden + project-root `.env`; якщо не потрібен цьому project — у Vaultwarden only. Не виводь значення в chat/Linear/docs/logs.
+- Детальна процедура, exposure handling і verification — у `vaoferi-security`.
 
 ## Routing
 
