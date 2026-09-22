@@ -9,11 +9,12 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 
 1. Прочитай `PROJECT_RULES.md` і релевантні project docs/code перед змінами.
 2. Сформулюй user/process outcome і перевір фактичний current behavior.
-3. Знайди існуючу реалізацію, contract, native capability або dependency перед створенням нової логіки.
-4. Для behavior change або bug fix застосуй TDD: failing test → verify red → minimal implementation → verify green → refactor only while green.
-5. Змінюй мінімальну кількість пов'язаних файлів; не роби глобальний replace без target-list review.
-6. Запусти релевантні tests/lint/build/runtime checks, потім перевір diff.
-7. Поясни результат outcome-first; явно назви неперевірене.
+3. Створи короткий **Acceptance ledger**: кожен релевантний acceptance criterion → test/interaction/evidence, environment і expected observable result.
+4. Знайди існуючу реалізацію, contract, native capability або dependency перед створенням нової логіки.
+5. Для behavior change або bug fix застосуй TDD: failing test → verify **RED** → minimal implementation → verify GREEN → refactor only while green.
+6. Змінюй мінімальну кількість пов'язаних файлів; не роби глобальний replace без target-list review.
+7. Запусти релевантні tests/lint/build/runtime/browser checks, потім перевір diff і acceptance ledger.
+8. Поясни результат outcome-first; явно назви неперевірене.
 
 ## Architecture And Data Flow
 
@@ -27,7 +28,22 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 
 - Tests — довготривала частина product code: не видаляй test і не послаблюй assertion лише для того, щоб приховати реальний failure.
 - Для critical logic має бути зрозуміло, який user/process flow вона захищає, який test це перевіряє і якою командою його повторити.
+- Browser TDD RED має відтворити user-visible failure, а не лише знайти потрібний selector/string у source.
+- Для interaction acceptance дійте на actual **topmost user-facing target**. За потреби перевір hit-testing/locator/elementFromPoint; underlying image/node не доводить поведінку верхнього clickable layer.
+- `source/string/DOM-presence` assertions можуть доповнювати verification, але не замінюють реальну interaction/runtime перевірку.
+- Для UI бери viewport/device matrix з project `TESTING.md`, task acceptance або design contract; перевіряй реальні interactions, **Console/Network**, overflow/layout і relevant states.
+- Якщо required browser/runtime недоступний, не маскуй це manual/source check-ом: task лишається **In Progress/BLOCKED**.
+- Перед `In Review` exact SHA/version має бути розгорнутий на canonical **reviewer-accessible** artifact/preview, якщо task потребує visual/runtime review; stale preview не рахується.
+- Якщо змінюється shared surface, повторно проганяй related acceptance/regression flows, що можуть бути зачеплені.
 - Якщо CI існує — не обходь його. Якщо повторювані tests/build gates є, а CI відсутній, запропонуй найменший корисний automation path замість ручного ритуалу.
+
+### Evidence Format
+
+Для нетривіальної/risky роботи фінальний evidence має дозволяти простежити:
+
+`acceptance criterion → test/interaction → environment/artifact/SHA → observed result → PASS/FAIL/BLOCKED`.
+
+“Agent says PASS” без фактичного command/browser/runtime output не є evidence.
 
 ## Comments
 

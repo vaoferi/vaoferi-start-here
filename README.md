@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.1**
+**Current release: 0.2.2**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,41 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.2: Fail-closed acceptance and Codex global guardrails
+
+This release hardens the boundary between “code exists” and “user-facing work is actually verified”.
+
+Key rules now fail closed:
+
+- every relevant acceptance criterion needs its own evidence before `In Review` / `Done`;
+- user-action criteria must be exercised on the real topmost user-facing target in a rendered/runtime surface;
+- source/string/DOM-presence checks are supplementary, not substitutes for behavioral proof;
+- required browser/runtime unavailable means `BLOCKED`, not a soft warning;
+- behavior changes and bug fixes use TDD RED → minimal GREEN → regressions;
+- reviewer-facing UI/runtime work must point to the exact SHA/version on a current reviewer-accessible artifact;
+- `VISUAL APPROVAL`, browser verification and authored-UI `!important` hard-stop rules are mirrored in the compact Codex global guardrails.
+
+### Codex global instructions
+
+Codex reads global instructions from `$CODEX_HOME/AGENTS.md`; when `CODEX_HOME` is unset, the default home is `~/.codex`. Repository `AGENTS.md` / `PROJECT_RULES.md` are then layered with the project context.
+
+The canonical compact Vaoferi mirror is `templates/provider/codex.md`. Install and verify its managed block with:
+
+```bash
+python scripts/codex_global.py status
+python scripts/codex_global.py install
+python scripts/codex_global.py verify
+```
+
+The installer is fail-closed:
+
+- missing/empty global file → create the managed block;
+- existing managed Vaoferi block → update only that block and preserve surrounding personal content;
+- existing non-empty unmanaged `AGENTS.md` → refuse to overwrite so an agent/owner can reconcile it intentionally;
+- `verify` fails on missing/drifted managed content.
+
+Use `--codex-home /path/to/home` for an explicit profile. The global block stays small and universal; project-specific paths, ports and product facts stay out of it.
 
 ## Bootstrap / update / verify
 

@@ -66,14 +66,17 @@ Persistent SPEC для дрібної очевидної правки не по�
 - Зберігай існуючі контракти, посилання, data flow і сусідню робочу поведінку.
 - Якщо зачеплена сусідня проблема прямо впливає на якість або стабільність рішення — повідом про неї; не роби великий scope creep мовчки.
 - Version-sensitive факти перевіряй за актуальною офіційною документацією або іншим надійним current source.
+- Для behavior change або bug fix застосовуй TDD: спочатку failing test, що відтворює потрібний user/process behavior, підтвердь **RED**, потім зроби мінімальний GREEN і regression checks. Не пиши production fix до підтвердженого RED, якщо тест технічно можливий.
 
 ## Verification
 
-- `Done` означає перевірений результат, а не "має працювати".
-- Перевірка має відповідати ризику: unit/integration/build/browser/smoke/manual evidence — що реально потрібно задачі.
-- UI-зміни потребують реального render/interaction evidence або явного пояснення, чому воно недоступне.
-- Після масових змін перевір список цільових файлів, diff і релевантні тести.
-- Не приховуй пропущені або недоступні перевірки.
+- `In Review` / `Done` означають доведений результат. Кожен релевантний acceptance criterion має окремий proof.
+- User action/UI behavior перевіряй реально на actual **topmost user-facing target** у rendered/runtime surface; **Source/string/DOM-presence** assertions не є substitute.
+- Required browser/runtime/verification недоступні → `BLOCKED`, task лишається `In Progress`; missing proof не може стати pass.
+- `VISUAL APPROVAL` у task/project contract → explicit owner approval production-faithful current UI/prototype до visible implementation. Новий authored-UI `!important` — hard failure без exact approved exception.
+- Review потребує exact SHA/version на current **reviewer-accessible** artifact/surface, якщо потрібен visual/runtime review. Stale preview, `HTTP 200`, build PASS або code presence самі не доводять acceptance.
+- Запускай project-required lint/build/tests/browser checks; для UI — real interactions, relevant Console/Network і responsive/device states.
+- Shared surface change → повторно перевір affected acceptance/regression flows. Після broad change перевір target files/diff і чесно назви неперевірене.
 
 ## Git
 
@@ -91,7 +94,7 @@ Persistent SPEC для дрібної очевидної правки не по�
 - UI, layout, responsive, components, tokens, typography або design docs → завантаж `vaoferi-design-skill` до design-рішень.
 - Dependencies, versions, upgrades, beta/preview compatibility → завантаж `vaoferi-dependencies`.
 - Secrets, auth, credentials, permissions, privacy або security-sensitive зміни → завантаж `vaoferi-security`.
-- Нетипова engineering/testing/docs процедура → завантаж відповідний локальний skill, якщо він є.
+- Нетривіальний implementation, bug fix, behavior change, refactor або tests → завантаж `vaoferi-engineering`.
 - Task tracking / migration із legacy tracker → завантаж `vaoferi-task-tracking`.
 
 Не завантажуй спеціалізовані правила без потреби: core має лишатися коротким, а conditional knowledge — підключатися за тригером.

@@ -7,10 +7,11 @@ AGENTS = ROOT / "AGENTS.md"
 
 
 class AgentsContractTest(unittest.TestCase):
-    def test_release_version_is_0_2_0(self):
+    def test_release_version_matches_readme(self):
         with (ROOT / "pyproject.toml").open("rb") as fh:
-            project = tomllib.load(fh)["project"]
-        self.assertEqual(project["version"], "0.2.0")
+            version = tomllib.load(fh)["project"]["version"]
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn(f"**Current release: {version}**", readme)
 
     def test_agents_is_small_and_universal(self):
         data = AGENTS.read_bytes()
@@ -61,6 +62,23 @@ class AgentsContractTest(unittest.TestCase):
         self.assertIn("не запускай окремий повний sweep", tracking.lower())
         self.assertIn("Linear", tracking)
 
+    def test_agents_fail_closed_on_acceptance_and_required_browser_evidence(self):
+        text = AGENTS.read_text(encoding="utf-8")
+        for required in (
+            "In Review",
+            "acceptance criterion",
+            "topmost user-facing target",
+            "Source/string/DOM-presence",
+            "TDD",
+            "RED",
+            "BLOCKED",
+            "VISUAL APPROVAL",
+            "!important",
+            "HTTP 200",
+            "reviewer-accessible",
+        ):
+            self.assertIn(required, text)
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -97,6 +115,19 @@ class SkillStructureTest(unittest.TestCase):
         ):
             self.assertIn(required, text)
 
+    def test_engineering_requires_acceptance_to_evidence_traceability(self):
+        text = (ROOT / ".agents" / "skills" / "vaoferi-engineering" / "SKILL.md").read_text(encoding="utf-8")
+        for required in (
+            "Acceptance ledger",
+            "topmost user-facing target",
+            "source/string/DOM-presence",
+            "RED",
+            "reviewer-accessible",
+            "Console/Network",
+            "In Progress/BLOCKED",
+        ):
+            self.assertIn(required, text)
+
     def test_project_adaptation_has_lossless_lifecycle(self):
         text = (ROOT / ".agents" / "skills" / "vaoferi-project-adaptation" / "SKILL.md").read_text(encoding="utf-8")
         for required in (
@@ -121,10 +152,29 @@ class SkillStructureTest(unittest.TestCase):
 
 
 class ProviderOverlayTest(unittest.TestCase):
-    def test_provider_templates_are_thin_overlays(self):
-        for name in ("codex", "claude", "gemini"):
+    def test_non_codex_provider_templates_are_thin_overlays(self):
+        for name in ("claude", "gemini"):
             path = ROOT / "templates" / "provider" / f"{name}.md"
             text = path.read_text(encoding="utf-8")
             self.assertIn("does not replace `AGENTS.md` or `PROJECT_RULES.md`", text)
             self.assertIn("provider-specific", text)
             self.assertLess(len(text.encode("utf-8")), 3 * 1024)
+
+    def test_codex_template_is_small_global_critical_mirror(self):
+        text = (ROOT / "templates" / "provider" / "codex.md").read_text(encoding="utf-8")
+        for required in (
+            "$CODEX_HOME/AGENTS.md",
+            "~/.codex/AGENTS.md",
+            "PROJECT_RULES.md",
+            "outcome-first",
+            "TDD",
+            "acceptance criterion",
+            "topmost user-facing target",
+            "BLOCKED",
+            "VISUAL APPROVAL",
+            "!important",
+            "reviewer-accessible",
+            "2+1",
+        ):
+            self.assertIn(required, text)
+        self.assertLess(len(text.encode("utf-8")), 4 * 1024)
