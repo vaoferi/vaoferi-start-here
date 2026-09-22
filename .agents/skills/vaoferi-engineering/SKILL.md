@@ -45,6 +45,21 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 
 “Agent says PASS” без фактичного command/browser/runtime output не є evidence.
 
+### Reviewer handoff
+
+Перед передачею в review збережи достатньо evidence, щоб інший агент міг перевірити роботу без довіри до твого висновку.
+
+Якщо був **failed attempt** або task лишається blocked, handoff має явно містити:
+- expected outcome;
+- actual outcome;
+- що саме виконувалось і в якому порядку;
+- точні errors/output;
+- перевірені files/functions/commits;
+- **what was ruled out**;
+- наступний найкращий experiment/fix.
+
+Не стискай невдачу до “не вийшло”: невдала спроба — це evidence для reviewer і наступного executor.
+
 ## Comments
 
 - Коментуй не очевидний синтаксис, а ризиковий invariant: чому зроблено саме так, що зламається при неправильному спрощенні, і який flow/test це захищає, якщо відомо.
