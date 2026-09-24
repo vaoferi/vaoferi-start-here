@@ -2,28 +2,22 @@
 
 This is the intentionally small global Codex mirror for the owner's highest-risk working rules.
 
-Install/reconcile it as `$CODEX_HOME/AGENTS.md`; the default Codex home is `~/.codex`, so the default file is `~/.codex/AGENTS.md`.
-
-It does not replace repository `AGENTS.md` or `PROJECT_RULES.md`. Project/directory instructions still supply the real project context. Keep this file universal: no project-specific paths, ports, domains, credentials, or product facts.
+Install/reconcile it as `$CODEX_HOME/AGENTS.md`; default: `~/.codex/AGENTS.md`. It does not replace repository `AGENTS.md` or `PROJECT_RULES.md`; project/directory instructions remain authoritative for project facts.
 
 ## Critical working rules
 
-- Read the repository `AGENTS.md`, `PROJECT_RULES.md`, and routed project docs before non-trivial work.
-- Explain and verify work **outcome-first**: say what the user/process can actually do, then the internal function/module details if needed.
-- For behavior changes and bug fixes use **TDD**: reproduce with a failing test, prove RED, implement the minimum GREEN fix, then run regressions.
-- Every relevant **acceptance criterion** needs its own proof before `In Review` or `Done`.
-- Executor uses `In Review` only as **Ready for Review**. `Blocked`/failed work stays `In Progress` with a detailed handoff; reviewer independently verifies instead of trusting executor claims.
-- Every repository-scoped task requires **commit + push** before `In Review`/`Done`; record the exact **pushed SHA** in Linear. Local-only commits are not review evidence.
-- Secret availability uses two controlled copies: **Vaultwarden** stores all validated credentials globally; project-root `.env` stores only credentials needed by that project. A discovered validated credential needed by the current project goes to BOTH; otherwise Vaultwarden only. Never echo secret values into task/chat/docs/logs.
-- If the criterion is a user action/UI behavior, execute that action on the actual **topmost user-facing target** in a real rendered/runtime surface. Source/string/DOM-presence checks are not a substitute.
-- If required browser/runtime verification cannot run, report **BLOCKED** and keep the task out of Review/Done. Never call missing proof a pass.
-- If the task/project requires `VISUAL APPROVAL`, get explicit owner approval on a production-faithful current UI/prototype before visible implementation.
-- In authored UI, new `!important` is a hard failure unless there is an exact approved/documented exception.
-- For equal visible peer groups, treat accidental orphan rows such as `2+1`, `3+1`, or `2+2+1` as a design failure unless there is a documented semantic/compositional/accessibility reason; three equal peers should normally be one row or one column.
-- Run the project-required lint/build/tests plus all browser/responsive/device states required by the project/design contract. Do not replace an exhaustive responsive gate with a couple of representative widths. Check Console/Network when they can reveal user-facing failures.
-- Review must point to the exact SHA/version and a **reviewer-accessible** current artifact/preview when visual/runtime review is required. A stale preview is not evidence.
-- Production deploy is not complete on upload/read-back or `HTTP 200`: verify the exact reviewed candidate on the effective origin and required browser/runtime surface; never repeat the same write-capable deploy action without new evidence or a changed precondition.
-- Never weaken/delete tests or verification merely to make a gate green.
-- Never claim verified behavior, deployment, access, or test results that did not actually run.
+- **Session baseline first.** Before the first write-capable repository action, inspect `.vaoferi/manifest.json`, compare installed Start Here version/source commit with canonical latest Vaoferi Start Here `main`, update through the canonical sync path if stale, verify central drift, then read repository `AGENTS.md`, `PROJECT_RULES.md`, and routed project docs. The first visible repo-status must be `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded` only after factual latest comparison + local verify. Otherwise emit `⛔ START HERE BLOCKED/OUTDATED — <reason>` and **do not begin write-capable repository work** without explicit owner override; read-only diagnosis is allowed.
+- Explain/verify **outcome-first**. For behavior changes and bug fixes use **TDD**: prove RED, implement minimum GREEN, then regressions.
+- Every relevant **acceptance criterion** needs proof before `In Review`/`Done`. User actions/UI behavior must be exercised on the real **topmost user-facing target**; source/string/DOM presence is not a substitute.
+- Missing required browser/runtime proof = **BLOCKED**. Never call missing evidence a pass.
+- `In Review` means **Ready for Review**. **Blocked**/failed work stays `In Progress`; the executor preserves evidence and the reviewer verifies independently.
+- Every repository-scoped task requires **commit + push** before review/Done; record exact **pushed SHA**. Local-only commits are not review evidence.
+- Secrets: **Vaultwarden** stores validated credentials globally; project-root `.env` stores only credentials needed by that project. Never echo secret values.
+- `VISUAL APPROVAL` requires explicit owner approval on a production-faithful current UI before visible implementation. New authored-UI `!important` is a hard failure without an exact accepted exception.
+- Equal visible peer groups must not create accidental orphan layouts such as `2+1`, `3+1`, `2+2+1` without a documented semantic/compositional/accessibility reason.
+- Run project-required lint/build/tests and required browser/responsive/device gates; inspect Console/Network when relevant.
+- Runtime/visual review must point to an exact SHA/version on a current **reviewer-accessible** artifact/preview.
+- Production deploy is not complete on upload/read-back or `HTTP 200`: verify the exact reviewed candidate on effective origin and required browser/runtime surface; do not repeat write-capable deploy attempts without changed evidence/preconditions.
+- Never weaken/delete tests just to get green. Never claim verified behavior, deployment, access, latest baseline, or test results that did not actually run.
 
-Canonical detailed doctrine remains in Vaoferi Start Here and its conditional skills. This global layer intentionally duplicates only these critical guardrails so they remain present even before repository-specific routing is loaded.
+Canonical detailed doctrine remains in Vaoferi Start Here and conditional skills. This global layer intentionally duplicates only critical guardrails so they remain present even when a repository copy is stale.

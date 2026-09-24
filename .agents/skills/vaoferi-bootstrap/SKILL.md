@@ -7,6 +7,19 @@ description: Use when starting work in a new or unsynchronized repository, or wh
 
 Мета: підготувати repo до автономної роботи без повторних запитань і без вигаданих project facts.
 
+## Session Baseline Gate
+
+Перед першою repository-scoped **write-capable** дією в кожній сесії доведи, що локальний baseline не застарілий.
+
+1. Прочитай `.vaoferi/manifest.json`; зафіксуй installed version і `source_commit`.
+2. Через доступне trusted source визнач **canonical Start Here** `main`: latest version + exact commit. Локальний manifest сам по собі не доводить latest.
+3. Якщо local baseline stale, виконай canonical sync `update`; не hand-edit centrally-owned files. Якщо manifest відсутній — використай canonical bootstrap path.
+4. Виконай local verify та **central drift** check. Sync/verify має лишатися fail-closed при змінених centrally-owned файлах або ownership conflict.
+5. Прочитай `PROJECT_RULES.md` і релевантні project-owned docs; central sync не має їх перезаписувати.
+6. Перший видимий repo-status дай окремо: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`.
+
+Не пиши `VERIFIED`, якщо canonical latest не був фактично звірений. Якщо remote/canonical evidence недоступне, baseline stale, update/verify конфліктує або є drift, покажи `⛔ START HERE BLOCKED/OUTDATED — <factual reason>` і **не починай write-capable repository work** без explicit owner override. **read-only diagnosis** дозволений, щоб локалізувати blocker і визначити безпечний update path.
+
 ## Resolve Before Asking
 
 Для кожного потрібного факту перевіряй у такому порядку:

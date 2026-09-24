@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.5**
+**Current release: 0.2.6**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,22 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.6: Owner-visible session baseline
+
+Every repository-scoped work session now starts with an explicit freshness gate before write-capable work.
+
+The agent must compare the repository `.vaoferi/manifest.json` Start Here version/source commit with the canonical latest `vaoferi/vaoferi-start-here` `main`, update through the canonical sync path if stale, verify centrally-owned files for drift, and then load `PROJECT_RULES.md` plus relevant project-owned documentation.
+
+The owner-visible success signal is intentionally standalone and short:
+
+`✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`
+
+If latest canonical state cannot be proven, the local baseline is stale, or update/verify finds a conflict/drift, the agent must instead surface:
+
+`⛔ START HERE BLOCKED/OUTDATED — <factual reason>`
+
+Write-capable implementation/deploy fails closed in that state unless the owner explicitly overrides it. Read-only diagnosis remains allowed so the agent can explain the blocker and identify the safe update path. The same critical startup rule is mirrored in the global Codex guardrails so an old repository copy is not the only place from which freshness can be discovered.
 
 ## 0.2.5: Fail-closed production deployment
 
