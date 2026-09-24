@@ -80,4 +80,4 @@
 - `Linear` — єдине active task source. `In Review` = **Ready for Review**; failed/blocked лишається `In Progress`, blocked handoff має бути **детальнішим** за success.
 - Repository-scoped **implementation task** продовжуй **до повного completion loop** за `vaoferi-task-tracking`; не зупиняйся на partial result.
 - `Definition of Done` формулюй outcome-first, **мовою користувача**. Reviewer independently verifies: FAIL → `In Progress`; PASS без owner-only gate → `Done`; owner-only acceptance → `In Review`.
-- `Trello` — legacy input: relevant card прочитай повністю, перенеси useful work/facts у Linear/canonical sources, verify parity; після parity hard-delete або archive/close. Не створюй нових Trello cards і не веди паралельні sources of truth.
+- `Trello` — legacy input: relevant card прочитай повністю, перенеси useful work/facts у Linear/canonical sources, verify parity; після parity hard-delete або архів/close. Не створюй нових Trello cards і не веди паралельні sources of truth.
