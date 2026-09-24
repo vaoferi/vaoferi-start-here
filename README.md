@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.4**
+**Current release: 0.2.5**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,31 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.5: Fail-closed production deployment
+
+This release turns production publication into a centrally-routed conditional workflow via `vaoferi-deploy`.
+
+The contract is based on repeated real deployment failure modes and separates evidence into explicit layers:
+
+`candidate → preview parity → target identity → rollback → upload → remote read-back → effective origin → CDN/cache → browser/user behavior`.
+
+Key rules:
+
+- verify required tooling, browser runtime, Git push path, provider access and deploy-config schema before spending hours on a release;
+- never deploy an unidentified “latest” branch/build: record the exact pushed SHA, artifact/release identity and included/excluded work;
+- prove the transport target maps to the intended effective production root before mutation;
+- FTP/transport upload or read-back is not public-origin proof;
+- a DEV/HMR page is not evidence for a reviewed static candidate;
+- rollback evidence must cover the production content that can actually be overwritten; a local candidate snapshot is not a production preimage;
+- upload/read-back, origin, CDN/cache and browser behavior are distinct verification layers;
+- cache purge is not a fix for an origin that still serves the wrong artifact;
+- public `HTTP 200` or an application root does not prove the reviewed candidate is live;
+- after a failed deploy attempt, record the hypothesis, result, what was ruled out and the changed precondition required before repeating the same write-capable action;
+- the next executor resumes from the last proven frontier instead of restarting deployment archaeology;
+- sequential/atomic/multi-root behavior remains project-specific; the universal contract does not impose one release topology.
+
+Each deployable repository keeps its own canonical deploy/runbook facts. Start Here owns the process; the repository owns domains, provider, transport, roots, config names, preview identity, rollback and provider-specific publication behavior.
 
 ## 0.2.4: Remote handoff + durable credential redundancy
 
