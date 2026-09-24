@@ -11,6 +11,19 @@ Production publication is a separate engineering problem from build success.
 
 Use project-owned deploy/runbook facts first. This skill supplies the universal process and failure boundaries; it never invents project-specific domains, roots, providers, ports, credentials, atomicity, or transport.
 
+## Release scope boundary
+
+Deploy assumes **implementation cards are already complete** under `vaoferi-task-tracking`: their own applicable tests/build/runtime evidence, commit, push and remote sync were finished before release. **Do not repair unrelated historical debt** during a deploy merely because a broad release gate exposes it.
+
+Classify any newly observed failure before changing product code:
+
+- release/candidate regression or true hard safety blocker → remains in release scope;
+- **PRE-EXISTING / UNRELATED** → create/link follow-up and continue unless it truly blocks safe publication;
+- **CI / ENVIRONMENT** → fix the harness/infrastructure in its own scope; do not tune product behavior to satisfy a broken environment without proof;
+- **EXTERNAL** → isolate/fail fast according to the project contract; do not rewrite the product blindly.
+
+For an already-green frozen candidate, routine production publication should normally finish in roughly **5–10 хвилин**. If that is impossible, fail fast in that window with one factual hard blocker and the exact required next action; do not silently expand the release into hours of backlog repair.
+
 ## Capability preflight
 
 Before a long deploy session, prove the required capabilities exist.
