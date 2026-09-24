@@ -55,6 +55,7 @@
 - Required browser/runtime/verification недоступні → `BLOCKED`, task лишається `In Progress`; missing proof не може стати pass.
 - `VISUAL APPROVAL` у task/project contract → explicit owner approval production-faithful current UI/prototype до visible implementation. Новий authored-UI `!important` — hard failure без exact approved exception.
 - Review потребує exact SHA/version на current **reviewer-accessible** artifact/surface, якщо потрібен visual/runtime review. Stale preview, `HTTP 200`, build PASS або code presence самі не доводять acceptance.
+- Production publish: upload/read-back не дорівнює live release; до `Done` доведи exact candidate на effective origin і, де потрібно, у real browser flow.
 - Запускай project-required lint/build/tests/browser checks; для UI — real interactions, relevant Console/Network і responsive/device states.
 - Shared surface change → повторно перевір affected acceptance/regression flows. Після broad change перевір target files/diff і чесно назви неперевірене.
 
@@ -82,6 +83,7 @@
 - Secrets, auth, credentials, permissions, privacy або security-sensitive зміни → завантаж `vaoferi-security`.
 - Нетривіальний implementation, bug fix, behavior change, refactor або tests → завантаж `vaoferi-engineering`.
 - Task tracking / migration із legacy tracker → завантаж `vaoferi-task-tracking`.
+- Production deploy, release/cutover, rollback або origin/CDN publication verification → завантаж `vaoferi-deploy`.
 
 Не завантажуй спеціалізовані правила без потреби: core має лишатися коротким, а conditional knowledge — підключатися за тригером.
 
