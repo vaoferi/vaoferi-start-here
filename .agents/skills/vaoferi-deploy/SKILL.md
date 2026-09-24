@@ -13,7 +13,7 @@ Use project-owned deploy/runbook facts first. This skill supplies the universal 
 
 ## Release scope boundary
 
-Deploy assumes **implementation cards are already complete** under `vaoferi-task-tracking`: their own applicable tests/build/runtime evidence, commit, push and remote sync were finished before release. **Do not repair unrelated historical debt** during a deploy merely because a broad release gate exposes it.
+Deploy assumes **implementation cards are already complete** under `vaoferi-task-tracking`: their own applicable tests/build/runtime evidence, commit, push and remote sync were finished before release. **do not repair unrelated historical debt** during a deploy merely because a broad release gate exposes it.
 
 Classify any newly observed failure before changing product code:
 
