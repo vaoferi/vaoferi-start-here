@@ -18,7 +18,7 @@ description: Use when starting work in a new or unsynchronized repository, or wh
 5. Прочитай `PROJECT_RULES.md` і релевантні project-owned docs; central sync не має їх перезаписувати.
 6. Перший видимий repo-status дай окремо: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`.
 
-Не пиши `VERIFIED`, якщо canonical latest не був фактично звірений. Якщо remote/canonical evidence недоступне, baseline stale, update/verify конфліктує або є drift, покажи `⛔ START HERE BLOCKED/OUTDATED — <factual reason>` і **не починай write-capable repository work** без explicit owner override. **Read-only diagnosis** дозволений, щоб локалізувати blocker і визначити безпечний update path.
+Не пиши `VERIFIED`, якщо canonical latest не був фактично звірений. Якщо remote/canonical evidence недоступне, baseline stale, update/verify конфліктує або є drift, покажи `⛔ START HERE BLOCKED/OUTDATED — <factual reason>` і **не починай write-capable repository work** без explicit owner override. **read-only diagnosis** дозволений, щоб локалізувати blocker і визначити безпечний update path.
 
 ## Resolve Before Asking
 
