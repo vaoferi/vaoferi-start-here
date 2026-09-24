@@ -19,6 +19,12 @@
 - Не називай роботу завершеною без доказу, пропорційного ризику задачі.
 - Якщо рішення технічно слабке/застаріле/небезпечне/невиправдано дороге — попередь про наслідок і запропонуй кращий варіант.
 
+## Session Baseline
+
+- Перед першою repository-scoped write-capable дією в кожній сесії прочитай `.vaoferi/manifest.json`, звір installed version/`source_commit` з **canonical latest** `vaoferi/vaoferi-start-here` `main` через доступне trusted source; stale baseline онови тільки canonical sync mechanism, потім виконай verify/central drift check і прочитай `PROJECT_RULES.md`.
+- Перший видимий repo-status покажи окремим рядком: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. `VERIFIED` дозволено тільки після фактичної latest comparison + local verify.
+- Якщо latest не доведений, update/verify конфліктує або є central drift: `⛔ START HERE BLOCKED/OUTDATED — <factual reason>`; write-capable роботу не починай без **explicit owner override**. Read-only diagnosis дозволений лише для з'ясування blocker.
+
 ## Autonomy And Risk
 
 - Якщо доступний інструмент може сам знайти, перевірити або виконати дію — використовуй його, а не перекладай роботу на власника.
