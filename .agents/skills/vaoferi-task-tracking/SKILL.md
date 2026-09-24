@@ -9,6 +9,81 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 
 `Linear` — єдине активне джерело робочих задач. `Trello` — тимчасове legacy input для міграції, не planner і не довгостроковий archive.
 
+## Mandatory issue modes
+
+Перед execution кожна картка має бути однозначно віднесена до одного mode. Якщо mode не вказаний у title/description/template, агент визначає його перед роботою й фіксує одним рядком у Linear.
+
+1. **IMPLEMENTATION** — змінює code/config/content або інший releaseable behavior.
+2. **DISCOVERY / INTAKE** — research, audit, збір вимог, visual approval або рішення; `Done` означає завершений deliverable, але не shippable code.
+3. **RELEASE / DEPLOY** — доставляє вже прийнятий candidate; не є фазою ремонту історичного backlog.
+
+`Done` має різну семантику тільки відповідно до mode; `DISCOVERY / INTAKE Done` ніколи не можна трактувати як release-ready implementation.
+
+## IMPLEMENTATION hard completion loop
+
+Після execution intent агент продовжує IMPLEMENTATION task самостійно до повного Definition of Done; **не зупиняйся після коду**, локального вигляду або довгого звіту в очікуванні, що owner окремо нагадає про lint/tests/build/commit/push.
+
+До `In Review` / `Done` виконай усе applicable для цього slice:
+
+1. реалізуй requested scope без silent scope creep;
+2. проганяй focused regression/tests для зміненого behavior;
+3. проганяй project-required lint/typecheck/static/security gates, релевантні цьому slice;
+4. зроби build, якщо зміна впливає на buildable artifact;
+5. виконай relevant browser/runtime verification для browser/runtime-dependent behavior;
+6. перевір diff на unintended edits, secrets, generated garbage і випадкові dependency/config зміни;
+7. виправ failures, якщо вони спричинені цією карткою;
+8. commit із issue reference;
+9. push;
+10. підтвердь **REMOTE SYNC**: intended local HEAD == remote branch/PR head;
+11. запиши короткий evidence handoff.
+
+IMPLEMENTATION не може бути `Done`, якщо її власні required gates, build/runtime evidence, commit, push або REMOTE SYNC ще попереду.
+
+## Failure classification before product changes
+
+Кожне падіння gate спочатку класифікуй. Не змінюй product code лише тому, що щось червоне.
+
+- **CARD REGRESSION** — спричинено current card diff → виправ у цій картці; `Done` заборонений до PASS.
+- **PRE-EXISTING / UNRELATED** — існувало до current diff або поза scope → не ремонтуй мовчки; створи/link follow-up, доведи що current card не погіршує стан, і не тягни цей борг у release без причини.
+- **CI / ENVIRONMENT** — missing browser/action/font/filesystem/runtime mismatch або harness problem → виправляй інфраструктуру в окремому scope; не підганяй product CSS/logic без доказу product regression.
+- **EXTERNAL** — CDN/API/provider/network → isolate/fail fast за project contract; не переписуй продукт навмання.
+
+## No report-and-wait default
+
+Після команди «виконай картку» агент не робить часткову роботу й не чекає другого owner prompt на тести, commit, push або доробку.
+
+Очікування owner допустиме лише коли потрібна реальна owner-only дія/рішення, наприклад:
+
+- неоднозначний visual/product acceptance;
+- destructive/high-risk mutation, для якої project policy вимагає approval;
+- credential/provider action, доступний лише owner;
+- зовнішній blocker, який неможливо обійти без зміни scope/requirements.
+
+У такому разі дай один конкретний blocker + одну потрібну owner action. Не маскуй pending work у великому звіті.
+
+## Evidence contract
+
+Успішний IMPLEMENTATION handoff має містити короткий machine-readable блок:
+
+- `MODE: IMPLEMENTATION`
+- `SHA/PR:`
+- `FOCUSED TESTS: PASS`
+- `PROJECT GATES: PASS` або `N/A + reason`
+- `BUILD: PASS` або `N/A`
+- `BROWSER/RUNTIME: PASS` або `N/A`
+- `REMOTE SYNC: PASS`
+- `KNOWN EXCEPTIONS: none` або explicit accepted exception
+
+DISCOVERY / INTAKE handoff:
+
+- `MODE: DISCOVERY`
+- `DELIVERABLE:`
+- `DECISION / OPEN QUESTIONS:`
+- `IMPLEMENTATION ISSUE: <id>` або `none`
+- `SHIPPABLE CODE: NO`
+
+RELEASE / DEPLOY використовує `vaoferi-deploy` і не має автоматично ремонтувати PRE-EXISTING / UNRELATED debt.
+
 ## Trello → Linear Procedure
 
 1. Не створюй нову work card у Trello.
@@ -125,4 +200,3 @@ For `In Review`:
 - full PASS with no owner-only gate → `Done`.
 
 Never auto-delete Linear issues from the reviewer loop. Issue retention/archive is a separate policy. Historical evidence is valuable for debugging recurring failures.
-

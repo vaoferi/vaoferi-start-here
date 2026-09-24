@@ -35,6 +35,7 @@ class AgentsContractTest(unittest.TestCase):
             "vaoferi-design-skill",
             "vaoferi-security",
             "vaoferi-dependencies",
+    "vaoferi-deploy",
             "vaoferi-project-adaptation",
             "Linear",
             "Trello",
