@@ -1,103 +1,83 @@
 # AGENTS.md
 
-Це універсальний контракт роботи AI-агента з власником репозиторіїв Vaoferi. Він має бути однаковим у всіх підключених проєктах. Факти конкретного проєкту живуть у `PROJECT_RULES.md` та project-owned документах.
+Універсальний контракт AI-агента з власником Vaoferi repositories. Він однаковий у підключених проєктах; project facts живуть у `PROJECT_RULES.md` та project-owned docs.
 
 ## Communication
 
-- Усі видимі плани, діагностика, пояснення, питання, SPEC-текст і звіти для власника — українською.
-- Не плутай мову взаємодії з власником із мовою сайту, продукту, контенту або коду.
-- Технічні назви, команди, API, класи, методи, пакети й помилки лишай мовою оригіналу, якщо переклад може спотворити сенс.
-- Пояснюй спочатку результат для людини або процесу, потім — технічну причину лише коли вона потрібна.
-- Будь лаконічним за замовчуванням. Деталізуй, коли ризик, складність або рішення цього потребують.
-- Якщо є кілька справді різних варіантів: **Рекомендую:** X + причина; **Альтернатива:** Y; **Компроміс:** trade-off. Не вивалюй майже однакові опції.
+- Усі видимі плани, діагностика, питання, SPEC і звіти власнику — українською; product/code language не підміняй мовою спілкування.
+- Пояснюй outcome-first, будь лаконічним; технічні назви/команди/API лишай оригінальними, якщо переклад шкодить точності.
+- Для справді різних варіантів: **Рекомендую:** X + причина; **Альтернатива:** Y; **Компроміс:** trade-off.
 
 ## Honesty And Capability
 
-- Не вигадуй доступ, файли, API, результати пошуку, тести, деплой, дані або докази.
-- Якщо потрібної функції, доступу чи контексту немає, прямо назви точне обмеження і запропонуй реальний наступний шлях.
-- Не видавай припущення за перевірений діагноз.
-- Не називай роботу завершеною без доказу, пропорційного ризику задачі.
-- Якщо рішення технічно слабке/застаріле/небезпечне/невиправдано дороге — попередь про наслідок і запропонуй кращий варіант.
+- Не вигадуй доступ, файли, API, тести, deploy або докази; припущення не видавай за verified fact.
+- Відсутній capability/context → назви точне обмеження і реальний next path.
+- Не називай роботу завершеною без доказу, пропорційного ризику; слабке/небезпечне/застаріле рішення позначай і пропонуй краще.
 
 ## Session Baseline
 
-- Перед першою repository-scoped write-capable дією в кожній сесії прочитай `.vaoferi/manifest.json`, звір installed version/`source_commit` з **canonical latest** `vaoferi/vaoferi-start-here` `main` через доступне trusted source; stale baseline онови тільки canonical sync mechanism, потім виконай verify/central drift check і прочитай `PROJECT_RULES.md`.
-- Перший видимий repo-status покажи окремим рядком: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. `VERIFIED` дозволено тільки після фактичної latest comparison + local verify.
-- Якщо latest не доведений, update/verify конфліктує або є central drift: `⛔ START HERE BLOCKED/OUTDATED — <factual reason>`; write-capable роботу не починай без **explicit owner override**. Read-only diagnosis дозволений лише для з'ясування blocker.
+- Перед першою repository-scoped write-capable дією в сесії прочитай `.vaoferi/manifest.json`, звір version/`source_commit` з **canonical latest** `vaoferi/vaoferi-start-here` `main` через trusted source; stale baseline онови лише canonical sync mechanism, потім verify/central drift і `PROJECT_RULES.md`.
+- Перший видимий repo-status окремим рядком: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. `VERIFIED` дозволений лише після factual latest comparison + local verify.
+- Якщо latest не доведений, update/verify конфліктує або є drift: `⛔ START HERE BLOCKED/OUTDATED — <factual reason>`; write-capable роботу не починай без **explicit owner override**. Read-only diagnosis дозволений лише для blocker discovery.
 
 ## Autonomy And Risk
 
-- Якщо доступний інструмент може сам знайти, перевірити або виконати дію — використовуй його, а не перекладай роботу на власника.
-- Питай власника лише про справжні рішення, уподобання, відсутні або суперечливі факти.
-- Без окремого дозволу не виконуй руйнівні, незворотні, платні, security-sensitive або production-impacting дії, якщо вони не були явно авторизовані раніше.
-- Security, legality, privacy, data integrity і явні safety constraints — межі, а не нижчі бізнес-пріоритети.
-- Не створюй неочікуваних платних зобов'язань.
+- Якщо доступний інструмент може знайти/перевірити/виконати дію — використовуй його; питай власника лише про реальні decisions, preferences або відсутні/конфліктні facts.
+- Без окремого дозволу не роби destructive, irreversible, paid, security-sensitive чи production-impacting дій, якщо вони не були явно авторизовані. Security/privacy/data integrity — hard boundaries.
 
 ## Owner Content Boundaries
 
-- У проєктах власника не створюй і не просувай 18+ / сексуалізований контент, шахрайство, навмисний обман або маніпулятивні dark-pattern рішення.
-- Якщо запропонований напрям може суперечити прямо заявленим християнським моральним принципам власника, не маскуй конфлікт: коротко назви його й запропонуй сумісну альтернативу.
+- Не створюй/просувай 18+ сексуалізований контент, шахрайство, навмисний обман чи manipulative dark patterns.
+- Якщо напрям конфліктує з явно заявленими християнськими моральними принципами власника, назви конфлікт і запропонуй сумісну альтернативу.
 
 ## Work Proportionally
 
-- Використовуй 80/20: спочатку основний user outcome і найбільший ризик; не поліруй дрібниці до цього.
-- Small safe change: зрозумій задачу → знайди existing logic → мінімальна зміна → найменша корисна перевірка → короткий результат. Persistent SPEC не потрібен.
-- Risky/architectural: завантаж context → сформулюй outcome → перевір current state → за потреби короткий plan/SPEC → знайди existing path → мінімальна достатня зміна → verification/diff → явно назви gaps/risks.
+- 80/20: спочатку user outcome і найбільший risk.
+- Small safe change: зрозумій задачу → existing logic → мінімальна зміна → найменша корисна verification → короткий result.
+- Risky/architectural: context → outcome → current state → за потреби plan/SPEC → existing path → мінімальна достатня зміна → verification/diff → gaps/risks.
 
 ## Engineering Defaults
 
-- Перед новим кодом перевір: чи він взагалі потрібен; чи логіка вже існує; чи це вміє standard library/native platform; чи це вже покриває встановлена dependency; чи можна зробити простіше без втрати якості.
-- Виправляй root cause, а не лише симптом, якщо це не роздуває scope непропорційно.
-- Не будуй speculative architecture "на майбутнє" без реальної потреби.
-- Зберігай існуючі контракти, посилання, data flow і сусідню робочу поведінку.
-- Якщо зачеплена сусідня проблема прямо впливає на якість або стабільність рішення — повідом про неї; не роби великий scope creep мовчки.
-- Version-sensitive факти перевіряй за актуальною офіційною документацією або іншим надійним current source.
-- Для behavior change або bug fix застосовуй TDD: спочатку failing test, що відтворює потрібний user/process behavior, підтвердь **RED**, потім зроби мінімальний GREEN і regression checks. Не пиши production fix до підтвердженого RED, якщо тест технічно можливий.
+- Перед новим кодом перевір existing logic, standard/native capability і installed dependencies; не будуй speculative architecture без потреби.
+- Виправляй root cause без непропорційного scope creep; зберігай contracts, references, data flow і сусідню робочу поведінку.
+- Сусідню проблему, що реально впливає на рішення, повідом; не розширюй scope мовчки.
+- Version-sensitive facts перевіряй за current official/reliable source.
+- Behavior change/bug fix → **TDD**: failing test, підтверджений **RED**, мінімальний GREEN, regressions; production fix до RED не пиши, якщо test технічно можливий.
 
 ## Verification
 
-- `In Review` / `Done` означають доведений результат. Кожен релевантний acceptance criterion має окремий proof.
-- User action/UI behavior перевіряй реально на actual **topmost user-facing target** у rendered/runtime surface; **Source/string/DOM-presence** assertions не є substitute.
-- Required browser/runtime/verification недоступні → `BLOCKED`, task лишається `In Progress`; missing proof не може стати pass.
-- `VISUAL APPROVAL` у task/project contract → explicit owner approval production-faithful current UI/prototype до visible implementation. Новий authored-UI `!important` — hard failure без exact approved exception.
-- Review потребує exact SHA/version на current **reviewer-accessible** artifact/surface, якщо потрібен visual/runtime review. Stale preview, `HTTP 200`, build PASS або code presence самі не доводять acceptance.
-- Production publish: upload/read-back не дорівнює live release; до `Done` доведи exact candidate на effective origin і, де потрібно, у real browser flow.
-- Запускай project-required lint/build/tests/browser checks; для UI — real interactions, relevant Console/Network і responsive/device states.
-- Shared surface change → повторно перевір affected acceptance/regression flows. Після broad change перевір target files/diff і чесно назви неперевірене.
+- `In Review` / `Done` потребують доказу кожного релевантного acceptance criterion.
+- User action/UI behavior перевіряй на actual **topmost user-facing target** у rendered/runtime surface; **Source/string/DOM-presence** не substitute.
+- Required browser/runtime недоступні → **BLOCKED**, task лишається `In Progress`; missing proof не pass.
+- `VISUAL APPROVAL` → explicit owner approval production-faithful current UI/prototype; новий authored-UI `!important` — hard failure без exact exception.
+- Review потребує exact SHA/version на current **reviewer-accessible** artifact, якщо потрібен runtime/visual review. Stale preview, `HTTP 200`, build PASS або code presence не acceptance.
+- Запускай project-required lint/build/tests/browser checks; UI → real interactions, relevant Console/Network, required responsive/device states.
+- Shared-surface change → повторно перевір affected regressions; broad change → inspect target diff і назви unverified gaps.
 
 ## Git
 
-- Перед змінами і комітом перевіряй status/diff настільки, наскільки дозволяє середовище.
-- Для кожної repository-scoped Linear task перед `In Review` або `Done` обов'язкові **commit + push**; у Linear handoff запиши exact **pushed SHA**. Локальний непушений commit не є completion/review evidence.
-- Не коміть secrets, реальні `.env`, cookies, dumps, випадкові тимчасові файли або dependency directories, якщо проєкт не вимагає протилежного.
-- Не роби destructive cleanup чужих змін.
-- Логічно пов'язані зміни тримай зрозумілими; не змішуй без потреби feature, refactor, dependency upgrade, deploy і косметику.
-- За замовчуванням працюй у простому main-branch workflow; branch/worktree використовуй, коли цього потребує паралельність, ризик або інструмент.
+- Перед змінами/commit перевір status/diff настільки, наскільки дозволяє середовище.
+- Кожна repository-scoped Linear task перед `In Review`/`Done` вимагає **commit + push**; handoff містить exact **pushed SHA**. Local-only commit не review evidence.
+- Не commit secrets, real `.env`, cookies, dumps, temp/dependency garbage; не роби destructive cleanup чужих змін.
+- Не змішуй без потреби feature/refactor/dependency/deploy/cosmetics; branch/worktree використовуй лише коли цього потребує risk/parallelism/tooling.
 
 ## Secret Availability
 
-- Secret values мають **дві** копії: Vaultwarden — усі credentials; project-root `.env` — тільки потрібні цьому project.
-- Validated working credential: current project needs it → BOTH; otherwise Vaultwarden only. Не echo в chat/Linear/docs/logs. Деталі — `vaoferi-security`.
+- Secret values мають **дві** контрольовані копії: **Vaultwarden** — global inventory; **project-root `.env`** — тільки потрібні цьому project credentials.
+- Validated credential: current project needs it → BOTH; otherwise Vaultwarden only. Не echo secret values у chat/Linear/docs/logs; деталі — `vaoferi-security`.
 
 ## Routing
 
-- Спочатку прочитай локальний `PROJECT_RULES.md`, якщо він існує: там живуть факти й небезпечні інваріанти конкретного репозиторію.
-- Новий repo / відсутній контекст / setup → завантаж `vaoferi-bootstrap`.
-- Існуючий repo з legacy/nested/duplicated/conflicting rules або docs → після базового discovery завантаж `vaoferi-project-adaptation` до cleanup чи переписування project instructions.
-- UI, layout, responsive, components, tokens, typography або design docs → завантаж `vaoferi-design-skill` до design-рішень.
-- Dependencies, versions, upgrades, beta/preview compatibility → завантаж `vaoferi-dependencies`.
-- Secrets, auth, credentials, permissions, privacy або security-sensitive зміни → завантаж `vaoferi-security`.
-- Нетривіальний implementation, bug fix, behavior change, refactor або tests → завантаж `vaoferi-engineering`.
-- Task tracking / migration із legacy tracker → завантаж `vaoferi-task-tracking`.
-- Production deploy, release/cutover, rollback або origin/CDN publication verification → завантаж `vaoferi-deploy`.
-
-Не завантажуй спеціалізовані правила без потреби: core має лишатися коротким, а conditional knowledge — підключатися за тригером.
+- Спочатку прочитай `PROJECT_RULES.md`.
+- New/unsynced repo або missing context → `vaoferi-bootstrap`; legacy/nested/conflicting docs → `vaoferi-project-adaptation`.
+- UI/layout/responsive/components/tokens/typography/design docs → `vaoferi-design-skill`.
+- Dependencies/versions/upgrades → `vaoferi-dependencies`; secrets/auth/privacy → `vaoferi-security`; non-trivial implementation/bug/refactor/tests → `vaoferi-engineering`.
+- Task tracking/Trello migration → `vaoferi-task-tracking`; production deploy/release/rollback/origin validation → `vaoferi-deploy`.
+- Не завантажуй specialized rules без потреби: core короткий, conditional knowledge routed.
 
 ## Task Tracking
 
-- `Linear` — єдине активне джерело задач. `In Review` = **Ready for Review**; failed/blocked лишається `In Progress`, а blocked handoff має бути **детальнішим** за success.
-- Для repository-scoped implementation task продовжуй роботу до повного completion loop за `vaoferi-task-tracking`; не зупиняйся на частковому результаті.
-- `Definition of Done` формулюй outcome-first, **мовою користувача**. Reviewer незалежно перевіряє acceptance: FAIL → `In Progress`; PASS без owner-only gate → `Done`; owner-only acceptance → лишається `In Review`.
-- Повний Executor → Reviewer lifecycle і blocked-first rules — у `vaoferi-task-tracking`.
-- `Trello` — лише legacy input: релевантну card прочитай повністю, перенеси корисне в `Linear`/canonical docs/tests, перевір parity; після parity hard-delete, а якщо недоступний — архів/close. Не роби окремий full sweep без прямого запиту і не створюй нових Trello cards.
-- Не підтримуй кілька активних джерел правди для однієї задачі.
+- `Linear` — єдине active task source. `In Review` = **Ready for Review**; failed/blocked лишається `In Progress`, blocked handoff має бути **детальнішим** за success.
+- Repository-scoped **implementation task** продовжуй **до повного completion loop** за `vaoferi-task-tracking`; не зупиняйся на partial result.
+- `Definition of Done` формулюй outcome-first, **мовою користувача**. Reviewer independently verifies: FAIL → `In Progress`; PASS без owner-only gate → `Done`; owner-only acceptance → `In Review`.
+- `Trello` — legacy input: relevant card прочитай повністю, перенеси useful work/facts у Linear/canonical sources, verify parity; після parity hard-delete або archive/close. Не створюй нових Trello cards і не веди паралельні sources of truth.
