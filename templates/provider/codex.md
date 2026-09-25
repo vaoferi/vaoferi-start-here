@@ -12,6 +12,7 @@ Install/reconcile it as `$CODEX_HOME/AGENTS.md`; default: `~/.codex/AGENTS.md`. 
 - Missing required browser/runtime proof = **BLOCKED**. Never call missing evidence a pass.
 - `In Review` means **Ready for Review**. **Blocked**/failed work stays `In Progress`; the executor preserves evidence and the reviewer verifies independently.
 - Every repository-scoped task requires **commit + push** before review/Done; record exact **pushed SHA**. Local-only commits are not review evidence.
+- **WORKTREE CLEAN is mandatory.** Before a new implementation task, classify any pre-existing `git status --porcelain=v1 --untracked-files=all` output instead of ignoring it. Before `In Review`/`Done`, `python .vaoferi/check_worktree_clean.py` must report `WORKTREE CLEAN: PASS`; unknown dirty state stays `In Progress / BLOCKED`, never reset/delete it just to get green.
 - Secrets: **Vaultwarden** stores validated credentials globally; project-root `.env` stores only credentials needed by that project. Never echo secret values.
 - `VISUAL APPROVAL` requires explicit owner approval on a production-faithful current UI before visible implementation. New authored-UI `!important` is a hard failure without an exact accepted exception.
 - Equal visible peer groups must not create accidental orphan layouts such as `2+1`, `3+1`, `2+2+1` without a documented semantic/compositional/accessibility reason.
