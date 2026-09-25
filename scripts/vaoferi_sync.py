@@ -16,6 +16,7 @@ DESIGN_LOCK = ROOT / "vendor" / "design-skill.lock.json"
 DESIGN_VENDOR = ROOT / "vendor" / "vaoferi-design-skill"
 BASE_OWNED_SOURCES = {
     "AGENTS.md": ROOT / "AGENTS.md",
+    "DEFINITION_OF_DONE.md": ROOT / "DEFINITION_OF_DONE.md",
     ".agents/skills/vaoferi-bootstrap/SKILL.md": ROOT / ".agents/skills/vaoferi-bootstrap/SKILL.md",
     ".agents/skills/vaoferi-engineering/SKILL.md": ROOT / ".agents/skills/vaoferi-engineering/SKILL.md",
     ".agents/skills/vaoferi-dependencies/SKILL.md": ROOT / ".agents/skills/vaoferi-dependencies/SKILL.md",
