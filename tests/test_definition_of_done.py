@@ -15,10 +15,10 @@ CLEAN = ROOT / "target" / ".vaoferi" / "check_worktree_clean.py"
 
 
 class DefinitionOfDoneContractTest(unittest.TestCase):
-    def test_release_is_027_or_newer_contract(self):
+    def test_release_is_028_or_newer_contract(self):
         with (ROOT / "pyproject.toml").open("rb") as fh:
             version = tomllib.load(fh)["project"]["version"]
-        self.assertEqual(version, "0.2.7")
+        self.assertEqual(version, "0.2.8")
 
     def test_universal_contract_requires_zero_dirty_end_state(self):
         text = DOD.read_text(encoding="utf-8")

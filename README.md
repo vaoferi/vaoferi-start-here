@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.7**
+**Current release: 0.2.8**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,25 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.8: deploy ownership boundary is mechanical, not prose
+
+Proven by the Miami deploy slice (NLM-133 / NLM-140): a red browser/CI/UI gate during a deploy was read as
+"remains in release scope", and the release agent started repairing product code.
+
+- `vaoferi-deploy` now lists the only defect classes a deploy task may fix (**DEPLOY-LAYER**): adapter/command/schema,
+  candidate packaging and entrypoint identity, transport/target mapping, rollback/preimage, publication/origin verifier,
+  and an accidental release-stream commit/revert — each as a smallest-possible fix that is committed and pushed.
+- Product/UI/business logic, media quality, responsive/layout/typography, browser test harness and
+  CI/environment/browser-installation debt stay outside deploy ownership even when they block the release: diagnose,
+  create or link the owning follow-up, then continue (non-hard) or fail fast with one factual blocker. Changing that
+  requires an explicit owner scope change.
+- Deploying an already accepted candidate no longer implies replaying the broad pre-deploy regression or the full
+  browser matrix; the implementation/CI task owns those before the pushed handoff. Release-specific identity/target/
+  rollback checks, exact publication verification and the post-deploy smoke stay mandatory.
+- `vaoferi-task-tracking` and the `AGENTS.md` routing line state the same boundary; `DEFINITION_OF_DONE.md` is
+  deliberately left untouched so there is still exactly one completion authority.
+- Design Skill re-vendored to the reviewed 0.4.3 release, which inherits this completion contract for design work.
 
 ## 0.2.7: Definition of Done + zero-dirty repository gate
 
