@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.6**
+**Current release: 0.2.7**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,20 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.7: Definition of Done + zero-dirty repository gate
+
+This release turns task completion into an explicit, centrally-synced contract.
+
+- `DEFINITION_OF_DONE.md` is now centrally owned and synced into every participating repository.
+- UI changes require the affected-surface × 10 canonical viewport manual matrix plus automated responsive/geometry regression.
+- `target/.vaoferi/check_worktree_clean.py` is synced as `.vaoferi/check_worktree_clean.py` and fails when staged, modified, deleted, renamed, or untracked files remain.
+- A new implementation task may not silently start on top of pre-existing dirty state: the agent must identify the owning task and finish/push it, or remain blocked.
+- `In Review` / `Done` requires commit + push + exact pushed SHA + remote sync + `WORKTREE CLEAN: PASS`.
+- Unknown/foreign changes are preserved and classified; destructive reset/delete is never allowed merely to make status green.
+- Global Codex guardrails mirror the same clean-worktree hard stop.
+
+Project rules may strengthen these gates but may not silently weaken them.
 
 ## 0.2.6: Owner-visible session baseline
 
