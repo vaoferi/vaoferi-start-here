@@ -21,6 +21,7 @@
 - Перед першою repository-scoped write-capable дією в сесії прочитай `.vaoferi/manifest.json`, звір version/`source_commit` з **canonical latest** `vaoferi/vaoferi-start-here` `main` через trusted source; stale baseline онови лише canonical sync mechanism, потім verify/central drift, `DEFINITION_OF_DONE.md` і `PROJECT_RULES.md`.
 - Перший видимий repo-status окремим рядком: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · DoD: loaded · PROJECT_RULES: loaded`. `VERIFIED` дозволений лише після factual latest comparison + local verify.
 - Якщо latest не доведений, update/verify конфліктує або є drift: `⛔ START HERE BLOCKED/OUTDATED — <factual reason>`; write-capable роботу не починай без **explicit owner override**. Read-only diagnosis дозволений лише для blocker discovery.
+- Перед новою IMPLEMENTATION задачею виконай `python .vaoferi/check_worktree_clean.py` (або exact `git status --porcelain=v1 --untracked-files=all`). Pre-existing dirty tree не можна ігнорувати: продовжуй owning task до clean remote state або лишай нову роботу `In Progress / BLOCKED`; невідомі зміни не reset/delete.
 
 ## Autonomy And Risk
 
@@ -62,7 +63,7 @@
 
 - Перед змінами/commit перевір status/diff настільки, наскільки дозволяє середовище.
 - Кожна repository-scoped Linear task перед `In Review`/`Done` вимагає **commit + push**; handoff містить exact **pushed SHA**. Local-only commit не review evidence.
-- Перед handoff підтвердь intended local HEAD == reviewer-accessible remote branch/PR head; незрозумілі untracked/modified хвости блокують completion.
+- Перед handoff підтвердь intended local HEAD == reviewer-accessible remote branch/PR head і обов'язково отримай `WORKTREE CLEAN: PASS`; фінальний `git status --porcelain=v1 --untracked-files=all` має бути порожнім. Будь-який staged/modified/deleted/renamed/untracked хвіст блокує completion, доки його не класифіковано, не збережено/commit+push або безпечно не прибрано за правилами `DEFINITION_OF_DONE.md`.
 - Не commit secrets, real `.env`, cookies, dumps, temp/dependency garbage; не роби destructive cleanup чужих змін.
 - Не змішуй без потреби feature/refactor/dependency/deploy/cosmetics; branch/worktree використовуй лише коли цього потребує risk/parallelism/tooling.
 
