@@ -1,7 +1,7 @@
 {
   "commit": "cac3359ae04c486e858200f7d386e27270789110",
   "files_sha256": {
-    "SKILL.md": "9f6ef1e2d00a930f80b9cf7903fb1e9efc211e7ced05508f5b3ad9e4796bfa25",
+    "SKILL.md": "59ba09449a0fef94112126d0a249228dbef26c86ba2b4e29d0bbeef584ecb810",
     "config/component-libraries.json": "2d82a306cd6097e83ee074347f3fba5938b2f7a2659f487364f3f2be1d7c48f8",
     "references/action-contract.md": "cbc62e61941bd15173387a7e184b9c54b91783d8184fc117eaeb19de30a4d6c2",
     "references/admin-workspace.md": "debd51cdeea821ee53d9fa3fe05f5d6dae2c841666f28cce722c096989ef538f",
