@@ -24,7 +24,8 @@ BASE_OWNED_SOURCES = {
     ".agents/skills/vaoferi-security/SKILL.md": ROOT / ".agents/skills/vaoferi-security/SKILL.md",
     ".agents/skills/vaoferi-task-tracking/SKILL.md": ROOT / ".agents/skills/vaoferi-task-tracking/SKILL.md",
     ".agents/skills/vaoferi-project-adaptation/SKILL.md": ROOT / ".agents/skills/vaoferi-project-adaptation/SKILL.md",
-    ".vaoferi/verify.py": ROOT / "target/.vaoferi/verify.py",\n    ".vaoferi/check_worktree_clean.py": ROOT / "target/.vaoferi/check_worktree_clean.py",
+    ".vaoferi/verify.py": ROOT / "target/.vaoferi/verify.py",
+    ".vaoferi/check_worktree_clean.py": ROOT / "target/.vaoferi/check_worktree_clean.py",
 }
 
 
