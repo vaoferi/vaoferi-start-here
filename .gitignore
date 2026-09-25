@@ -4,6 +4,7 @@ __pycache__/
 venv/
 .pytest_cache/
 .DS_Store
+._*
 .env
 .env.*
 !.env.example
