@@ -7,8 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LOCK = ROOT / "vendor" / "design-skill.lock.json"
 VENDOR = ROOT / "vendor" / "vaoferi-design-skill"
 AGENTS = ROOT / "AGENTS.md"
-EXPECTED_VERSION = "0.4.2"
-EXPECTED_COMMIT = "cac3359ae04c486e858200f7d386e27270789110"
+EXPECTED_VERSION = "0.4.3"
+EXPECTED_COMMIT = "e4adb7a5993f6da5bd95cc447a50822afcaabf56"
 REQUIRED_V042_REFERENCES = (
     "references/scopes.md",
     "references/lifecycle.md",
