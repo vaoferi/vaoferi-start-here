@@ -25,6 +25,8 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 
 Перед execution прочитай `DEFINITION_OF_DONE.md` і project-owned `PROJECT_RULES.md`/`TESTING.md`/design contracts, релевантні задачі.
 
+Перед **новою** IMPLEMENTATION задачею виконай `python .vaoferi/check_worktree_clean.py` або exact `git status --porcelain=v1 --untracked-files=all`. Якщо є pre-existing dirty state, не ігноруй його і не починай поверх нього новий slice: визнач owning task, доведи його до commit + push + `WORKTREE CLEAN: PASS`, або залиш нову роботу `In Progress / BLOCKED`. Невідомі зміни не reset/delete.
+
 Після execution intent агент продовжує IMPLEMENTATION task самостійно до повного Definition of Done; **не зупиняйся після коду**, локального вигляду або довгого звіту в очікуванні, що owner окремо нагадає про lint/tests/build/browser QA/commit/push.
 
 До `In Review` / `Done` виконай усе applicable для цього slice:
@@ -41,7 +43,8 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 10. commit із issue reference;
 11. push;
 12. підтвердь **REMOTE SYNC**: intended local HEAD == remote branch/PR head;
-13. запиши exact pushed SHA і короткий evidence handoff у Linear.
+13. запусти `python .vaoferi/check_worktree_clean.py` і отримай `WORKTREE CLEAN: PASS`;
+14. запиши exact pushed SHA і короткий evidence handoff у Linear.
 
 IMPLEMENTATION не може бути `In Review` або `Done`, якщо її required gates, affected-surface browser matrix, automated responsive/geometry gate, build/runtime evidence, clean intended diff, commit, push або REMOTE SYNC ще попереду.
 
@@ -79,6 +82,7 @@ IMPLEMENTATION не може бути `In Review` або `Done`, якщо її r
 - `BROWSER/RUNTIME: PASS — <affected surfaces> × <manual states count>` або `N/A + documented non-UI reason`
 - `AUTOMATED RESPONSIVE/GEOMETRY: PASS — <command/test>` або `N/A + documented non-UI reason`
 - `REMOTE SYNC: PASS`
+- `WORKTREE CLEAN: PASS — python .vaoferi/check_worktree_clean.py`
 - `KNOWN EXCEPTIONS: none` або explicit accepted exception
 
 Missing field/evidence для applicable gate = FAIL → задача лишається `In Progress`.
