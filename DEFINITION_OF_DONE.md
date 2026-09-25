@@ -8,18 +8,41 @@
 
 Якщо виконання фізично заблоковане зовнішнім фактором, задача лишається `In Progress / BLOCKED` з детальним blocker handoff. Заборонено маскувати незавершену роботу під review-ready.
 
-## 2. Git completion є обов'язковим
+## 2. Git completion і чистий worktree є обов'язковими
+
+### Preflight: чужі або старі зміни не можна ігнорувати
+
+Перед початком **нової** repository-scoped IMPLEMENTATION задачі агент запускає:
+
+`git status --porcelain=v1 --untracked-files=all`
+
+або canonical helper:
+
+`python .vaoferi/check_worktree_clean.py`
+
+Якщо worktree вже dirty, агент **не має права** просто почати нову задачу поверх нього.
+
+- Кожен pre-existing staged/modified/deleted/renamed/untracked файл треба інвентаризувати й прив'язати до конкретної задачі або джерела.
+- Якщо зміни належать незавершеній активній задачі, агент продовжує **саме її** до commit + push + clean worktree, а не відкриває поверх неї інший implementation slice.
+- Якщо зміни належать іншій відомій задачі, її треба явно link-нути/відновити й довести до безпечного remote state окремим commit/push перед новим review-ready handoff.
+- Якщо ownership неможливо довести без ризику втрати даних, поточна робота лишається `In Progress / BLOCKED`; невідомі зміни не видаляються, не reset-яться і не маскуються.
+- Generated/temp garbage, створене поточним агентом і доведено disposable, прибирається до handoff. Чужі або невідомі файли не знищуються заради зеленого status.
+
+### Completion: нуль незакомічених файлів
 
 Перед `In Review` / `Done` для кожної repository-scoped IMPLEMENTATION задачі агент зобов'язаний:
 
-1. перевірити `git status` і цільовий diff;
-2. не залишити випадкових локальних змін, generated/temp garbage або незрозумілих untracked файлів;
-3. commit-нути весь intended task scope з issue reference;
-4. push-нути commit у reviewer-accessible remote branch/PR;
-5. підтвердити, що local intended HEAD == remote branch/PR head;
-6. записати exact pushed SHA у Linear handoff.
+1. перевірити цільовий diff та `git status --porcelain=v1 --untracked-files=all`;
+2. commit-нути **всі** безпечно класифіковані project-owned зміни, які мають зберігатися, з коректною issue traceability;
+3. push-нути кожен intended commit у reviewer-accessible remote branch/PR;
+4. підтвердити, що intended local HEAD == remote branch/PR head;
+5. повторно запустити `python .vaoferi/check_worktree_clean.py`;
+6. отримати **порожній Git status** і `WORKTREE CLEAN: PASS`;
+7. записати exact pushed SHA/PR та clean-worktree evidence у Linear handoff.
 
-Local-only commit не є завершенням. Непушений або змішаний diff блокує `In Review` / `Done`.
+У кінці задачі має залишатися **нуль незакомічених tracked/staged/untracked файлів**. Gitignored private/runtime файли не є Git-worktree змінами, але tracked secrets або випадково unignored приватні файли — окрема security failure, не привід їх commit-ити.
+
+Local-only commit не є завершенням. Непушений commit, dirty worktree або невідомий mixed diff блокують `In Review` / `Done`.
 
 ## 3. Manual browser QA — affected surfaces × 10 canonical viewport states
 
@@ -92,6 +115,7 @@ Repository-scoped IMPLEMENTATION задача не готова до review бе
 - `BROWSER/RUNTIME: PASS — <affected surfaces> × <manual states count>`
 - `AUTOMATED RESPONSIVE/GEOMETRY: PASS — <command/test>` або `N/A + documented non-UI reason`
 - `REMOTE SYNC: PASS`
+- `WORKTREE CLEAN: PASS — python .vaoferi/check_worktree_clean.py`
 - `KNOWN EXCEPTIONS: none` або explicit accepted exception
 
 Reviewer перевіряє докази незалежно. Missing evidence = FAIL → `In Progress`.
