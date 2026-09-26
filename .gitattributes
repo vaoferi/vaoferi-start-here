@@ -1,3 +1,6 @@
-# Preserve the byte-pinned Design Skill snapshot on Windows checkouts.
-/vendor/vaoferi-design-skill/** text eol=lf
-/vendor/design-skill.lock.json text eol=lf
+# Keep hash-managed sync sources byte-stable across Windows and Unix checkouts.
+/AGENTS.md text eol=lf
+/DEFINITION_OF_DONE.md text eol=lf
+/.agents/skills/** text eol=lf
+/target/.vaoferi/** text eol=lf
+/vendor/** text eol=lf
