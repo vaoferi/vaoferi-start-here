@@ -1,0 +1,3 @@
+# Preserve the byte-pinned Design Skill snapshot on Windows checkouts.
+/vendor/vaoferi-design-skill/** text eol=lf
+/vendor/design-skill.lock.json text eol=lf
