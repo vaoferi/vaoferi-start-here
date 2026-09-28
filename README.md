@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.8**
+**Current release: 0.2.9**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,18 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.2.9: stable-target acceptance survives DEV teardown
+
+A Miami Vero incident exposed a generic completion gap: UI/browser acceptance could pass while a temporary DEV runtime was active, then the same canonical URL could fall back to an older durable preview after DEV stop/TTL.
+
+This release makes that impossible to call `Done`:
+
+- projects with temporary DEV → durable preview/staging/fallback topology must verify the exact accepted SHA/version **both before and after normal teardown/fallback**;
+- the latest accepted user-visible state is the durable baseline until a newer candidate is explicitly accepted and promoted;
+- a healthy container, `HTTP 200`, or reachable fallback is not acceptance when the artifact identity is stale or unknown;
+- project docs own the concrete stable endpoint, identity mechanism, promotion command and TTL/teardown details; Start Here owns the universal invariant;
+- `AGENTS.md` and the compact Codex guardrail mirror this fail-closed rule so agents cannot close user-visible work after checking only temporary DEV.
 
 ## 0.2.8: deploy ownership boundary is mechanical, not prose
 

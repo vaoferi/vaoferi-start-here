@@ -74,7 +74,27 @@ Manual QA виконується на actual reviewer-accessible rendered target
 - light/dark/system та інші affected states перевірені, якщо зміна їх стосується;
 - Console/Network не містять нових критичних помилок, якщо це релевантно.
 
-## 4. Automated responsive/geometry sweep
+## 4. Stable user-facing target після teardown / fallback
+
+Якщо project workflow має тимчасовий DEV/HMR runtime, preview/staging mode, TTL/watchdog, route switching або інший fallback на durable user-facing artifact, browser QA на активному DEV **не є достатнім доказом Done**.
+
+Перед `In Review` / `Done` user-visible зміна має довести весь lifecycle:
+
+1. exact pushed/accepted SHA відомий;
+2. canonical reviewer-accessible target під час DEV/temporary runtime показує саме цей SHA/version;
+3. required browser/runtime QA на цьому target PASS;
+4. accepted candidate built/verified і promoted у durable stable preview/staging artifact;
+5. temporary DEV/runtime нормально зупинено або завершено через project-standard teardown/TTL path;
+6. **той самий canonical stable endpoint** після teardown/fallback все ще показує accepted SHA/version;
+7. ключові user-visible acceptance points повторно перевірені після fallback.
+
+Нормальний teardown/TTL/watchdog **не має права мовчки зробити видимим старіший user-facing artifact**. Latest accepted user-visible state є durable baseline до наступного explicit accepted promotion.
+
+Якщо stable artifact старіший за accepted candidate, task лишається `In Progress`: спочатку треба виконати project-owned build/verify/promotion path або fail closed. `HTTP 200`, healthy container чи доступний fallback без exact candidate identity не є PASS.
+
+Project docs визначають конкретний endpoint, identity mechanism, promotion command і teardown lifecycle. Якщо project взагалі не має temporary→stable/fallback topology, цей gate документується як `N/A` з короткою причиною.
+
+## 5. Automated responsive/geometry sweep
 
 Manual 10-state matrix не замінює автоматизований browser regression gate.
 
@@ -95,7 +115,7 @@ Manual 10-state matrix не замінює автоматизований browse
 
 Pixel-diff/screenshot regression може доповнювати geometry assertions, але не замінює semantic/DOM geometry checks там, де потрібно довести видимість, кількість елементів або взаємне розташування.
 
-## 5. Tests and build
+## 6. Tests and build
 
 Перед `In Review` / `Done` агент запускає всі project-required gates, релевантні зміні: focused regression, lint, typecheck, static/security checks, build, browser/runtime suites та project-specific CI-equivalent commands.
 
@@ -103,7 +123,7 @@ Behavior change / bug fix виконується TDD, якщо test техніч
 
 Known failure не можна назвати PASS. PRE-EXISTING/UNRELATED, CI/ENVIRONMENT і EXTERNAL failures класифікуються окремо та не маскуються product-fix-ом.
 
-## 6. Evidence handoff у Linear
+## 7. Evidence handoff у Linear
 
 Repository-scoped IMPLEMENTATION задача не готова до review без короткого evidence ledger:
 
@@ -120,13 +140,13 @@ Repository-scoped IMPLEMENTATION задача не готова до review бе
 
 Reviewer перевіряє докази незалежно. Missing evidence = FAIL → `In Progress`.
 
-## 7. Project rules можуть тільки посилювати
+## 8. Project rules можуть тільки посилювати
 
 `PROJECT_RULES.md`, `DESIGN_CONTRACT.md`, `TESTING.md`, SPEC та інші project-owned docs можуть додавати viewport-и, acceptance criteria, security gates, browser engines, ролі, теми, локалізації та production checks.
 
 Вони не можуть послабити цей Definition of Done без explicit owner decision, зафіксованого в canonical docs.
 
-## 8. Принцип
+## 9. Принцип
 
 **Зробив задачу — довів її до віддаленої, перевіреної, відтворюваної й незалежно перевіряємої готовності.**
 

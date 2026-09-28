@@ -18,6 +18,7 @@ Install/reconcile it as `$CODEX_HOME/AGENTS.md`; default: `~/.codex/AGENTS.md`. 
 - Equal visible peer groups must not create accidental orphan layouts such as `2+1`, `3+1`, `2+2+1` without a documented semantic/compositional/accessibility reason.
 - Run project-required lint/build/tests and required browser/responsive/device gates; inspect Console/Network when relevant.
 - Runtime/visual review must point to an exact SHA/version on a current **reviewer-accessible** artifact/preview.
+- If a canonical user-facing target can switch from temporary DEV to durable preview/staging/fallback, `Done` also requires verification **after normal teardown/TTL/fallback**: the stable target must still serve the accepted SHA/version. A healthy but stale fallback is a failure, not acceptance.
 - Production deploy is not complete on upload/read-back or `HTTP 200`: verify the exact reviewed candidate on effective origin and required browser/runtime surface; do not repeat write-capable deploy attempts without changed evidence/preconditions.
 - Never weaken/delete tests just to get green. Never claim verified behavior, deployment, access, latest baseline, or test results that did not actually run.
 

@@ -56,6 +56,7 @@
 - Required browser/runtime недоступні → **BLOCKED**, task лишається `In Progress`; missing proof не pass.
 - `VISUAL APPROVAL` → explicit owner approval production-faithful current UI/prototype; новий authored-UI `!important` — hard failure без exact exception.
 - Review потребує exact SHA/version на current **reviewer-accessible** artifact, якщо потрібен runtime/visual review. Stale preview, `HTTP 200`, build PASS або code presence не acceptance.
+- Якщо canonical user-facing target перемикається між temporary DEV і durable preview/staging/fallback, `Done` потребує повторної перевірки **після нормального teardown/TTL/fallback**: stable target має показувати той самий accepted SHA/version. Silent fallback на старіший accepted/user-visible artifact = FAIL; project-specific promotion/identity commands живуть у project docs.
 - Запускай project-required lint/build/tests/browser checks; UI → real interactions, relevant Console/Network, required responsive/device states.
 - Shared-surface change → повторно перевір affected regressions; broad change → inspect target diff і назви unverified gaps.
 
