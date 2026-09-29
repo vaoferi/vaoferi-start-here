@@ -24,6 +24,15 @@ class RuntimePreviewContractTest(unittest.TestCase):
         self.assertIn("two consecutive iterations", runtime)
         self.assertIn("RECOVERY MODE", codex)
 
+    def test_runtime_preview_contract_requires_single_writer_publication(self):
+        runtime = (ROOT / ".agents/skills/vaoferi-runtime-preview/SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("Single-writer publication invariant", runtime)
+        self.assertIn("canonical publisher", runtime)
+        self.assertIn("competing publishers", runtime)
+        self.assertIn("direct write", runtime)
+        self.assertIn("durable target", runtime)
+
 
 if __name__ == "__main__":
     unittest.main()
