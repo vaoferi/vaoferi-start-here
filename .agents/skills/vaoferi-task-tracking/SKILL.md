@@ -37,7 +37,7 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 4. зроби build, якщо зміна впливає на buildable artifact;
 5. для UI/layout/responsive/browser змін вручну перевір **кожну affected user-facing surface × 10 canonical viewport states** з `DEFINITION_OF_DONE.md`, плюс project-specific states;
 6. для UI/layout/responsive змін проганяй automated browser geometry/visibility regression gate з breakpoint boundaries та owner-reproduced edge cases;
-7. виконай інший relevant browser/runtime verification для browser/runtime-dependent behavior;
+7. виконай інший relevant browser/runtime verification для browser/runtime-dependent behavior; якщо є DEV→stable/fallback topology, завантаж `vaoferi-runtime-preview` і доведи durable promotion + post-teardown stable parity;
 8. перевір diff на unintended edits, secrets, generated garbage, незрозумілі untracked/modified хвости і випадкові dependency/config зміни;
 9. виправ failures, якщо вони спричинені цією карткою;
 10. commit із issue reference;
@@ -56,6 +56,28 @@ IMPLEMENTATION не може бути `In Review` або `Done`, якщо її r
 - **PRE-EXISTING / UNRELATED** — існувало до current diff або поза scope → не ремонтуй мовчки; створи/link follow-up, доведи що current card не погіршує стан, і не тягни цей борг у release без причини.
 - **CI / ENVIRONMENT** — missing browser/action/font/filesystem/runtime mismatch або harness problem → виправляй інфраструктуру в окремому scope; не підганяй product CSS/logic без доказу product regression.
 - **EXTERNAL** — CDN/API/provider/network → isolate/fail fast за project contract; не переписуй продукт навмання.
+
+## Acceptance frontier і anti-loop
+
+Для довгих/blocked implementation задач не вимірюй прогрес кількістю коментарів або годин. Вимірюй **зміною acceptance frontier**.
+
+Якщо task використовує runtime/preview lifecycle — frontier визначає `vaoferi-runtime-preview`. Для інших задач сформулюй аналогічні 3–7 observable milestones.
+
+Кожна невдала ітерація має дати хоча б одне:
+- frontier просунувся;
+- конкретна гіпотеза спростована новим evidence;
+- один blocker звужений до меншого reproducible fail.
+
+**Два поспіль цикли** без жодного з цих результатів = процесний FAIL. Агент зобов'язаний:
+1. припинити broad exploration;
+2. назвати один current user-visible blocker;
+3. дати одну exact reproduction;
+4. перевірити, чи не виконується stale tool/branch/artifact;
+5. зробити один найменший experiment, який може спростувати leading hypothesis.
+
+Не можна багато разів переписувати той самий blocker різними словами й називати це прогресом.
+
+Якщо already accepted user-facing result зник зі stable endpoint — перейти в RECOVERY MODE і спочатку повернути latest accepted durable state, навіть якщо ширша infrastructure card має ще десятки hardening пунктів.
 
 ## No report-and-wait default
 
@@ -86,6 +108,8 @@ IMPLEMENTATION не може бути `In Review` або `Done`, якщо її r
 - `KNOWN EXCEPTIONS: none` або explicit accepted exception
 
 Missing field/evidence для applicable gate = FAIL → задача лишається `In Progress`.
+
+Для temporary→durable runtime додатково обов'язкові: `FRONTIER: F0..F7`, exact control-plane identity, promoted artifact identity і stable target identity після teardown.
 
 DISCOVERY / INTAKE handoff:
 
