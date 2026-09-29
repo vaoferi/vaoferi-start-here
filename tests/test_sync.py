@@ -44,6 +44,17 @@ class SyncTest(unittest.TestCase):
                 manifest["owned_files"],
             )
 
+            runtime_preview = target / ".agents" / "skills" / "vaoferi-runtime-preview" / "SKILL.md"
+            self.assertTrue(runtime_preview.is_file())
+            self.assertIn(
+                ".agents/skills/vaoferi-runtime-preview/SKILL.md",
+                manifest["owned_files"],
+            )
+            runtime_text = runtime_preview.read_text(encoding="utf-8")
+            self.assertIn("RECOVERY MODE", runtime_text)
+            self.assertIn("Acceptance frontier", runtime_text)
+            self.assertIn("Control-plane identity", runtime_text)
+
             dod = target / "DEFINITION_OF_DONE.md"
             clean_gate = target / ".vaoferi" / "check_worktree_clean.py"
             self.assertTrue(dod.is_file())
