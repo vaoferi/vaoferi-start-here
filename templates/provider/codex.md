@@ -1,27 +1,25 @@
 # Codex Global Critical Guardrails
 
-This is the intentionally small global Codex mirror for the owner's highest-risk working rules.
-
-Install/reconcile it as `$CODEX_HOME/AGENTS.md`; default: `~/.codex/AGENTS.md`. It does not replace repository `AGENTS.md` or `PROJECT_RULES.md`; project/directory instructions remain authoritative for project facts.
+Compact mirror of Vaoferi's highest-risk rules. It supplements, never replaces, repository `AGENTS.md` / `PROJECT_RULES.md`.
 
 ## Critical working rules
 
-- **Session baseline first.** Before the first write-capable repository action, inspect `.vaoferi/manifest.json`, compare installed Start Here version/source commit with canonical latest Vaoferi Start Here `main`, update through the canonical sync path if stale, verify central drift, then read repository `AGENTS.md`, `PROJECT_RULES.md`, and routed project docs. The first visible repo-status must be `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded` only after factual latest comparison + local verify. Otherwise emit `⛔ START HERE BLOCKED/OUTDATED — <reason>` and **do not begin write-capable repository work** without explicit owner override; read-only diagnosis is allowed.
-- Explain/verify **outcome-first**. For behavior changes and bug fixes use **TDD**: prove RED, implement minimum GREEN, then regressions.
-- Every relevant **acceptance criterion** needs proof before `In Review`/`Done`. User actions/UI behavior must be exercised on the real **topmost user-facing target**; source/string/DOM presence is not a substitute.
+- **Session baseline first.** Before write-capable repo work, compare local `.vaoferi/manifest.json` with canonical latest Start Here `main`; if stale, update through canonical sync, verify drift, then read `DEFINITION_OF_DONE.md` and `PROJECT_RULES.md`. Only then emit `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. Otherwise emit `⛔ START HERE BLOCKED/OUTDATED — <reason>` and do not write without explicit owner override.
+- Explain outcome-first. Behavior change/bug fix → TDD RED → minimal GREEN → regressions.
+- Every relevant acceptance criterion needs proof before `In Review`/`Done`. User actions/UI behavior must be exercised on the real topmost user-facing target; source/string/DOM presence is supplementary only.
 - Missing required browser/runtime proof = **BLOCKED**. Never call missing evidence a pass.
-- `In Review` means **Ready for Review**. **Blocked**/failed work stays `In Progress`; the executor preserves evidence and the reviewer verifies independently.
-- Every repository-scoped task requires **commit + push** before review/Done; record exact **pushed SHA**. Local-only commits are not review evidence.
-- **WORKTREE CLEAN is mandatory.** Before a new implementation task, classify any pre-existing `git status --porcelain=v1 --untracked-files=all` output instead of ignoring it. Before `In Review`/`Done`, `python .vaoferi/check_worktree_clean.py` must report `WORKTREE CLEAN: PASS`; unknown dirty state stays `In Progress / BLOCKED`, never reset/delete it just to get green.
-- Secrets: **Vaultwarden** stores validated credentials globally; project-root `.env` stores only credentials needed by that project. Never echo secret values.
-- `VISUAL APPROVAL` requires explicit owner approval on a production-faithful current UI before visible implementation. New authored-UI `!important` is a hard failure without an exact accepted exception.
-- Equal visible peer groups must not create accidental orphan layouts such as `2+1`, `3+1`, `2+2+1` without a documented semantic/compositional/accessibility reason.
-- Run project-required lint/build/tests and required browser/responsive/device gates; inspect Console/Network when relevant.
-- Runtime/visual review must point to an exact SHA/version on a current **reviewer-accessible** artifact/preview.
-- If a canonical user-facing target can switch from temporary DEV to durable preview/staging/fallback, `Done` requires **durable promotion + exact artifact identity + verification after normal teardown/TTL/fallback**. The latest accepted visible state must survive DEV death. A healthy but stale fallback is a failure, not acceptance.
-- If an already accepted stable endpoint becomes stale/broken, enter **RECOVERY MODE**: restore the latest accepted durable state before secondary hardening. Two consecutive iterations with no acceptance-frontier movement and no newly ruled-out hypothesis require one reproducible fail + one smallest next experiment, not another broad status report.
-- For runtime evidence, know which exact control-plane implementation ran. A stale installed CLI/service cannot prove a newer checkout's contract.
-- Production deploy is not complete on upload/read-back or `HTTP 200`: verify the exact reviewed candidate on effective origin and required browser/runtime surface; do not repeat write-capable deploy attempts without changed evidence/preconditions.
-- Never weaken/delete tests just to get green. Never claim verified behavior, deployment, access, latest baseline, or test results that did not actually run.
+- `In Review` = Ready for Review. Blocked/failed work stays `In Progress`.
+- Every repository task requires **commit + push + exact pushed SHA** before review/Done.
+- **WORKTREE CLEAN is mandatory.** Classify pre-existing dirty state before new implementation work; before handoff, `python .vaoferi/check_worktree_clean.py` must report `WORKTREE CLEAN: PASS`. Never reset/delete unknown work just to get green.
+- Secrets: Vaultwarden is the global inventory; project-root `.env` holds only project-needed credentials. Never echo secret values.
+- `VISUAL APPROVAL` requires explicit owner approval on a production-faithful current UI. New authored-UI `!important` is a hard failure without an accepted exception.
+- Equal visible peer groups must not create accidental orphan layouts (`2+1`, `3+1`, `2+2+1`) without a documented reason.
+- Run project-required lint/build/tests and browser/responsive/device gates; inspect Console/Network where relevant.
+- Runtime/visual review must point to an exact SHA/version on a current reviewer-accessible artifact.
+- Temporary DEV → durable preview/staging/fallback requires **durable promotion + exact artifact identity + post-teardown verification**. Latest accepted visible state must survive DEV death; healthy-but-stale fallback = FAIL.
+- If an accepted stable endpoint becomes stale/broken, enter **RECOVERY MODE**: restore the latest accepted durable state before secondary hardening. Two consecutive loops with no frontier movement/new falsification → one reproducible fail + one smallest experiment.
+- Runtime evidence must identify the exact control-plane implementation that ran; stale installed tooling cannot prove a newer checkout's contract.
+- Production deploy is not done on upload/read-back or `HTTP 200`; verify the exact reviewed candidate on effective origin and required browser/runtime surface.
+- Never weaken/delete tests just to get green. Never claim verification that did not actually run.
 
-Canonical detailed doctrine remains in Vaoferi Start Here and conditional skills. This global layer intentionally duplicates only critical guardrails so they remain present even when a repository copy is stale.
+Canonical details remain in Vaoferi Start Here and conditional skills.
