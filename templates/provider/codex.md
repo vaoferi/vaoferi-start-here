@@ -1,14 +1,14 @@
 # Codex Global Critical Guardrails
 
-Compact mirror of Vaoferi's highest-risk rules. It supplements, never replaces, repository `AGENTS.md` / `PROJECT_RULES.md`.
+Compact mirror of Vaoferi's highest-risk rules for `$CODEX_HOME/AGENTS.md` (default `~/.codex/AGENTS.md`). It supplements, never replaces, repository `AGENTS.md` / `PROJECT_RULES.md`.
 
 ## Critical working rules
 
-- **Session baseline first.** Before write-capable repo work, compare local `.vaoferi/manifest.json` with canonical latest Start Here `main`; if stale, update through canonical sync, verify drift, then read `DEFINITION_OF_DONE.md` and `PROJECT_RULES.md`. Only then emit `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. Otherwise emit `⛔ START HERE BLOCKED/OUTDATED — <reason>` and do not write without explicit owner override.
+- **Session baseline first.** Before write-capable repo work, compare local `.vaoferi/manifest.json` with canonical latest Start Here `main`; if stale, update through canonical sync, verify drift, then read `DEFINITION_OF_DONE.md` and `PROJECT_RULES.md`. Only then emit `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. Otherwise emit `⛔ START HERE BLOCKED/OUTDATED — <reason>` and **do not begin write-capable repository work** without explicit owner override.
 - Explain outcome-first. Behavior change/bug fix → TDD RED → minimal GREEN → regressions.
 - Every relevant acceptance criterion needs proof before `In Review`/`Done`. User actions/UI behavior must be exercised on the real topmost user-facing target; source/string/DOM presence is supplementary only.
 - Missing required browser/runtime proof = **BLOCKED**. Never call missing evidence a pass.
-- `In Review` = Ready for Review. Blocked/failed work stays `In Progress`.
+- `In Review` = Ready for Review. Blocked/failed work stays `In Progress`; executor evidence is independently checked by the reviewer.
 - Every repository task requires **commit + push + exact pushed SHA** before review/Done.
 - **WORKTREE CLEAN is mandatory.** Classify pre-existing dirty state before new implementation work; before handoff, `python .vaoferi/check_worktree_clean.py` must report `WORKTREE CLEAN: PASS`. Never reset/delete unknown work just to get green.
 - Secrets: Vaultwarden is the global inventory; project-root `.env` holds only project-needed credentials. Never echo secret values.
