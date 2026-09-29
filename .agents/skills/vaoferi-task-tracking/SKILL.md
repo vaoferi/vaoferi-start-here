@@ -35,9 +35,9 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 2. проганяй focused regression/tests для зміненого behavior;
 3. проганяй project-required lint/typecheck/static/security gates, релевантні цьому slice;
 4. зроби build, якщо зміна впливає на buildable artifact;
-5. для UI/layout/responsive/browser змін вручну перевір **кожну affected user-facing surface × 10 canonical viewport states** з `DEFINITION_OF_DONE.md`, плюс project-specific states;
-6. для UI/layout/responsive змін проганяй automated browser geometry/visibility regression gate з breakpoint boundaries та owner-reproduced edge cases;
-7. виконай інший relevant browser/runtime verification для browser/runtime-dependent behavior; якщо є DEV→stable/fallback topology, завантаж `vaoferi-runtime-preview` і доведи durable promotion + post-teardown stable parity;
+5. для UI/layout/responsive/browser змін застосуй **risk tier** з `DEFINITION_OF_DONE.md`: candidate = affected surfaces + owner state + affected breakpoint boundaries; full canonical matrix — тільки broad/high-risk/release;
+6. для UI/layout/responsive змін проганяй automated browser geometry/visibility regression у відповідному affected range; exhaustive sweep — лише коли цього вимагає risk tier;
+7. виконай relevant browser/runtime verification; якщо є DEV→stable/fallback topology, завантаж `vaoferi-runtime-preview`, доведи exact-SHA durable promotion + normal stop parity, а forced TTL/watchdog — тільки для lifecycle/runtime risk або explicit project requirement;
 8. перевір diff на unintended edits, secrets, generated garbage, незрозумілі untracked/modified хвости і випадкові dependency/config зміни;
 9. виправ failures, якщо вони спричинені цією карткою;
 10. commit із issue reference;
@@ -46,7 +46,7 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 13. запусти `python .vaoferi/check_worktree_clean.py` і отримай `WORKTREE CLEAN: PASS`;
 14. запиши exact pushed SHA і короткий evidence handoff у Linear.
 
-IMPLEMENTATION не може бути `In Review` або `Done`, якщо її required gates, affected-surface browser matrix, automated responsive/geometry gate, build/runtime evidence, clean intended diff, commit, push або REMOTE SYNC ще попереду.
+IMPLEMENTATION не може бути `In Review` або `Done`, якщо її **risk-tier-required** gates, affected-surface browser/geometry evidence, build/runtime evidence, clean intended diff, commit, push або REMOTE SYNC ще попереду. Ordinary task не повторює full-health gate після кожної дрібної правки; після failure спочатку запускається focused owning slice.
 
 ## Failure classification before product changes
 
@@ -232,7 +232,7 @@ For blocked work:
 
 For `In Review`:
 - first verify the executor's **pushed SHA** exists on the remote and matches the described task scope; missing/unpushed SHA = FAIL → `In Progress`;
-- verify `DEFINITION_OF_DONE.md` evidence independently, including affected-surface browser matrix and automated responsive/geometry gate when applicable;
+- verify `DEFINITION_OF_DONE.md` evidence independently, including declared risk tier, affected-surface browser matrix and automated responsive/geometry gate when applicable;
 - independent FAIL → detailed review comment + `In Progress`;
 - technical PASS but owner-only visual/business acceptance still pending → keep `In Review`, state exact owner action;
 - full PASS with no owner-only gate → `Done`.

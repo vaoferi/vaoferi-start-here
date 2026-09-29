@@ -167,15 +167,17 @@ accepted B on DEV → stop/TTL → permanent A
 
 ## Browser/runtime acceptance
 
-For user-visible changes:
-
+For user-visible changes with temporary→durable topology:
 - use the canonical stable endpoint, not localhost/internal port;
 - verify exact candidate identity;
-- run required visual/interaction checks;
-- promote durable artifact;
+- run the **affected** visual/interaction checks required by the task risk tier;
+- promote the durable artifact;
 - stop DEV through the normal path;
-- repeat key checks on the same stable endpoint;
-- where TTL/watchdog is normal lifecycle, test it and retain an automated regression.
+- repeat key checks on the same stable endpoint and prove the same accepted identity.
+
+A **manual forced TTL/watchdog expiry** is required per task when the change touches runtime/publisher/routing/promotion/lease/watchdog mechanics, or when a project-specific high-risk contract explicitly requires it. For an ordinary product/UI change, exact-SHA promotion + normal stop parity is sufficient when project automation already protects TTL/watchdog behavior.
+
+Do not rerun a full product/browser suite inside a runtime finish merely because an unrelated UI test is red. Record the owning surface/task and keep runtime acceptance focused unless the runtime change itself creates broad blast radius.
 
 For media/cache/theme behavior, inspect Network as well as appearance when the requirement concerns repeated requests, caching or progressive loading.
 

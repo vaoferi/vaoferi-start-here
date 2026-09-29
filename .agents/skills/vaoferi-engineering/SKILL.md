@@ -37,6 +37,17 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 - Якщо змінюється shared surface, повторно проганяй related acceptance/regression flows, що можуть бути зачеплені.
 - Якщо CI існує — не обходь його. Якщо повторювані tests/build gates є, а CI відсутній, запропонуй найменший корисний automation path замість ручного ритуалу.
 
+### Risk-tiered verification ladder
+
+Choose verification by **affected scope + risk**, not by habit:
+
+- **V1 Inner loop:** focused RED→GREEN + smallest relevant lint/type/static/browser check.
+- **V2 Candidate:** build if applicable + focused affected regressions + affected-surface browser/geometry checks, including owner repro and affected breakpoint boundaries.
+- **V3 Stable acceptance:** exact pushed SHA/version on canonical reviewer target + key affected acceptance; load `vaoferi-runtime-preview` when temporary→durable topology applies.
+- **V4 Full health:** broad project/browser matrix only for high-risk/shared/global/release work or when focused evidence expands the blast radius.
+
+Ordinary work should not exceed two full-health runs by default. A third requires a written new-risk justification. If a broad gate fails outside the affected area, isolate the owning test first; reproducible unrelated defects stay with their owning task, and timing flakes without a user-visible repro do not justify changing product behavior.
+
 ### Evidence Format
 
 Для нетривіальної/risky роботи фінальний evidence має дозволяти простежити:

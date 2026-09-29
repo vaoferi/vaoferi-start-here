@@ -1,9 +1,9 @@
 {
-  "commit": "e4adb7a5993f6da5bd95cc447a50822afcaabf56",
+  "commit": "cf5030eda3477feeff2909fa4ff2a384017d1a4b",
   "files_sha256": {
-    "SKILL.md": "d381c9e5ffd863ee06b67955f10d88a855a965d405bfee61e8fdaa8b972f50b2",
+    "SKILL.md": "f7e0fc94ae4b7d35ed7a58cda0f6d513274c696bf7fe2abbd825cb30b0aa9f26",
     "config/component-libraries.json": "2d82a306cd6097e83ee074347f3fba5938b2f7a2659f487364f3f2be1d7c48f8",
-    "references/action-contract.md": "c16d93f495f11f06ddf7ad5487c22175f15a204d9cd52a857d72624dd9b73401",
+    "references/action-contract.md": "15cc12bb8e5fd4a253edb0ea7bab3f16213e867233fdf60ab342f9ea23e42c20",
     "references/admin-workspace.md": "debd51cdeea821ee53d9fa3fe05f5d6dae2c841666f28cce722c096989ef538f",
     "references/component-sources.md": "f76b2f17e7a3d5963b80547ff01c380bb175203e6442b8f087708e1486088dff",
     "references/lifecycle.md": "dc07c59620ca92834c8f6295bccd37f0c7e9bb525e85333549b537af65322258",
@@ -11,12 +11,12 @@
     "references/scopes.md": "7a07ed12c59ad8ddd9d1878a5d57b609b98989899a8a49a2a203652bc0739a16",
     "references/skillopt-and-architecture.md": "18d7f1285d35c06b52c2cb1b8a42f2ca453053971f844f7d0b8521a8fdf23542",
     "references/stages.md": "5c546e1d0d7ad496bc9d52924a943ccae6797dc1f40ba8d051011f84f4da5c10",
-    "references/verification.md": "42ec2ec521f182064e49f7c2432d80f4c45d0901c3f4888d3a49a3d444b3fc79",
-    "scripts/check_skill_structure.py": "dc2775deb342c3666c8c181320804af10c1a93995365c88f4965fb6692b1ecc0",
+    "references/verification.md": "5bacf554ae7f6dce847b3ca48f8784a2a5419091a07c8c7c9369a0c908999bb8",
+    "scripts/check_skill_structure.py": "91edc9e710d66e3f26c3d63560c1f816ee10686f89095e6f020742ad50a2f2d2",
     "scripts/get_component_snippet.py": "45ae9515cbe7794bce119bd5a4b0375cca10a1a281865c59d25d32273b0ea448",
     "scripts/validate_snippets_source.py": "dbc56e178632d70277376c82976c1188b8abe0ac37bcc793cf0dcc8ae3faf563"
   },
   "repository": "vaoferi/vaoferi-design-skill",
   "schema": 1,
-  "version": "0.4.3"
+  "version": "0.4.4"
 }

@@ -7,8 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LOCK = ROOT / "vendor" / "design-skill.lock.json"
 VENDOR = ROOT / "vendor" / "vaoferi-design-skill"
 AGENTS = ROOT / "AGENTS.md"
-EXPECTED_VERSION = "0.4.3"
-EXPECTED_COMMIT = "e4adb7a5993f6da5bd95cc447a50822afcaabf56"
+EXPECTED_VERSION = "0.4.4"
+EXPECTED_COMMIT = "cf5030eda3477feeff2909fa4ff2a384017d1a4b"
 REQUIRED_V042_REFERENCES = (
     "references/scopes.md",
     "references/lifecycle.md",
@@ -53,6 +53,10 @@ class DesignVendorTest(unittest.TestCase):
         self.assertIn("whole dependency/library", stages)
         self.assertIn("trivial visual", stages)
         self.assertTrue(catalog.is_file())
+        verification = (VENDOR / "references" / "verification.md").read_text(encoding="utf-8")
+        self.assertIn("Risk-tiered Browser Verification", verification)
+        self.assertIn("V4 — Full health", verification)
+        self.assertIn("Failure ownership / flaky tests", verification)
         for rel in REQUIRED_V042_REFERENCES:
             self.assertTrue((VENDOR / rel).is_file(), rel)
 

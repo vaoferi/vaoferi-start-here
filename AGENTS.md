@@ -51,13 +51,13 @@
 
 - `In Review` / `Done` потребують доказу кожного релевантного acceptance criterion і повного `DEFINITION_OF_DONE.md`.
 - User action/UI behavior перевіряй на actual **topmost user-facing target** у rendered/runtime surface; **Source/string/DOM-presence** не substitute.
-- Для UI/layout/responsive/browser змін manual browser QA = **усі affected surfaces × 10 canonical viewport states** із `DEFINITION_OF_DONE.md`; project docs можуть додати viewport-и, але не прибрати базову матрицю.
-- UI/layout/responsive зміни також потребують automated browser geometry/visibility regression gate з breakpoint boundaries та owner-reproduced edge cases; screenshot diff може доповнювати, але не замінює semantic geometry checks.
+- Verification **risk-tiered**: inner loop = focused proof; candidate = affected surfaces + owner state + affected breakpoint boundaries; full-health matrix = broad/high-risk/release або explicit project requirement.
+- UI/layout/responsive зміни все одно потребують browser QA + automated geometry/visibility proof, але scope відповідає risk tier; локальна правка не сертифікує весь продукт заново.
 - Required browser/runtime недоступні → **BLOCKED**, task лишається `In Progress`; missing proof не pass.
 - `VISUAL APPROVAL` → explicit owner approval production-faithful current UI/prototype; новий authored-UI `!important` — hard failure без exact exception.
 - Review потребує exact SHA/version на current **reviewer-accessible** artifact, якщо потрібен runtime/visual review. Stale preview, `HTTP 200`, build PASS або code presence не acceptance.
 - Якщо canonical user-facing target перемикається між temporary DEV і durable preview/staging/fallback, завантаж `vaoferi-runtime-preview`. `Done` потребує **durable promotion + exact artifact identity + monotonic acceptance frontier**. Silent fallback на старіший accepted/user-visible artifact = FAIL.
-- Запускай project-required lint/build/tests/browser checks; UI → real interactions, relevant Console/Network, required responsive/device states.
+- Після локального fix не запускай full gate ритуально: спочатку focused rerun. Unrelated/flaky failure ізолюй; reproducible чужий defect належить owning task, а не розширює поточну картку. Full-health повторюється лише коли risk tier цього вимагає.
 - Shared-surface change → повторно перевір affected regressions; broad change → inspect target diff і назви unverified gaps.
 - Якщо stable reviewer/user endpoint перестав показувати вже accepted work, це **RECOVERY MODE**: спочатку віднови latest accepted durable state; не витрачай основний цикл на другорядний hardening. Два поспіль цикли без просування acceptance frontier або нового спростування гіпотези → зупини broad exploration і зведи роботу до одного reproducible fail + одного найменшого experiment.
 

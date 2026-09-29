@@ -77,6 +77,7 @@ class AgentsContractTest(unittest.TestCase):
             "!important",
             "HTTP 200",
             "reviewer-accessible",
+            "risk-tiered",
         ):
             self.assertIn(required, text)
 

@@ -44,11 +44,26 @@
 
 Local-only commit не є завершенням. Непушений commit, dirty worktree або невідомий mixed diff блокують `In Review` / `Done`.
 
-## 3. Manual browser QA — affected surfaces × 10 canonical viewport states
+## 3. Risk-tiered manual browser QA
 
-Кожна зміна, що може вплинути на rendered UI, layout, responsive behavior, content visibility, interaction, theme, routing або browser/runtime behavior, потребує ручної browser-перевірки всіх affected user-facing surfaces.
+Кожна user-visible зміна все ще потребує **реальної browser-перевірки**, але обсяг перевірки має відповідати blast radius, а не автоматично дорівнювати максимальній release-матриці.
 
-Базова матриця має 5 класів екранів у двох орієнтаціях — 10 canonical states на кожну affected сторінку/поверхню:
+Перед verification acceptance ledger фіксує affected surfaces, relevant behavior/states/themes/orientations, owner-reproduced viewport/state, affected responsive breakpoints і risk tier.
+
+### Candidate UI gate — default для локальної UI-задачі
+
+Для звичайної локальної зміни перевір:
+- кожну affected user-facing surface;
+- owner-reproduced viewport/state;
+- для кожного **зачепленого breakpoint** — `n-1 / n / n+1`;
+- representative narrow і desktop state, якщо зміна може впливати на обидва класи;
+- тільки релевантні theme/orientation/interaction states.
+
+Не треба вручну проганяти весь сайт і всі browser flows після зміни одного кольору, локального spacing або одного Hero gradient, якщо diff/contract не мають broader impact.
+
+### Full Health canonical matrix
+
+Повна матриця нижче є mandatory для broad/high-risk UI, release/production checkpoint, CI/nightly health, shared/global layout/tokens/app-shell змін або коли focused evidence показує ширший blast radius.
 
 | Клас | Portrait | Landscape |
 |---|---:|---:|
@@ -58,21 +73,9 @@ Local-only commit не є завершенням. Непушений commit, dir
 | desktop | 1440×900 | 900×1440 |
 | ultra-wide / extreme large | 2560×1080 | 1080×2560 |
 
-Проєкт може додавати власні breakpoint-critical viewport-и, але не може мовчки скорочувати цю матрицю для UI-змін.
+Project-specific viewport-и можуть посилювати відповідний risk tier. Якщо blast radius невідомий — verification розширюється, а не мовчки звужується.
 
-Якщо зміна зачіпає 3 сторінки/кабінети — це мінімум 30 ручних visual checks: 3 affected surfaces × 10 states. Якщо affected surfaces більше — перевіряються всі.
-
-Manual QA виконується на actual reviewer-accessible rendered target, а не за source/DOM-string presence. Для кожного state перевіряються щонайменше:
-
-- усі задекларовані блоки присутні й видимі;
-- текст не обрізаний, не виходить за контейнер і не ховається;
-- елементи не перекривають один одного;
-- spacing/gaps не колапсують до `0`, якщо contract не вимагає full-bleed/touching-edge;
-- немає horizontal page overflow;
-- controls доступні та не випадають за viewport;
-- responsive reflow не губить контент;
-- light/dark/system та інші affected states перевірені, якщо зміна їх стосується;
-- Console/Network не містять нових критичних помилок, якщо це релевантно.
+У кожному перевіреному state перевіряються required content/visibility, clipping/overlap, horizontal overflow, reachable controls, responsive reflow, relevant theme/state behavior і Console/Network там, де це релевантно acceptance.
 
 ## 4. Stable user-facing target після teardown / fallback
 
@@ -84,9 +87,11 @@ Manual QA виконується на actual reviewer-accessible rendered target
 2. canonical reviewer-accessible target під час DEV/temporary runtime показує саме цей SHA/version;
 3. required browser/runtime QA на цьому target PASS;
 4. accepted candidate built/verified і promoted у durable stable preview/staging artifact;
-5. temporary DEV/runtime нормально зупинено або завершено через project-standard teardown/TTL path;
-6. **той самий canonical stable endpoint** після teardown/fallback все ще показує accepted SHA/version;
+5. temporary DEV/runtime нормально зупинено через project-standard teardown path; **manual forced TTL/watchdog expiry** обов'язковий, якщо задача змінює runtime/publisher/routing/promotion/lease/watchdog mechanics або project contract прямо цього вимагає;
+6. **той самий canonical stable endpoint** після normal teardown/fallback все ще показує accepted SHA/version;
 7. ключові user-visible acceptance points повторно перевірені після fallback.
+
+Для звичайної product/UI зміни, яка не торкається runtime lifecycle, exact-SHA durable promotion + normal stop parity є достатнім per-task lifecycle proof, якщо automated project regression уже захищає TTL/watchdog. Не симулюй TTL expiry після кожної CSS/text правки.
 
 Нормальний teardown/TTL/watchdog **не має права мовчки зробити видимим старіший user-facing artifact**. Latest accepted user-visible state є durable baseline до наступного explicit accepted promotion.
 
@@ -111,34 +116,48 @@ Hard rules:
 
 Detailed procedure: `.agents/skills/vaoferi-runtime-preview/SKILL.md`.
 
-## 5. Automated responsive/geometry sweep
+## 5. Automated responsive/geometry verification
 
-Manual 10-state matrix не замінює автоматизований browser regression gate.
+Manual browser QA не замінює automated browser geometry/visibility regression для layout/responsive роботи.
 
-Для UI/layout/responsive змін проєкт повинен мати Playwright або еквівалентний browser test, який програмно перевіряє геометрію та видимість на діапазоні viewport-ів, включно з breakpoint boundaries і owner-reproduced edge cases.
+### Candidate scope
 
-Для критичних діапазонів дозволено й рекомендовано exhaustive integer sweep по ширині/висоті в bounded range, якщо runtime це практично дозволяє. Якщо повний Cartesian sweep непропорційно дорогий, агент не має права просто пропустити його: він зобов'язаний зафіксувати project-specific sampling strategy, що включає кожен breakpoint boundary (`n-1`, `n`, `n+1`), мінімальні/максимальні висоти, owner-reproduced viewport-и та representative intermediate states.
+За замовчуванням machine gate перевіряє **affected surface/range**: owner-reproduced edge case, affected breakpoint boundaries `n-1 / n / n+1`, relevant min/max heights або aspect states, і representative intermediate state там, де між boundaries може виникнути інша geometry.
 
-Автоматизований gate має fail-ити, якщо:
+### Full-health scope
 
-- expected element зник або став non-visible;
-- кількість required blocks/controls змінилася без contract change;
-- element rect виходить за viewport/approved container;
-- sibling blocks overlap;
-- required spacing/inset колапсує нижче documented minimum;
-- page отримує unexpected horizontal overflow;
-- content стає clipped/hidden через responsive rule;
-- layout/theme/orientation змінює geometry всупереч contract.
+Exhaustive integer CSS-pixel sweep по bounded range або широка browser/state matrix потрібні, коли змінюється shared/global layout/token/breakpoint system; ризик є саме “дірка між sampled widths”; owner defect відтворюється у bounded interval; є broad redesign/refactor; або CI/release/nightly/full-health contract цього вимагає.
 
-Pixel-diff/screenshot regression може доповнювати geometry assertions, але не замінює semantic/DOM geometry checks там, де потрібно довести видимість, кількість елементів або взаємне розташування.
+Не роби повний Cartesian sweep ритуалом для кожної локальної visual правки.
 
-## 6. Tests and build
+Machine gate має fail-ити на relevant scope, якщо expected element зник, rect виходить за approved container/viewport, siblings overlap, required inset колапсує, з'явився unexpected horizontal overflow або content стає clipped/hidden.
 
-Перед `In Review` / `Done` агент запускає всі project-required gates, релевантні зміні: focused regression, lint, typecheck, static/security checks, build, browser/runtime suites та project-specific CI-equivalent commands.
+Pixel-diff може доповнювати geometry assertions, але не замінює semantic/DOM geometry proof там, де потрібні видимість, кількість або взаємне розташування.
 
-Behavior change / bug fix виконується TDD, якщо test технічно можливий: RED → minimal GREEN → regressions.
+## 6. Verification ladder — focused by default, full when risk requires
 
-Known failure не можна назвати PASS. PRE-EXISTING/UNRELATED, CI/ENVIRONMENT і EXTERNAL failures класифікуються окремо та не маскуються product-fix-ом.
+### V1 — Inner loop
+Після кожної маленької зміни: focused RED → GREEN regression, найменший релевантний lint/type/static check і exact browser interaction, якщо behavior browser-dependent. **Не запускай full project/browser gate після кожної CSS/helper/timing правки.**
+
+### V2 — Candidate gate
+Коли implementation slice готовий: build якщо applicable, focused regression suites, candidate browser/geometry gate з секцій 3/5 і relevant security/static checks.
+
+### V3 — Stable acceptance
+Для reviewer-visible change: commit + push exact candidate SHA; canonical reviewer target показує саме цей SHA/version; key affected acceptance повторно перевірена; temporary→durable topology виконує секцію 4.
+
+### V4 — Full health
+Повний project gate / broad browser-engine matrix / full responsive matrix обов'язковий для high-risk або broad change: auth/roles/permissions/passwords; API/persistence/schema/data model; security/privacy; media pipeline/shared loading-cache behavior; runtime/publisher/deploy/projectctl/promotion; dependency/build tooling; shared/global CSS/design tokens/router/app shell; broad multi-surface redesign/refactor; production/release checkpoint; broader blast radius із focused evidence; або explicit project/owner requirement.
+
+Для ordinary локальної задачі — **не більше двох full-health runs за замовчуванням**: final candidate і один repeat після focused fix реального failure. Третій full-health run потребує короткого письмового пояснення: який **новий ризик** він доводить і чому focused rerun недостатній.
+
+### Failure ownership
+1. Affected/current-card failure блокує task і виправляється тут.
+2. Unrelated failure → isolate smallest owning test + bounded repeat (зазвичай 2–3 рази).
+3. Reproducible unrelated defect → owning task/follow-up; поточна картка не ремонтує чужий subsystem.
+4. Timing/flaky assertion без user-visible repro → test-hardening; production behavior не змінюється лише заради зеленого flaky assertion.
+5. Після focused fix повтори candidate gate; новий full-health run лише коли risk tier цього вимагає.
+
+Known failure не можна назвати PASS. PRE-EXISTING/UNRELATED, CI/ENVIRONMENT і EXTERNAL failures фіксуються чесно та не маскуються product-fix-ом.
 
 ## 7. Evidence handoff у Linear
 

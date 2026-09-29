@@ -32,6 +32,20 @@ class DefinitionOfDoneContractTest(unittest.TestCase):
         ):
             self.assertIn(required, text)
 
+    def test_risk_tiered_verification_contract_is_machine_locked(self):
+        text = DOD.read_text(encoding="utf-8")
+        for required in (
+            "Risk-tiered manual browser QA",
+            "V1 — Inner loop",
+            "V2 — Candidate gate",
+            "V3 — Stable acceptance",
+            "V4 — Full health",
+            "не більше двох full-health runs",
+            "Failure ownership",
+            "n-1 / n / n+1",
+        ):
+            self.assertIn(required, text)
+
     def test_agents_and_tracking_fail_closed_on_dirty_tree(self):
         agents = AGENTS.read_text(encoding="utf-8")
         tracking = TRACKING.read_text(encoding="utf-8")

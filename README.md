@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.3.0**
+**Current release: 0.3.1**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,23 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.3.1: risk-tiered verification without weakening acceptance
+
+Miami Vero exposed the opposite failure mode from weak testing: a safe full gate could become an execution loop when every local test-hardening commit restarted an unrelated 10+ minute product/browser certification.
+
+0.3.1 keeps evidence fail-closed but separates four verification levels:
+
+`V1 Inner loop → V2 Candidate gate → V3 Stable acceptance → V4 Full health`.
+
+- ordinary local changes use focused RED→GREEN and affected-surface/breakpoint verification;
+- reviewer-visible work still needs exact pushed SHA/version on the canonical reviewer target;
+- broad/high-risk/shared/release work still gets the full project/browser matrix;
+- an ordinary task normally gets at most two full-health runs; a third needs a new-risk justification;
+- unrelated reproducible failures belong to their owning task; timing flakes without user-visible repro do not justify product changes;
+- temporary→durable UI work still proves durable promotion + normal stop parity, while manual forced TTL/watchdog expiry is reserved for runtime/publisher lifecycle changes or explicit project policy.
+
+The bundled Design Skill is updated to **0.4.4** with the same risk-tiered browser/geometry contract.
 
 ## 0.3.0: runtime/preview lifecycle becomes a first-class workflow
 
@@ -232,7 +249,7 @@ python scripts/vaoferi_sync.py verify --target /path/to/repository
 
 Bootstrap/update copies centrally-owned rules and skills into the target repository and records exact hashes/source version in `.vaoferi/manifest.json`. Project-owned files such as `PROJECT_RULES.md`, `DESIGN.md`, `docs/` and `tests/` are not silently overwritten.
 
-The synced package includes the reviewed Vaoferi Design Skill snapshot, currently **0.4.2 / contract architecture 1.2**, pinned by exact Git commit and SHA-256 hashes.
+The synced package includes the reviewed Vaoferi Design Skill snapshot, currently **0.4.4 / contract architecture 1.2**, pinned by exact Git commit and SHA-256 hashes.
 
 ## Reusable GitHub checks
 

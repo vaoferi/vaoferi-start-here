@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class RuntimePreviewContractTest(unittest.TestCase):
     def test_runtime_preview_contract_is_wired(self):
         with (ROOT / "pyproject.toml").open("rb") as fh:
-            self.assertEqual(tomllib.load(fh)["project"]["version"], "0.3.0")
+            self.assertEqual(tomllib.load(fh)["project"]["version"], "0.3.1")
 
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         dod = (ROOT / "DEFINITION_OF_DONE.md").read_text(encoding="utf-8")
@@ -32,6 +32,13 @@ class RuntimePreviewContractTest(unittest.TestCase):
         self.assertIn("competing publishers", runtime)
         self.assertIn("direct write", runtime)
         self.assertIn("durable target", runtime)
+
+    def test_runtime_preview_scopes_forced_ttl_to_lifecycle_risk(self):
+        runtime = (ROOT / ".agents/skills/vaoferi-runtime-preview/SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("manual forced TTL/watchdog expiry", runtime)
+        self.assertIn("ordinary product/UI change", runtime)
+        self.assertIn("normal stop parity", runtime)
+        self.assertIn("unrelated UI test", runtime)
 
 
 if __name__ == "__main__":

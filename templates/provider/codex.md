@@ -14,7 +14,7 @@ Compact mirror of Vaoferi's highest-risk rules for `$CODEX_HOME/AGENTS.md` (defa
 - Secrets: Vaultwarden is the global inventory; project-root `.env` holds only project-needed credentials. Never echo secret values.
 - `VISUAL APPROVAL` requires explicit owner approval on a production-faithful current UI. New authored-UI `!important` is a hard failure without an accepted exception.
 - Equal visible peer groups must not create accidental orphan layouts (`2+1`, `3+1`, `2+2+1`) without a documented reason.
-- Run project-required lint/build/tests and browser/responsive/device gates; inspect Console/Network where relevant.
+- Verification is **risk-tiered**: focused RED→GREEN in the inner loop; affected-surface/breakpoint candidate gate before review; full project/browser matrix only for broad/high-risk/release or explicit project requirements. Isolate unrelated/flaky failures instead of expanding the current task.
 - Runtime/visual review must point to an exact SHA/version on a current reviewer-accessible artifact.
 - Temporary DEV → durable preview/staging/fallback requires **durable promotion + exact artifact identity + post-teardown verification**. Latest accepted visible state must survive DEV death; healthy-but-stale fallback = FAIL.
 - If an accepted stable endpoint becomes stale/broken, enter **RECOVERY MODE**: restore the latest accepted durable state before secondary hardening. Two consecutive loops with no frontier movement/new falsification → one reproducible fail + one smallest experiment.
