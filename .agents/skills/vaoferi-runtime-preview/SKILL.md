@@ -73,6 +73,19 @@ Normal completion is:
 
 The previous artifact is a rollback target for failed promotion/recovery. It is not the normal fallback after successful newer acceptance.
 
+## Single-writer publication invariant
+
+A durable preview/staging target has exactly one declared **canonical publisher** or promotion path.
+
+- Other workflows and scripts may build, test, or retain ephemeral artifacts, but they must not independently mutate the durable target, release pointer, or accepted artifact.
+- If CI is allowed to publish, it invokes the same canonical publisher entrypoint; it does not recreate publication with a second `rsync`, `scp`, `sftp`, copy, delete, or remote-shell write path.
+- Before **F4 DURABLE PROMOTION**, identify the canonical publisher and inspect repository-owned automation for **competing publishers** that can write the same durable target.
+- A **direct write** into the durable target outside the canonical publisher is FAIL and is not promotion evidence, even when the copied files came from the correct source SHA.
+- Multiple callers of one canonical publisher must be serialized when concurrent publication could race. Serialization does not make multiple independent publishers valid.
+- If accepted stable state later reverts or changes without an accepted promotion, RECOVERY MODE checks competing publishers before broad infrastructure archaeology.
+
+Projects own the concrete protected paths and regression checks. Start Here owns this invariant; do not embed project-specific paths here.
+
 ## RECOVERY MODE
 
 If the owner/reviewer reports that the canonical stable endpoint no longer shows already accepted work, immediately enter **RECOVERY MODE**.
