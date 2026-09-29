@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.2.9**
+**Current release: 0.3.0**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -38,6 +38,22 @@ python scripts/check_agents_contract.py AGENTS.md
 ```
 
 `Start Here self-test` runs these checks on every push and pull request to `main`.
+
+## 0.3.0: runtime/preview lifecycle becomes a first-class workflow
+
+Repeated Miami Vero failures showed that one extra DoD sentence was not enough. Work could still spend hours inside diagnostics while the user-facing stable preview stayed stale; acceptance-critical code could remain on diverged task branches; and a stale installed control-plane binary could be confused with the current platform checkout.
+
+0.3.0 adds a dedicated `vaoferi-runtime-preview` skill and changes the workflow from "check preview near the end" to a monotonic acceptance frontier:
+
+`SOURCE → CANDIDATE → TEMP TARGET → USER ACCEPTANCE → DURABLE PROMOTION → TEARDOWN → STABLE PARITY → DURABLE EVIDENCE`.
+
+Hardening:
+- stable preview means latest accepted durable user-visible state, not merely a healthy fallback;
+- promotion is required before DEV may stop/expire;
+- stale/broken canonical endpoint triggers RECOVERY MODE before secondary hardening;
+- two consecutive loops with no frontier movement/new falsification collapse to one reproducible fail + one smallest experiment;
+- runtime evidence includes control-plane identity;
+- acceptance-critical fixes stranded on stale/diverged branches are not current evidence.
 
 ## 0.2.9: stable-target acceptance survives DEV teardown
 
