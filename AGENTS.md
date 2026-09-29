@@ -56,9 +56,10 @@
 - Required browser/runtime недоступні → **BLOCKED**, task лишається `In Progress`; missing proof не pass.
 - `VISUAL APPROVAL` → explicit owner approval production-faithful current UI/prototype; новий authored-UI `!important` — hard failure без exact exception.
 - Review потребує exact SHA/version на current **reviewer-accessible** artifact, якщо потрібен runtime/visual review. Stale preview, `HTTP 200`, build PASS або code presence не acceptance.
-- Якщо canonical user-facing target перемикається між temporary DEV і durable preview/staging/fallback, `Done` потребує повторної перевірки **після нормального teardown/TTL/fallback**: stable target має показувати той самий accepted SHA/version. Silent fallback на старіший accepted/user-visible artifact = FAIL; project-specific promotion/identity commands живуть у project docs.
+- Якщо canonical user-facing target перемикається між temporary DEV і durable preview/staging/fallback, завантаж `vaoferi-runtime-preview`. `Done` потребує **durable promotion + exact artifact identity + monotonic acceptance frontier**. Silent fallback на старіший accepted/user-visible artifact = FAIL.
 - Запускай project-required lint/build/tests/browser checks; UI → real interactions, relevant Console/Network, required responsive/device states.
 - Shared-surface change → повторно перевір affected regressions; broad change → inspect target diff і назви unverified gaps.
+- Якщо stable reviewer/user endpoint перестав показувати вже accepted work, це **RECOVERY MODE**: спочатку віднови latest accepted durable state; не витрачай основний цикл на другорядний hardening. Два поспіль цикли без просування acceptance frontier або нового спростування гіпотези → зупини broad exploration і зведи роботу до одного reproducible fail + одного найменшого experiment.
 
 ## Git
 
@@ -79,7 +80,7 @@
 - New/unsynced repo або missing context → `vaoferi-bootstrap`; legacy/nested/conflicting docs → `vaoferi-project-adaptation`.
 - UI/layout/responsive/components/tokens/typography/design docs → `vaoferi-design-skill`.
 - Dependencies/versions/upgrades → `vaoferi-dependencies`; secrets/auth/privacy → `vaoferi-security`; non-trivial implementation/bug/refactor/tests → `vaoferi-engineering`.
-- Task tracking/Trello migration → `vaoferi-task-tracking`; production deploy/release/rollback/origin validation → `vaoferi-deploy` (deploy fixes only DEPLOY-LAYER defects; product/UI/CI causes go to their owning task).
+- Task tracking/Trello migration → `vaoferi-task-tracking`; DEV/HMR/stable preview/staging/TTL/watchdog/artifact promotion або stale reviewer URL → **`vaoferi-runtime-preview`**; production deploy/release/rollback/origin validation → `vaoferi-deploy` (deploy fixes only DEPLOY-LAYER defects; product/UI/CI causes go to their owning task).
 - Не завантажуй specialized rules без потреби: core короткий, conditional knowledge routed.
 
 ## Task Tracking
