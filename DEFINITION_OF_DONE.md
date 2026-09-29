@@ -94,6 +94,23 @@ Manual QA виконується на actual reviewer-accessible rendered target
 
 Project docs визначають конкретний endpoint, identity mechanism, promotion command і teardown lifecycle. Якщо project взагалі не має temporary→stable/fallback topology, цей gate документується як `N/A` з короткою причиною.
 
+### 4.1 Acceptance frontier, durable evidence and recovery
+
+For temporary→durable runtimes, completion follows this monotonic frontier:
+
+`SOURCE → CANDIDATE → TEMP TARGET → USER ACCEPTANCE → DURABLE PROMOTION → TEARDOWN → STABLE PARITY → DURABLE EVIDENCE`.
+
+Hard rules:
+
+- permanent/stable preview means the **latest accepted durable user-visible state**, not merely any healthy fallback;
+- exact artifact identity must survive the temporary DEV process; SPA HTML from an identity route is a FAIL;
+- accepted runtime/promotion fixes may not remain only on a stale/diverged task branch while dependent work continues on the authoritative branch;
+- if accepted work disappears from the canonical stable endpoint, enter **RECOVERY MODE** and restore the latest accepted durable state before secondary hardening;
+- evidence must include the exact control-plane implementation that actually executed build/promotion/teardown;
+- two consecutive iterations with no frontier advance and no newly falsified hypothesis require scope collapse to one reproducible failure and one smallest next experiment.
+
+Detailed procedure: `.agents/skills/vaoferi-runtime-preview/SKILL.md`.
+
 ## 5. Automated responsive/geometry sweep
 
 Manual 10-state matrix не замінює автоматизований browser regression gate.
