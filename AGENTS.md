@@ -47,6 +47,11 @@
 - Version-sensitive facts перевіряй за current official/reliable source.
 - Behavior change/bug fix → **TDD**: failing test, підтверджений **RED**, мінімальний GREEN, regressions; production fix до RED не пиши, якщо test технічно можливий.
 
+## Canonical Route And Memory
+
+- Failed **canonical route** → спершу exact environment/identity/credential + Linear/docs/runtime/Hindsight. Не повторюй disproved path без доказаної **invalidating condition**; повний anti-loop contract — `MEMORY.md`.
+- Не клади в memory secrets, PII, production payloads або biometric data.
+
 ## Verification
 
 - `In Review` / `Done` потребують доказу кожного релевантного acceptance criterion і повного `DEFINITION_OF_DONE.md`.
