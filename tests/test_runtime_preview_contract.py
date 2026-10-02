@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class RuntimePreviewContractTest(unittest.TestCase):
     def test_runtime_preview_contract_is_wired(self):
         with (ROOT / "pyproject.toml").open("rb") as fh:
-            self.assertEqual(tomllib.load(fh)["project"]["version"], "0.3.2")
+            self.assertEqual(tomllib.load(fh)["project"]["version"], "0.3.3")
 
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         dod = (ROOT / "DEFINITION_OF_DONE.md").read_text(encoding="utf-8")
@@ -43,3 +43,4 @@ class RuntimePreviewContractTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

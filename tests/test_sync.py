@@ -2,6 +2,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import unittest
@@ -12,13 +13,33 @@ DESIGN_LOCK = ROOT / "vendor" / "design-skill.lock.json"
 
 
 class SyncTest(unittest.TestCase):
-    def run_sync(self, action, target):
+    def run_sync(self, action, target, env=None):
+        merged = dict(os.environ)
+        merged.pop("VAOFERI_START_HERE_CENTRAL_URL", None)
+        if env:
+            merged.update(env)
         return subprocess.run(
             [sys.executable, str(SYNC), action, "--target", str(target)],
             cwd=ROOT,
             text=True,
             capture_output=True,
+            env=merged,
         )
+
+    def test_sync_exposes_explicit_central_freshness_action(self):
+        with TemporaryDirectory() as td:
+            target = Path(td)
+            self.assertEqual(self.run_sync("bootstrap", target).returncode, 0)
+            unreachable = target / "no-such-remote"
+            result = self.run_sync(
+                "check-central",
+                target,
+                {"VAOFERI_START_HERE_CENTRAL_URL": str(unreachable)},
+            )
+            output = result.stdout + result.stderr
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("CENTRAL STATUS: UNKNOWN", output)
+            self.assertNotIn("Central freshness verified", output)
 
     def test_bootstrap_preserves_project_rules_and_is_idempotent(self):
         with TemporaryDirectory() as td:
@@ -89,3 +110,4 @@ class SyncTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

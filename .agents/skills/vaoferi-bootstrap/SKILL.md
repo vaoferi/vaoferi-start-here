@@ -12,9 +12,9 @@ description: Use when starting work in a new or unsynchronized repository, or wh
 Перед першою repository-scoped **write-capable** дією в кожній сесії доведи, що локальний baseline не застарілий.
 
 1. Прочитай `.vaoferi/manifest.json`; зафіксуй installed version і `source_commit`.
-2. Через доступне trusted source визнач **canonical Start Here** `main`: latest version + exact commit. Локальний manifest сам по собі не доводить latest.
+2. Через доступне trusted source визнач **canonical Start Here** `main`: latest version + exact commit. Локальний manifest сам по собі не доводить latest; cached local ref Start Here теж не є доказом.
 3. Якщо local baseline stale, виконай canonical sync `update`; не hand-edit centrally-owned files. Якщо manifest відсутній — використай canonical bootstrap path.
-4. Виконай local verify та **central drift** check. Sync/verify має лишатися fail-closed при змінених centrally-owned файлах або ownership conflict.
+4. Виконай local verify, потім окремо `python .vaoferi/verify.py check-central`: fresh `git ls-remote` refs/heads/main дає `CURRENT`/`OUTDATED`/`UNKNOWN`. Local PASS не доводить central latest. Sync/verify має лишатися fail-closed при змінених centrally-owned файлах або ownership conflict.
 5. Прочитай `PROJECT_RULES.md` і релевантні project-owned docs; central sync не має їх перезаписувати.
 6. Перший видимий repo-status дай окремо: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`.
 
@@ -67,3 +67,4 @@ A clean/new repository can skip that heavier adaptation pass when there is no pr
 - якщо `PROJECT_RULES.md` уже існує, не перезаписуй його мовчки;
 - bootstrap/update universal-owned files роби через canonical sync mechanism, коли він доступний;
 - якщо потрібна legacy-doc reconciliation, передай confirmed context у `vaoferi-project-adaptation`, а не починай cleanup навмання.
+

@@ -4,7 +4,7 @@ Compact mirror of Vaoferi's highest-risk rules for `$CODEX_HOME/AGENTS.md` (defa
 
 ## Critical working rules
 
-- **Session baseline first.** Before write-capable repo work, compare local `.vaoferi/manifest.json` with canonical latest Start Here `main`; if stale, update through canonical sync, verify drift, then read `DEFINITION_OF_DONE.md` and `PROJECT_RULES.md`. Only then emit `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. Otherwise emit `⛔ START HERE BLOCKED/OUTDATED — <reason>` and **do not begin write-capable repository work** without explicit owner override.
+- **Session baseline first.** Before write-capable repo work, compare local `.vaoferi/manifest.json` with canonical latest Start Here `main`; if stale, update through canonical sync, then read `DEFINITION_OF_DONE.md` and `PROJECT_RULES.md`. Local verify proves hashes only; `VERIFIED` additionally requires `python .vaoferi/verify.py check-central` reporting `CURRENT` from a fresh `git ls-remote` — a cached local ref never counts. Only then emit `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · PROJECT_RULES: loaded`. Otherwise emit `⛔ START HERE BLOCKED/OUTDATED — <reason>` and **do not begin write-capable repository work** without explicit owner override.
 - Explain outcome-first. Behavior change/bug fix → TDD RED → minimal GREEN → regressions.
 - Every relevant acceptance criterion needs proof before `In Review`/`Done`. User actions/UI behavior must be exercised on the real topmost user-facing target; source/string/DOM presence is supplementary only.
 - Missing required browser/runtime proof = **BLOCKED**. Never call missing evidence a pass.
@@ -24,3 +24,4 @@ Compact mirror of Vaoferi's highest-risk rules for `$CODEX_HOME/AGENTS.md` (defa
 - Never weaken/delete tests just to get green. Never claim verification that did not actually run.
 
 Canonical details remain in Vaoferi Start Here and conditional skills.
+

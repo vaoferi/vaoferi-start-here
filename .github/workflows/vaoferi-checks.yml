@@ -29,6 +29,8 @@ jobs:
           python-version: '3.11'
       - name: Verify Start Here contract
         run: python .vaoferi/verify.py
+      - name: Verify central freshness against trusted remote
+        run: python .vaoferi/verify.py check-central
       - name: Fail if required project checks are missing
         if: ${{ inputs.require-project-checks && inputs.project-check-command == '' }}
         shell: bash
@@ -39,3 +41,4 @@ jobs:
         if: ${{ inputs.project-check-command != '' }}
         shell: bash
         run: ${{ inputs.project-check-command }}
+

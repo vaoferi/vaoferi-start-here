@@ -18,8 +18,9 @@
 
 ## Session Baseline
 
-- Перед першою repository-scoped write-capable дією в сесії прочитай `.vaoferi/manifest.json`, звір version/`source_commit` з **canonical latest** `vaoferi/vaoferi-start-here` `main` через trusted source; stale baseline онови лише canonical sync mechanism, потім verify/central drift, `DEFINITION_OF_DONE.md` і `PROJECT_RULES.md`.
-- Перший видимий repo-status окремим рядком: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · DoD: loaded · PROJECT_RULES: loaded`. `VERIFIED` дозволений лише після factual latest comparison + local verify.
+- Перед першою repository-scoped write-capable дією прочитай `.vaoferi/manifest.json`, звір version/`source_commit` з **canonical latest** `vaoferi/vaoferi-start-here` `main` через trusted source; stale baseline онови лише canonical sync mechanism, потім `DEFINITION_OF_DONE.md` і `PROJECT_RULES.md`.
+- Local verify доводить лише hashes/hygiene; `VERIFIED` вимагає окремого `python .vaoferi/verify.py check-central` (fresh `git ls-remote` refs/heads/main). Cached local ref не є доказом central latest.
+- Перший видимий repo-status: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · DoD: loaded · PROJECT_RULES: loaded`.
 - Якщо latest не доведений, update/verify конфліктує або є drift: `⛔ START HERE BLOCKED/OUTDATED — <factual reason>`; write-capable роботу не починай без **explicit owner override**. Read-only diagnosis дозволений лише для blocker discovery.
 - Перед новою IMPLEMENTATION задачею виконай `python .vaoferi/check_worktree_clean.py` (або exact `git status --porcelain=v1 --untracked-files=all`). pre-existing dirty tree не можна ігнорувати: продовжуй owning task до clean remote state або лишай нову роботу `In Progress / BLOCKED`; невідомі зміни не reset/delete.
 
@@ -94,3 +95,4 @@
 - Repository-scoped **implementation task** продовжуй **до повного completion loop** за `DEFINITION_OF_DONE.md` + `vaoferi-task-tracking`; не зупиняйся на partial result.
 - `Definition of Done` формулюй outcome-first, **мовою користувача**. Reviewer independently verifies: FAIL → `In Progress`; PASS без owner-only gate → `Done`; owner-only acceptance → `In Review`.
 - `Trello` — legacy input: relevant card прочитай повністю, перенеси useful work/facts у Linear/canonical sources, verify parity; після parity hard-delete або архів/close. Не створюй нових Trello cards і не веди паралельні sources of truth.
+

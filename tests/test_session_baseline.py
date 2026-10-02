@@ -18,6 +18,7 @@ class SessionBaselineContractTest(unittest.TestCase):
             "START HERE BLOCKED/OUTDATED",
             "PROJECT_RULES: loaded",
             "explicit owner override",
+            "check-central",
         ):
             self.assertIn(required, text)
 
@@ -30,6 +31,7 @@ class SessionBaselineContractTest(unittest.TestCase):
             "central drift",
             "write-capable",
             "read-only diagnosis",
+            "check-central",
         ):
             self.assertIn(required, text)
 
@@ -41,6 +43,7 @@ class SessionBaselineContractTest(unittest.TestCase):
             ".vaoferi/manifest.json",
             "PROJECT_RULES: loaded",
             "do not begin write-capable repository work",
+            "check-central",
         ):
             self.assertIn(required, text)
 
@@ -53,3 +56,4 @@ class SessionBaselineContractTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

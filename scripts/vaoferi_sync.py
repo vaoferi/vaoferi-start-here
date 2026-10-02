@@ -209,9 +209,18 @@ def verify(target: Path) -> None:
     print(f"Verified Start Here in {target}")
 
 
+def check_central(target: Path) -> None:
+    """Local verify cannot establish central latest; this asks the trusted remote."""
+    verifier = target / ".vaoferi/verify.py"
+    result = subprocess.run([sys.executable, str(verifier), "check-central"], cwd=target)
+    if result.returncode != 0:
+        raise SyncError(f"central freshness not established (exit {result.returncode})")
+    print(f"Central freshness verified in {target}")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Bootstrap, update, or verify Vaoferi Start Here in a repository")
-    parser.add_argument("action", choices=("bootstrap", "update", "verify"))
+    parser.add_argument("action", choices=("bootstrap", "update", "verify", "check-central"))
     parser.add_argument("--target", required=True, type=Path)
     return parser.parse_args()
 
@@ -220,7 +229,12 @@ def main() -> int:
     args = parse_args()
     target = args.target.resolve()
     try:
-        {"bootstrap": bootstrap, "update": update, "verify": verify}[args.action](target)
+        {
+            "bootstrap": bootstrap,
+            "update": update,
+            "verify": verify,
+            "check-central": check_central,
+        }[args.action](target)
     except (OSError, SyncError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
@@ -229,3 +243,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

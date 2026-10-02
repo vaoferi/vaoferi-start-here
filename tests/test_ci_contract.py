@@ -12,9 +12,11 @@ class CiContractTest(unittest.TestCase):
         self.assertIn("actions/checkout@v7", text)
         self.assertIn("actions/setup-python@v7", text)
         self.assertIn("python .vaoferi/verify.py", text)
+        self.assertIn("python .vaoferi/verify.py check-central", text)
         self.assertIn("require-project-checks", text)
         self.assertIn("project-check-command", text)
 
 
 if __name__ == "__main__":
     unittest.main()
+
