@@ -12,6 +12,7 @@ Compact mirror of Vaoferi's highest-risk rules for `$CODEX_HOME/AGENTS.md` (defa
 - Every repository task requires **commit + push + exact pushed SHA** before review/Done.
 - **WORKTREE CLEAN is mandatory.** Classify pre-existing dirty state before new implementation work; before handoff, `python .vaoferi/check_worktree_clean.py` must report `WORKTREE CLEAN: PASS`. Never reset/delete unknown work just to get green.
 - Secrets: Vaultwarden is the global inventory; project-root `.env` holds only project-needed credentials. Never echo secret values.
+- **Canonical-route stop:** if current project docs prescribe a route and it fails, prove why first (exact environment/identity/credential presence + current Linear/docs/runtime + Hindsight when available). Do not repeat a disproved path unless its invalidating condition changed; see synced `MEMORY.md`.
 - `VISUAL APPROVAL` requires explicit owner approval on a production-faithful current UI. New authored-UI `!important` is a hard failure without an accepted exception.
 - Equal visible peer groups must not create accidental orphan layouts (`2+1`, `3+1`, `2+2+1`) without a documented reason.
 - Verification is **risk-tiered**: focused RED→GREEN in the inner loop; affected-surface/breakpoint candidate gate before review; full project/browser matrix only for broad/high-risk/release or explicit project requirements. Isolate unrelated/flaky failures instead of expanding the current task.

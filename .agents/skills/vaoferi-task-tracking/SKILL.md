@@ -11,6 +11,15 @@ description: Use when reading, migrating, creating, updating, or retiring work i
 
 `DEFINITION_OF_DONE.md` — обов'язковий centrally-owned completion contract для кожної repository-scoped IMPLEMENTATION задачі. Цей skill уточнює lifecycle, але не може послабити DoD.
 
+## Linear information architecture
+
+- **Project Overview** — stable README/navigation: purpose, boundaries, canonical repositories/docs, workstream/site labels and durable project-level decisions. Не вести тут денний progress log.
+- **Issues** — executable work, owner decisions and issue-specific evidence/corrections.
+- **Project Updates / Activity** — chronological material state change: release/cutover, health, project-level blocker, corrected project assumption or important risk/next step. Не засмічувати кожним test rerun.
+- **Hindsight** — sanitized experience/dead-end memory, subordinate to current sources; не task tracker і не truth.
+
+Якщо executor зробив **material correction** до раніше опублікованого висновку, не переписуй історію тихо: додай issue comment/update з correct evidence і, коли failure class може повторитися, збережи sanitized Hindsight trap/correction record за `MEMORY.md`.
+
 ## Mandatory issue modes
 
 Перед execution кожна картка має бути однозначно віднесена до одного mode. Якщо mode не вказаний у title/description/template, агент визначає його перед роботою й фіксує одним рядком у Linear.

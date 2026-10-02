@@ -44,6 +44,20 @@ If the harness/CLI cannot write Vaultwarden:
 - leave an explicit BLOCKED/follow-up with only non-secret destination metadata: service/account name, Vaultwarden folder/item naming target and required owner/tool action;
 - when the credential does not belong to the current project, Vaultwarden persistence remains incomplete until access exists; never leak the value into Linear/chat as a workaround.
 
+### Recovery before re-asking the owner
+
+**Before asking the owner** to provide a credential again, prove that the approved copies cannot satisfy the task.
+
+Check in order, without printing values:
+
+1. credential names/schema in `.env.example`, deploy config, secret manifest or current runbook;
+2. the ignored **project-root `.env`** when the project is a consumer;
+3. the canonical **Vaultwarden** item/folder mapping and the cross-platform bootstrap defined by Linear **NLM-178**;
+4. current runtime/provider config for a validated credential already in use, when read access is authorized;
+5. current Linear/Start Here notes for a renamed/migrated seam.
+
+If a credential is found and validated, persist/reconcile it under the existing two-copy contract; do not make the owner retype it. If neither copy is accessible, report only the missing **credential names**, consumer, expected Vaultwarden destination and exact bootstrap/access blocker. Do not create a third secret store and do not paste a value into the blocker.
+
 ### Exposure versus availability
 
 Finding a validated credential in tracked/shared/public code is still a security exposure.
