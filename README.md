@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.3.1**
+**Current release: 0.3.2**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -13,6 +13,19 @@ Public canonical source for Vaoferi-wide AI-agent behavior, conditional local sk
 - Linear — active work tracker. Trello — incremental legacy input only: migrate relevant cards as they are encountered; delete when supported, otherwise archive/close after parity.
 
 The architecture is intentionally local-first: after bootstrap/update, ordinary work in a target repository must not depend on network access to this repository.
+
+## 0.3.2: canonical-route stop + shared anti-loop memory
+
+Repeated infrastructure debugging showed a missing guardrail: an agent could see a canonical route fail once, jump through several alternate shells/hosts/paths, and later rediscover the same dead end because the correction lived only in one conversation.
+
+0.3.2 adds a centrally-synced `MEMORY.md` and tightens engineering/security routing:
+
+- a documented canonical route must be diagnosed on its exact environment/identity/credential seam before an alternate path is tried;
+- Hindsight is an anti-loop experience layer, never a source of truth; a failed/disproved path is retried only after a named invalidating condition changed;
+- the recommended Hindsight coding-agent configuration uses the upstream harness-neutral per-repo bank, shared observations and session-start reflect, while active config stays machine-level rather than repo-carried;
+- cross-machine memory requires one explicitly approved shared Hindsight server; memory tokens/LLM keys follow the existing Vaultwarden contract;
+- before asking the owner to resend a credential, agents must exhaust the approved project `.env` + Vaultwarden/bootstrap seams and report only non-secret missing metadata;
+- `MEMORY.md` is centrally owned by Start Here and synced into participating repositories, so the recovery/anti-loop contract is available offline with the rest of the baseline.
 
 ## 0.2.0: Project Adaptation
 
