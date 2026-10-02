@@ -16,6 +16,20 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 7. Запусти релевантні tests/lint/build/runtime/browser checks, потім перевір diff і acceptance ledger.
 8. Поясни результат outcome-first; явно назви неперевірене.
 
+## Canonical-route stop
+
+Коли current `PROJECT_RULES.md` / ADR / runbook задає canonical route, а він не працює, **не обходь його за інерцією**.
+
+Перед alternate path:
+
+1. відтвори failure на exact host/path/tool/version і підтвердь target/worktree/artifact identity;
+2. перевір required credential names/presence через approved seams без друку values;
+3. звір current project docs і активний **Linear** decision/task;
+4. коли Hindsight доступний — recall/reflect same problem signature, failed/disproved paths та `do-not-repeat-until`;
+5. сформулюй одну leading hypothesis і зроби один **smallest experiment**, який може її спростувати.
+
+Alternate/workaround допустимий лише після доказаного blocker. Збережи evidence + причину + re-entry/invalidating condition. Раніше disproved path не повторюй без фактичної зміни цієї умови.
+
 ## Architecture And Data Flow
 
 - SOLID використовуй як захист від coupling/хаосу, а не як церемонію: interface/service/adapter потрібні лише коли реально зменшують ризик змін або полегшують тестування.
