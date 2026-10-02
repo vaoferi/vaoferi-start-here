@@ -39,6 +39,9 @@
 5. повторно запустити `python .vaoferi/check_worktree_clean.py`;
 6. отримати **порожній Git status** і `WORKTREE CLEAN: PASS`;
 7. записати exact pushed SHA/PR та clean-worktree evidence у Linear handoff.
+8. перевірити **workspace hygiene**: `git worktree list --porcelain` не містить нічого, крім canonical checkout і worktree, який ще реально використовується. Будь-який auxiliary worktree, створений цією задачею, до terminal state зобов'язаний бути прибраний через `git worktree remove <path>`, а після всіх видалень — `git worktree prune`.
+
+Крок 8 стосується саме **видимих sibling-директорій**: clean status поточного checkout не доводить, що робоча область чиста. Залишений auxiliary checkout — це block для `In Review` / `Done`, а не дрібна гігієна.
 
 У кінці задачі має залишатися **нуль незакомічених tracked/staged/untracked файлів**. Gitignored private/runtime файли не є Git-worktree змінами, але tracked secrets або випадково unignored приватні файли — окрема security failure, не привід їх commit-ити.
 

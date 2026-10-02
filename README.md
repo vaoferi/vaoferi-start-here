@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.3.3**
+**Current release: 0.3.4**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -13,6 +13,19 @@ Public canonical source for Vaoferi-wide AI-agent behavior, conditional local sk
 - Linear — active work tracker. Trello — incremental legacy input only: migrate relevant cards as they are encountered; delete when supported, otherwise archive/close after parity.
 
 The architecture is intentionally local-first: after bootstrap/update, ordinary work in a target repository must not depend on network access to this repository.
+
+## 0.3.4: auxiliary worktrees have a lifecycle, not just a rule of thumb
+
+The contract already said to use a worktree only for real risk/parallelism/tooling reasons and to end with a clean checkout. It said nothing about where such a worktree may live or what must happen to it afterwards, so an agent could finish its own card honestly — clean status, pushed commits — and still leave a permanent sibling project folder beside the canonical repo. Nine such folders accumulated in one workspace before this was noticed.
+
+0.3.4 closes that gap:
+
+- an auxiliary worktree may only be created under the hidden `$WORK/.codex/worktrees/<repo>/<issue>/...` area; a visible sibling `$WORK/<Repo>-<task>` is forbidden without an explicit owner request;
+- before `In Review` / `Done` the task must remove it with `git worktree remove <path>` and then run `git worktree prune`;
+- `DEFINITION_OF_DONE.md` gains a workspace-hygiene step, because a clean current checkout was never evidence that the workspace itself was clean;
+- Windows Git may not be used as the `prunable` verdict for NAS/Linux absolute gitdir pointers, since Windows cannot resolve them correctly. Cleanup runs from the canonical Linux checkout.
+
+Branch refs may survive removal: repository history is not workspace clutter.
 
 ## 0.3.3: central freshness is a separate, explicit check
 

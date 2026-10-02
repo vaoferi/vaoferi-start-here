@@ -22,16 +22,16 @@
 - Local verify доводить лише hashes/hygiene; `VERIFIED` вимагає окремого `python .vaoferi/verify.py check-central` (fresh `git ls-remote` refs/heads/main). Cached local ref не є доказом central latest.
 - Перший видимий repo-status: `✅ START HERE VERIFIED — <version> @ <short SHA> · central drift: none · DoD: loaded · PROJECT_RULES: loaded`.
 - Якщо latest не доведений, update/verify конфліктує або є drift: `⛔ START HERE BLOCKED/OUTDATED — <factual reason>`; write-capable роботу не починай без **explicit owner override**. Read-only diagnosis дозволений лише для blocker discovery.
-- Перед новою IMPLEMENTATION задачею виконай `python .vaoferi/check_worktree_clean.py` (або exact `git status --porcelain=v1 --untracked-files=all`). pre-existing dirty tree не можна ігнорувати: продовжуй owning task до clean remote state або лишай нову роботу `In Progress / BLOCKED`; невідомі зміни не reset/delete.
+- Перед новою IMPLEMENTATION задачею виконай `python .vaoferi/check_worktree_clean.py` (або exact `git status --porcelain=v1 --untracked-files=all`). pre-existing dirty tree не можна ігнорувати: продовжуй owning task до clean remote state або лишай роботу `In Progress / BLOCKED`; невідомі зміни не reset/delete.
 
 ## Autonomy And Risk
 
 - Якщо доступний інструмент може знайти/перевірити/виконати дію — використовуй його; питай власника лише про реальні decisions, preferences або відсутні/конфліктні facts.
-- Без окремого дозволу не роби destructive, irreversible, paid, security-sensitive чи production-impacting дій, якщо вони не були явно авторизовані. Security/privacy/data integrity — hard boundaries.
+- Без окремого дозволу не роби destructive, irreversible, paid, security-sensitive чи production-impacting дій. Security/privacy/data integrity — hard boundaries.
 
 ## Owner Content Boundaries
 
-- Не створюй/просувай 18+ сексуалізований контент, шахрайство, навмисний обман чи manipulative dark patterns.
+- Не створюй/просувай 18+ сексуалізований контент, шахрайство, навмисний обман чи dark patterns.
 - Якщо напрям конфліктує з явно заявленими християнськими моральними принципами власника, назви конфлікт і запропонуй сумісну альтернативу.
 
 ## Work Proportionally
@@ -71,9 +71,10 @@
 
 - Перед змінами/commit перевір status/diff настільки, наскільки дозволяє середовище.
 - Кожна repository-scoped Linear task перед `In Review`/`Done` вимагає **commit + push**; handoff містить exact **pushed SHA**. Local-only commit не review evidence.
-- Перед handoff підтвердь intended local HEAD == reviewer-accessible remote branch/PR head і обов'язково отримай `WORKTREE CLEAN: PASS`; фінальний `git status --porcelain=v1 --untracked-files=all` має бути порожнім. Будь-який staged/modified/deleted/renamed/untracked хвіст блокує completion, доки його не класифіковано, не збережено/commit+push або безпечно не прибрано за правилами `DEFINITION_OF_DONE.md`.
-- Не commit secrets, real `.env`, cookies, dumps, temp/dependency garbage; не роби destructive cleanup чужих змін.
-- Не змішуй без потреби feature/refactor/dependency/deploy/cosmetics; branch/worktree використовуй лише коли цього потребує risk/parallelism/tooling.
+- Перед handoff підтвердь intended local HEAD == reviewer-accessible remote branch/PR head і отримай `WORKTREE CLEAN: PASS`; фінальний `git status --porcelain=v1 --untracked-files=all` має бути порожнім. Будь-який хвіст блокує completion, доки його не класифіковано, не збережено/commit+push або безпечно не прибрано за `DEFINITION_OF_DONE.md`.
+- Не commit secrets, `.env`, cookies, dumps, temp/dependency garbage; не роби destructive cleanup чужих змін.
+- Не змішуй без потреби feature/refactor/dependency/deploy/cosmetics; branch/worktree лише за реальної потреби.
+- **Auxiliary worktree**: only hidden `$WORK/.codex/worktrees/...`, never a visible sibling `$WORK/<Repo>-<task>`; remove with `git worktree remove` + `git worktree prune` before `In Review`/`Done`. Details in `DEFINITION_OF_DONE.md`.
 
 ## Secret Availability
 
