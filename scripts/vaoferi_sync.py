@@ -77,15 +77,32 @@ def owned_sources() -> dict[str, Path]:
     return sources
 
 
-def read_version() -> str:
-    with (ROOT / "pyproject.toml").open("rb") as fh:
-        return tomllib.load(fh)["project"]["version"]
+def source_blob_bytes(source: Path, root: Path = ROOT, revision: str | None = None) -> bytes:
+    """Read a tracked source from the pinned Git tree, not checkout-transformed bytes."""
+    try:
+        relative = source.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError as exc:
+        raise SyncError(f"canonical source is outside repository: {source}") from exc
+    pinned_revision = revision or source_commit(root)
+    result = subprocess.run(
+        ["git", "cat-file", "blob", f"{pinned_revision}:{relative}"],
+        cwd=root,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        raise SyncError(f"canonical source missing from Git revision {pinned_revision}: {relative}")
+    return result.stdout
 
 
-def source_commit() -> str:
+def read_version(revision: str) -> str:
+    data = source_blob_bytes(ROOT / "pyproject.toml", revision=revision)
+    return tomllib.loads(data.decode("utf-8"))["project"]["version"]
+
+
+def source_commit(root: Path = ROOT) -> str:
     result = subprocess.run(
         ["git", "rev-parse", "HEAD"],
-        cwd=ROOT,
+        cwd=root,
         text=True,
         capture_output=True,
     )
@@ -113,13 +130,18 @@ def load_manifest(target: Path) -> dict:
     return data
 
 
-def write_manifest(target: Path, installed_at: str, sources: dict[str, Path]) -> bytes:
+def write_manifest(
+    target: Path,
+    installed_at: str,
+    sources: dict[str, Path],
+    source_revision: str,
+) -> bytes:
     owned = {rel: sha256_file(target / rel) for rel in sorted(sources)}
     data = {
         "schema": 1,
         "start_here": {
-            "version": read_version(),
-            "source_commit": source_commit(),
+            "version": read_version(source_revision),
+            "source_commit": source_revision,
         },
         "owned_files": owned,
         "project_owned": PROJECT_OWNED,
@@ -132,12 +154,18 @@ def write_manifest(target: Path, installed_at: str, sources: dict[str, Path]) ->
     return payload
 
 
-def copy_owned(target: Path, previous_owned: dict[str, str] | None, sources: dict[str, Path]) -> None:
+def copy_owned(
+    target: Path,
+    previous_owned: dict[str, str] | None,
+    sources: dict[str, Path],
+    source_root: Path = ROOT,
+    source_revision: str | None = None,
+) -> None:
     for rel, source in sources.items():
         if not source.is_file():
             raise SyncError(f"canonical source missing: {source}")
         dest = target / rel
-        source_data = source.read_bytes()
+        source_data = source_blob_bytes(source, source_root, source_revision)
         if dest.exists() and previous_owned is None and dest.read_bytes() != source_data:
             raise SyncError(f"bootstrap conflict at centrally-owned path: {rel}")
         if dest.exists() and previous_owned is not None and rel not in previous_owned:
@@ -171,24 +199,26 @@ def retire_removed_owned_files(target: Path, previous_owned: dict[str, str], sou
 
 def bootstrap(target: Path) -> None:
     sources = owned_sources()
+    revision = source_commit()
     target.mkdir(parents=True, exist_ok=True)
     if manifest_path(target).exists():
         raise SyncError("bootstrap conflict: manifest already exists; use update")
-    copy_owned(target, previous_owned=None, sources=sources)
+    copy_owned(target, previous_owned=None, sources=sources, source_revision=revision)
     installed_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    write_manifest(target, installed_at, sources)
+    write_manifest(target, installed_at, sources, revision)
     print(f"Bootstrapped Start Here into {target}")
 
 
 def update(target: Path) -> None:
     sources = owned_sources()
+    revision = source_commit()
     manifest = load_manifest(target)
     assert_no_drift(target, manifest)
     previous_owned = dict(manifest["owned_files"])
-    copy_owned(target, previous_owned=previous_owned, sources=sources)
+    copy_owned(target, previous_owned=previous_owned, sources=sources, source_revision=revision)
     retire_removed_owned_files(target, previous_owned, sources)
     before = manifest_path(target).read_bytes()
-    after = write_manifest(target, manifest["installed_at"], sources)
+    after = write_manifest(target, manifest["installed_at"], sources, revision)
     if before == after:
         print(f"Start Here already current in {target}")
     else:

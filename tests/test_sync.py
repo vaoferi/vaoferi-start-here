@@ -1,6 +1,7 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import hashlib
+import importlib.util
 import json
 import os
 import subprocess
@@ -10,6 +11,9 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 SYNC = ROOT / "scripts" / "vaoferi_sync.py"
 DESIGN_LOCK = ROOT / "vendor" / "design-skill.lock.json"
+SYNC_SPEC = importlib.util.spec_from_file_location("vaoferi_sync", SYNC)
+SYNC_MODULE = importlib.util.module_from_spec(SYNC_SPEC)
+SYNC_SPEC.loader.exec_module(SYNC_MODULE)
 
 
 class SyncTest(unittest.TestCase):
@@ -106,6 +110,33 @@ class SyncTest(unittest.TestCase):
             result = self.run_sync("bootstrap", target)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("conflict", (result.stderr + result.stdout).lower())
+
+    def test_update_copies_committed_blob_bytes_not_transformed_checkout_bytes(self):
+        with TemporaryDirectory() as td:
+            source_repo = Path(td) / "source"
+            target = Path(td) / "target"
+            source_repo.mkdir()
+            subprocess.run(["git", "init", "-q", str(source_repo)], check=True)
+            subprocess.run(["git", "-C", str(source_repo), "config", "user.name", "Sync Test"], check=True)
+            subprocess.run(["git", "-C", str(source_repo), "config", "user.email", "sync-test@example.invalid"], check=True)
+            (source_repo / ".gitattributes").write_text("*.md text eol=lf\n", encoding="utf-8")
+            source = source_repo / "AGENTS.md"
+            committed = b"first line\n\n"
+            source.write_bytes(committed)
+            subprocess.run(["git", "-C", str(source_repo), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(source_repo), "commit", "-qm", "fixture"], check=True)
+
+            # Simulate checkout bytes that differ from the pinned Git revision.
+            source.write_bytes(b"first line\n\r\n")
+
+            SYNC_MODULE.copy_owned(
+                target,
+                previous_owned=None,
+                sources={"AGENTS.md": source},
+                source_root=source_repo,
+                source_revision="HEAD",
+            )
+            self.assertEqual((target / "AGENTS.md").read_bytes(), committed)
 
 
 if __name__ == "__main__":
