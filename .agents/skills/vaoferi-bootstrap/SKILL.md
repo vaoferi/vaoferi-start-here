@@ -32,6 +32,25 @@ description: Use when starting work in a new or unsynchronized repository, or wh
 
 Не проси власника виконувати пошук, який можеш зробити доступними інструментами.
 
+## Code Graph Adoption
+
+Якщо репозиторій має `.codegraph/` (або власний canonical code-graph index),
+CodeGraph є першим structural/code-understanding layer, а не опцією після grep.
+Це стосується non-trivial роботи, яка змінює або review-ить code/config, робить
+architecture/runtime/data-flow claims, змінює operational documentation, що описує
+code/runtime topology, або заявляє blast radius.
+
+1. Перевір index: `codegraph status`. Якщо він відсутній або явно unhealthy —
+   спочатку віднови інтеграцію або зафіксуй конкретний BLOCKED reason.
+2. Для non-trivial задач зроби хоча б один змістовний structural query **перед**
+   широкими file-by-file пошуками, і повторний impact/blast-radius query перед
+   завершенням, коли оцінюється impact.
+3. Не відкривай CodeGraph силою для чистої prose/content задачі без structural claim.
+
+Не замінюй CodeGraph LightRAG-ом, Graphify-ом чи іншим паралельним code-graph
+workflow без explicit owner decision. Source of truth лишаються current Git code,
+tests, active Linear decisions і canonical project docs.
+
 ## Minimum Context
 
 З'ясуй настільки, наскільки це реально потрібно задачі або першому setup:
