@@ -51,6 +51,19 @@ class MemoryAndRecoveryContractTest(unittest.TestCase):
         ):
             self.assertIn(required, text)
 
+    def test_dependency_aware_gate_recovery_is_central_and_synced(self):
+        memory = MEMORY.read_text(encoding="utf-8")
+        engineering = ENGINEERING.read_text(encoding="utf-8")
+        tracking = TRACKING.read_text(encoding="utf-8")
+        sync = SYNC.read_text(encoding="utf-8")
+        for expected in ("Dependency-aware stage receipts", "source_impact: unaffected",
+                         "transitive dependents", "WAIVED", "gate_resume.py"):
+            self.assertIn(expected, memory)
+        self.assertIn("stage N", engineering)
+        self.assertIn("MEMORY.md §3.1", engineering)
+        self.assertIn("focused RED→GREEN", tracking)
+        self.assertIn('".vaoferi/gate_resume.py": ROOT / "target/.vaoferi/gate_resume.py"', sync)
+
     def test_security_recovers_existing_credentials_before_reasking_owner(self):
         text = SECURITY.read_text(encoding="utf-8")
         for required in (
