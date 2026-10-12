@@ -47,6 +47,46 @@ Two consecutive cycles with no acceptance-frontier movement, no new falsified hy
 - one smallest experiment;
 - one next decision based on its result.
 
+## 3.1. Dependency-aware stage receipts (NLM-234)
+
+For multi-stage work, the **acceptance frontier** is a dependency graph, not a request to restart all earlier gates whenever a later gate fails. This includes build, lint, CI, security, DB/media freshness, browser interaction/geometry/Visual Gate, publish, and deploy, whenever they actually apply.
+
+**Before an expensive gate**, record a durable, sanitized checkpoint with: stage name/status `PASS | FAIL | BLOCKED | WAIVED`; exact source SHA; *stage-specific* input identities or content hashes; environment/root/DB/media/visual and mapping identities where relevant; the **IDs of accepted dependency receipts**; verified evidence link/command/output; completion and expiry timestamps; and the operator's explicit acceptance scope. Put this in an approved project-owned evidence/Linear location, not a secret-filled global bank. A fresh agent must be able to retrieve and independently validate it. Use stable receipt IDs tied to actual proof, not arbitrary claims.
+
+**Do not equate source SHA with total blast radius.** If only stage 5 changes code and stages 1–4 have unchanged measured inputs, their earlier PASS may remain valid **only** after a documented diff/impact assessment establishes that the new SHA does not affect their inputs/contracts. Record `source_impact: unaffected` and `impact_evidence` for each reused stage. Unknown or unmeasured impact = **RERUN/BLOCKED**, never automatic reuse. Changed DB snapshot, article/media payload, CSS/bundle, reviewer target, root, route mapping, dependency implementation, preimage or expired receipt invalidates each affected stage and **its transitive dependents**, not unrelated stages.
+
+**On stage N FAIL:** first diagnose N and prove the narrow owning failure RED → GREEN. While N is red, inspect prior receipts read-only for validity; do not repeat already valid stage 1…N−1 to arrive at the same error. After the focused fix, recompute transitive invalidation and run **only** affected, new, expired or unproven prerequisites, then required integration/release verification. A required gate remains required: reuse valid evidence is allowed; omission, downgrade or stale evidence is not. A project rule or owner restriction can forbid a particular QA run; respect it and explicitly record what remains WAIVED/BLOCKED, never claim PASS.
+
+Status semantics: `PASS` is a proven, scoped result; `FAIL` is an observed failing gate to repair; `BLOCKED` means missing prerequisites/evidence; `WAIVED` is an explicit exception, **not PASS**, and cannot satisfy a mandatory prerequisite automatically. A waiver requires the existing authorized project/owner exception contract, including scope and expiry. A local helper never grants waivers.
+
+**Deterministic read-only aid:** `python .vaoferi/gate_resume.py <ledger.json> <observed.json>` compares the stored receipts with newly measured current inputs and dependencies, returning `REUSE`, `RERUN`, `FIX_FOCUSED`, `BLOCKED` or `WAIVED`. This script is synced by the canonical Start Here manifest; it does **not** run tests, hash actual files or authenticate evidence links. `verified: true`, input hashes, environment IDs, SHA-impact evidence, expiry and dependency bindings **must be independently established before invocation**; output `REUSE` is not itself a runtime/browser/CI PASS. Exit 0 means all stages reusable, exit 1 means action remains, exit 2 is malformed/invalid input. Sample minimal stage:
+
+```json
+{
+  "schema": 1,
+  "gates": {
+    "browser": {
+      "depends_on": [],
+      "receipt": {
+        "status": "PASS",
+        "receipt_id": "browser-artifact-2026-10-12",
+        "source_sha": "<verified-source-sha>",
+        "inputs": {"artifact_sha256": "<hash>", "root_id": "<target>", "viewport": "390x844"},
+        "dependency_receipts": {},
+        "evidence": "<sanitized-evidence-pointer>",
+        "expires_at": "2026-10-13T00:00:00Z"
+      }
+    }
+  }
+}
+```
+
+The second `observed.json` uses `{"schema": 1, "gates": {"browser": {"verified": true, "source_sha": "<current-source-sha>", "inputs": {"artifact_sha256": "<hash>", "root_id": "<target>", "viewport": "390x844"}}}}`. These are **illustrative placeholders, never production receipts**. Add `source_impact: unaffected` and `impact_evidence` only when the source SHA changed **and** the exact stage-specific impact was proven. Do not store secrets, raw production data or biometrics.
+
+If two consecutive passes do not advance the frontier or falsify a new hypothesis, **stop broad reruns**, preserve valid receipts and record one current error, one falsifiable hypothesis, one smallest experiment and one next decision. Source of truth remains current rules/code/runtime/Linear, not Hindsight or a helper's verdict.
+
+---
+
 ## 4. What to retain
 
 Prefer durable, sanitized experience records. A useful trap/correction memory has:
