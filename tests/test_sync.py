@@ -87,6 +87,10 @@ class SyncTest(unittest.TestCase):
             self.assertIn("DEFINITION_OF_DONE.md", manifest["owned_files"])
             self.assertIn(".vaoferi/check_worktree_clean.py", manifest["owned_files"])
 
+            gate_resume = target / ".vaoferi" / "gate_resume.py"
+            self.assertTrue(gate_resume.is_file())
+            self.assertIn(".vaoferi/gate_resume.py", manifest["owned_files"])
+
             design_lock = json.loads(DESIGN_LOCK.read_text(encoding="utf-8"))
             for rel, expected in design_lock["files_sha256"].items():
                 installed = target / ".agents" / "skills" / "vaoferi-design-skill" / rel
