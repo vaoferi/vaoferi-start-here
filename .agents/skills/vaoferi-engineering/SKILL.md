@@ -62,6 +62,12 @@ Choose verification by **affected scope + risk**, not by habit:
 
 Ordinary work should not exceed two full-health runs by default. A third requires a written new-risk justification. If a broad gate fails outside the affected area, isolate the owning test first; reproducible unrelated defects stay with their owning task, and timing flakes without a user-visible repro do not justify changing product behavior.
 
+### Dependency-aware gate resumption
+
+For multi-stage acceptance, apply the canonical receipt and transitive-invalidation protocol in `MEMORY.md §3.1` **before** repeating expensive V2/V3/V4 gates. Establish verified stage-scoped current inputs, dependency receipts, expiry and source-diff impact; evaluate them with the read-only `python .vaoferi/gate_resume.py <ledger.json> <observed.json>` helper when the synchronized tool is available. Its `REUSE` output confirms deterministic metadata equality only, **not** independent runtime/CI PASS.
+
+If stage N fails, retain still-valid PASS for 1…N−1, reproduce N and complete a focused RED→GREEN repair **first**. Then rerun only transitively affected, expired or unproven gates and mandatory integration acceptance. Stage-specific input changes, unknown blast radius or missing provenance fail closed. A different commit by itself is not proof every earlier gate changed; reuse across commits needs measured unchanged inputs plus explicit `source_impact: unaffected` evidence. Never relabel `WAIVED` as `PASS`; do not bypass required gates or owner restrictions. No blanket `full-health` rerun merely to recover from an unrelated failed gate.
+
 ### Evidence Format
 
 Для нетривіальної/risky роботи фінальний evidence має дозволяти простежити:
