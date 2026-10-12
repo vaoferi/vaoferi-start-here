@@ -88,6 +88,12 @@ IMPLEMENTATION не може бути `In Review` або `Done`, якщо її *
 
 Якщо already accepted user-facing result зник зі stable endpoint — перейти в RECOVERY MODE і спочатку повернути latest accepted durable state, навіть якщо ширша infrastructure card має ще десятки hardening пунктів.
 
+### Відновлення після failed gate — без повторення чинного PASS
+
+Для послідовних verification gates застосовуй `MEMORY.md §3.1`: durable receipts (source SHA, **stage inputs**, verified environment/root/DB/media/visual identity, depends_on та bound dependency receipt IDs, expiry, sanitized evidence); актуальний acceptance frontier; read-only comparison через `.vaoferi/gate_resume.py`, якщо він синхронізований. Якщо падає gate №5, **спершу focused RED→GREEN для №5**; №1–4 не повторювати без виміряного invalidator. Після fix №5 пройти transitive dependency invalidation і лише необхідні regressions/integration gates. `WAIVED ≠ PASS`; якщо є owner ban на конкретний тест — не запускати його та не вигадувати green. Hindsight зберігає досвід, але **durable verification receipt** має мати перевірюване issue/repo evidence й не може бути лише спогадом.
+
+Після двох непродуктивних циклів зафіксувати один failure, одну гіпотезу й один найменший experiment, а не ще один full-health rerun. Ця політика не послаблює `DEFINITION_OF_DONE.md`, project-required tests або security/release gates.
+
 ## No report-and-wait default
 
 Після команди «виконай картку» агент не робить часткову роботу й не чекає другого owner prompt на тести, browser QA, commit, push або доробку.
