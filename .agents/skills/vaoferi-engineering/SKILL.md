@@ -10,11 +10,23 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 1. Прочитай `PROJECT_RULES.md` і релевантні project docs/code перед змінами.
 2. Сформулюй user/process outcome і перевір фактичний current behavior.
 3. Створи короткий **Acceptance ledger**: кожен релевантний acceptance criterion → test/interaction/evidence, environment і expected observable result.
-4. Знайди існуючу реалізацію, contract, native capability або dependency перед створенням нової логіки.
+4. Для нового нетривіального компонента чи generic logic застосуй **Reuse-first gate** нижче: inventory → compare → decision; не починай custom-from-scratch без evidence.
 5. Для behavior change або bug fix застосуй TDD: failing test → verify **RED** → minimal implementation → verify GREEN → refactor only while green.
 6. Змінюй мінімальну кількість пов'язаних файлів; не роби глобальний replace без target-list review.
 7. Запусти релевантні tests/lint/build/runtime/browser checks, потім перевір diff і acceptance ledger.
 8. Поясни результат outcome-first; явно назви неперевірене.
+
+## Reuse-first gate: inventory → compare → decision
+
+**Обов'язково до написання нового нетривіального компонента, складного UI-контролу, gesture engine, editor, form/table/grid або reusable infrastructure.** Не роби цю процедуру заново для дрібного CSS/bugfix або зміни наявного компонента: бери вже наявний evidence, якщо середовище й вимоги не змінилися.
+
+1. **Current project:** перевір існуючий код, тести, package manifests/lockfile, встановлені бібліотеки, design system, project `code/`, `example/` / `examples/`, документацію та релевантний Git history.
+2. **Owner Work reuse:** перевір доступні сусідні репозиторії Vaoferi у canonical, дозволеній власником Work/NAS workspace і повторно використовувані owner-provided reference assets, зокрема куплений **Hyper 5.5.0** або подібні UI kits. Копіювати між власними репозиторіями можна **тільки коли license, secrets/privacy і target distribution це дозволяють**; приватний, платний або client asset не переносити до public repo автоматично. Framework compatibility (Yii/Bootstrap vs React/Vite) перевіряти, не припускати.
+3. **Supported upstream:** короткий цільовий пошук готового maintained OSS/npm/GitHub solution і поточної офіційної документації; перевір feature coverage, React/framework & version compatibility, license, maintenance, accessibility, security, bundle/performance і adaptation cost.
+4. **DECISION перед custom code:** запиши в task/Linear/SPEC **`REUSE DECISION`** у 3–6 рядках: що перевірено і де; 1–3 реальні кандидати; reuse/adapt/build та конкретне пояснення; license/compatibility gaps і evidence links. Якщо хороше готове рішення є, використовуй/адаптуй його з мінімальною залежністю; не пиши власний gesture/interaction engine без вагомої, перевіреної причини.
+5. **Access failure:** якщо важливі owner repos/templates недоступні, чесно познач inventory як incomplete. **Не заявляй «ніде немає» і не створюй generic custom-from-scratch, поки не з'явиться доступ або explicit owner override.** Продовж незалежні маленькі задачі; не витрачай години на широкі пошуки чи обходи canonical NAS route.
+
+Не роби формальної глобальної інвентаризації на кожне завдання: шукай цільово за компонентом/функцією. Якщо вже є підтримувана власна реалізація й вона пройшла acceptance, нова бібліотека **не є** підставою переписувати її без реального defect або owner decision.
 
 ## Canonical-route stop
 
