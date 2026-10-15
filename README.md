@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.3.4**
+**Current release: 0.3.5**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -13,6 +13,12 @@ Public canonical source for Vaoferi-wide AI-agent behavior, conditional local sk
 - Linear — active work tracker. Trello — incremental legacy input only: migrate relevant cards as they are encountered; delete when supported, otherwise archive/close after parity.
 
 The architecture is intentionally local-first: after bootstrap/update, ordinary work in a target repository must not depend on network access to this repository.
+
+## 0.3.5: reusable components before reinvention
+
+Non-trivial custom components and interaction systems now require a short **Reuse-first gate** before writing a new engine: inspect current code/dependencies, permitted sibling Vaoferi repositories and owned Work assets (including licensed Hyper references), then established maintained OSS. Record a brief REUSE DECISION with candidate fit, compatibility/licensing and source evidence. If a required owner source is inaccessible, don't assert the component doesn't exist; seek access/explicit override or move to another task.
+
+This is targeted research, **not** an exhaustive workspace sweep for every minor bugfix. It does not force rewrites of working, owner-accepted components merely because a new library is discovered. The separately canonical Design Skill must be aligned through its own reviewed source/pin, never by editing vendored copies ad hoc.
 
 ## 0.3.4: auxiliary worktrees have a lifecycle, not just a rule of thumb
 
