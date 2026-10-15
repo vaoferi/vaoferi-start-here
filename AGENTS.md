@@ -42,7 +42,7 @@
 
 ## Engineering Defaults
 
-- Перед новим кодом перевір existing logic, standard/native capability і installed dependencies; не будуй speculative architecture без потреби.
+- **Reuse-first:** перед новим generic кодом перевір repo/deps → owner Work/Hyper → OSS; запиши `REUSE DECISION` за `vaoferi-engineering`.
 - Виправляй root cause без непропорційного scope creep; зберігай contracts, references, data flow і сусідню робочу поведінку.
 - Сусідню проблему, що реально впливає на рішення, повідом; не розширюй scope мовчки.
 - Version-sensitive facts перевіряй за current official/reliable source.
