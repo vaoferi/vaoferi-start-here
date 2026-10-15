@@ -35,6 +35,12 @@ If Vaultwarden already has a different value, do not blindly destroy history or 
 
 For multiline credentials such as an SSH private key, preserve the two-copy rule. Use a lossless `.env` representation compatible with the project (for example a base64 value) rather than inventing a third permanent secret store. A temporary runtime file may be materialized with strict permissions when a client requires a file path, but it is not a third canonical store.
 
+### Provider account and credential affinity
+
+For providers with multiple accounts, bind each validated credential to a **provider/account/site identity**, not merely a working password or an open browser. Record only non-secret account alias/IDs and website IDs in the project's deploy runbook, with secret values remaining in the existing **Vaultwarden + project-root `.env` two-copy model**. A credential that works in account A is **not authorization to write to account B**.
+
+Before a provider write, verify the **currently authenticated** browser/CLI/API/FTP account against the project's expected target. A login state, FTP directory listing, parked domain or temporary site preview does not establish correct ownership. If a session switches accounts, expires, overlaps another profile or shows conflicting parked-domain ownership, stop writes and re-establish approved account identity. Never silently copy credentials between projects or request raw secrets in chat to bypass this check. See `vaoferi-deploy`.
+
 ### Vaultwarden access unavailable
 
 If the harness/CLI cannot write Vaultwarden:

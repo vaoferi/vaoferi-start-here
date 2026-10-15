@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.3.4**
+**Current release: 0.3.5**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -13,6 +13,10 @@ Public canonical source for Vaoferi-wide AI-agent behavior, conditional local sk
 - Linear — active work tracker. Trello — incremental legacy input only: migrate relevant cards as they are encountered; delete when supported, otherwise archive/close after parity.
 
 The architecture is intentionally local-first: after bootstrap/update, ordinary work in a target repository must not depend on network access to this repository.
+
+## 0.3.5: prevent cross-account provider deployments
+
+Agents can be logged into a different account of the **same hosting or cloud provider** from the one that owns the site. This release requires a project-owned non-secret mapping of provider account, website, domain, serving root, and credential profile; authenticated provider identity proof before any write; detection of parked/duplicate domain assignments; rechecks after account switches; and isolated concurrent releases. Account/domain migration and mail/DNS changes remain separately authorized. The deploy adapter must **enforce** this pre-write check, not just document it.
 
 ## 0.3.4: auxiliary worktrees have a lifecycle, not just a rule of thumb
 
