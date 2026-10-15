@@ -42,7 +42,7 @@
 
 ## Engineering Defaults
 
-- Перед новим кодом перевір existing logic, standard/native capability і installed dependencies; не будуй speculative architecture без потреби.
+- **Reuse-first:** перед новим нетривіальним компонентом чи generic логікою перевір current repo/dependencies, доступні сусідні Vaoferi Work repositories і owner-licensed examples/Hyper, потім підтримувані OSS/packages. Запиши короткий reuse decision (кандидати, сумісність/ліцензії, чому reuse або custom). Без перевірки не стверджуй, що аналогів немає; custom-from-scratch лише після порівняння або explicit owner override. Дрібні targeted fixes не потребують широкого sweep.
 - Виправляй root cause без непропорційного scope creep; зберігай contracts, references, data flow і сусідню робочу поведінку.
 - Сусідню проблему, що реально впливає на рішення, повідом; не розширюй scope мовчки.
 - Version-sensitive facts перевіряй за current official/reliable source.
