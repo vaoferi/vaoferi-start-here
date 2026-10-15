@@ -82,6 +82,14 @@ class AgentsContractTest(unittest.TestCase):
             self.assertIn(required, text)
 
 
+    def test_reuse_first_gate_is_universal_and_enforceable(self):
+        agents = AGENTS.read_text(encoding="utf-8")
+        engineering = (ROOT / ".agents" / "skills" / "vaoferi-engineering" / "SKILL.md").read_text(encoding="utf-8")
+        for required in ("Reuse-first", "Work", "Hyper", "OSS", "owner override"):
+            self.assertIn(required, agents)
+        for required in ("Reuse-first gate", "Owner Work reuse", "Hyper 5.5.0", "license", "REUSE DECISION", "Access failure"):
+            self.assertIn(required, engineering)
+
 if __name__ == "__main__":
     unittest.main()
 
