@@ -114,6 +114,40 @@ Do not silently downgrade to a weaker transport. Prefer the strongest project/pr
 
 Never paste secrets into Linear, chat, commit messages, screenshots, URLs or logs.
 
+## Provider account isolation (mandatory pre-write gate)
+
+One owner may use **multiple accounts with the same provider**, each hosting different websites. A browser tab, provider API token, CLI session and FTP client may refer to **different accounts**. **"Logged in" is not evidence of the correct account.** Never infer that a writable root serves the project's public domain.
+
+### Project-owned non-secret binding
+
+The project's single canonical deploy runbook/registry records this authorized target tuple, without passwords, tokens or private keys:
+
+| Field | Meaning |
+| --- | --- |
+| `provider`, `account_alias` | Provider and a non-secret distinguishable name for the intended account |
+| `provider_account_id` / `tenant_id` | Stable provider-issued account/subscription identity (not just email, browser session or IP) |
+| `website_id` / `resource_id` | Provider-issued website/service identity in that account |
+| `production_domain` | Canonical hostname plus apex/www or other approved aliases |
+| `document_root`, `transport_root` | Actual serving directory, and any distinct FTP/SFTP chroot-relative path |
+| `credential_profile_ref` | Non-secret Vaultwarden item / project `.env` variable-name reference scoped to THIS provider account and site |
+| `temporary_preview_url`, `effective_origin`, `edge_mapping` | When available, reference paths to distinguish working provider preview/origin from parked public edge |
+| `verified_at`, `verification_evidence` | Provider control-plane source, time and latest explicit owner migration decision |
+
+Do not embed any real customer's identifiers in this universal skill. If account/site IDs are not offered by the provider, require equivalent independent, authenticated account/site ownership evidence; otherwise fail closed. Hindsight and previous deployment logs are historical leads, **not current target authority**.
+
+### Mandatory release preflight and account switching
+
+1. **Pin project and expected target binding** before opening the provider. Perform read-only inventory of **authorized** provider accounts/sites if more than one might own the domain. Do not assume the first logged-in hPanel, browser profile or CLI account is the target.
+2. **Prove current session/account identity** using authenticated provider whoami/account selector, hosting subscription and site-list control-plane data. Check browser session, CLI/API token and FTP/SFTP credential against the same provider account/site; these may be authenticated differently. On mismatch, select the correct approved profile and recheck — never borrow another project's credential.
+3. **Verify project → account → website → domain → effective document root → transport root** using provider evidence and a real public hostname/origin check. A Hostinger temporary link may show the right site while the domain returns `Parked Domain`: that is an **unresolved routing/association mismatch**, not evidence that another FTP upload will fix it.
+4. **Detect conflicting domain claims** across authorized accounts: primary, parked, addon, temporary and pending assignments. Do not automatically park/unpark, change a website domain, move/transfer/recreate/delete the website, switch DNS/nameservers, or touch associated mailboxes. If identity/ownership is ambiguous or the domain is assigned to a different account, **BLOCKED before writes**. Request the exact independently evidenced binding change and separate owner authorization.
+5. **Check rollback and isolation** and repeat the entire binding check **after every account/session/credential switch** and immediately before every release wave. No cached browser-login assumption. Compare the resulting *public* URL against the intended candidate, not just temporary preview or FTP bytes.
+6. **Serialize production writes per provider account + website and domain**: parallel agents can prepare immutable artifacts, but must never race to change overlapping account configuration, serving roots, domain associations or release paths.
+
+**Mechanical requirement:** the project deployment adapter must refuse write-capable operations unless provider account ID, website ID, document root and credential/transport identity match the project-owned binding. A prose-only check is not sufficient. A mismatched account or parked alias is a **hard pre-write blocker** even if a file manager or FTP connection works.
+
+The binding can change only after an **explicit owner-approved migration/rebinding** supported by independent live provider evidence and a reversible plan recording old/new account IDs, website IDs, domain, mail impact and document roots. Updating a browser session or discovering an old parked alias never silently updates ownership.
+
 ## Target identity before mutation
 
 A writable remote path is not automatically the live production root.

@@ -28,6 +28,7 @@
 
 - Якщо доступний інструмент може знайти/перевірити/виконати дію — використовуй його; питай власника лише про реальні decisions, preferences або відсутні/конфліктні facts.
 - Без окремого дозволу не роби destructive, irreversible, paid, security-sensitive чи production-impacting дій. Security/privacy/data integrity — hard boundaries.
+- **Multi-account provider isolation:** before provider writes, compare the project's non-secret binding (provider, stable account/tenant ID, website/resource ID, domain, effective document root and credential profile) against the **currently authenticated** provider account, live site and transport. A logged-in browser session or reachable FTP path is not proof. Unknown account, mismatch or duplicate/parked-domain ownership = **BLOCKED before writes**; never transfer domains or switch provider accounts implicitly. See `vaoferi-deploy` and `vaoferi-security`.
 
 ## Owner Content Boundaries
 
