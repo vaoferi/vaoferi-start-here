@@ -8,10 +8,10 @@ SECURITY = (ROOT / ".agents/skills/vaoferi-security/SKILL.md").read_text(encodin
 SYNC = (ROOT / "scripts/vaoferi_sync.py").read_text(encoding="utf-8")
 
 class MultiAccountProviderIsolationTest(unittest.TestCase):
-    def test_agent_core_fails_closed_on_wrong_account(self):
-        for value in ("Multi-account provider isolation", "currently authenticated",
-                      "provider account", "duplicate/parked-domain ownership", "BLOCKED before writes"):
-            self.assertIn(value, AGENTS)
+    def test_bounded_agent_core_routes_provider_writes_to_deploy_skill(self):
+        self.assertIn("vaoferi-deploy", AGENTS)
+        self.assertIn("production deploy/release", AGENTS)
+        self.assertIn("vaoferi-security", AGENTS)
     def test_project_keeps_a_nonsecret_account_site_binding(self):
         for value in ("Project-owned non-secret binding", "provider_account_id", "website_id",
                       "production_domain", "document_root", "credential_profile_ref",
