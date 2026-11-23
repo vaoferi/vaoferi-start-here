@@ -8,6 +8,10 @@
 
 Якщо виконання фізично заблоковане зовнішнім фактором, задача лишається `In Progress / BLOCKED` з детальним blocker handoff. Заборонено маскувати незавершену роботу під review-ready.
 
+## 1A. Website observability acceptance (Start Here 4.0)
+
+Для репозиторіїв із вебсайтами, SPA, CMS або статичними HTML-сторінками обов'язкова первинна перевірка observability через `vaoferi-observability`: site/domain/account binding, відповідність privacy/consent, free-tier cap та provider-level статуси. Перед оголошенням onboarding готовим мають бути project-owned evidence і реальна перевірка прийому події; source-code presence / SDK init / HTTP 200 не доводять інжесту. Якщо зовнішня інтеграція неможлива — `BLOCKED`/`NOT_APPLICABLE` з підтвердженою причиною, не фіктивний PASS. Для термінових виправлень production-регресій observability follow-up ведеться окремо і не затримує user-impact hotfix. Жодних third-party SDK чи session replay у production без існуючого дозволу на deploy і потрібного consent.
+
 ## 2. Git completion і чистий worktree є обов'язковими
 
 ### Preflight: чужі або старі зміни не можна ігнорувати
