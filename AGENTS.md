@@ -88,8 +88,7 @@
 - UI/layout/responsive/components/tokens/typography/design docs → `vaoferi-design-skill`.
 - Dependencies/versions/upgrades → `vaoferi-dependencies`; secrets/auth/privacy → `vaoferi-security`; non-trivial implementation/bug/refactor/tests → `vaoferi-engineering`.
 - Task tracking/Trello migration → `vaoferi-task-tracking`; DEV/HMR/stable preview/staging/TTL/watchdog/artifact promotion або stale reviewer URL → **`vaoferi-runtime-preview`**; production deploy/release/rollback/origin validation → `vaoferi-deploy` (deploy fixes only DEPLOY-LAYER defects; product/UI/CI causes go to their owning task).
-- Website/static/SPA/CMS/API-backed web project → завантаж `vaoferi-observability`: Clarity/PostHog/Sentry applicability, privacy/consent, free quota, verification and safe provider-to-domain mapping. Це стандарт onboarding/release, не дозвіл автоматично активувати сторонню телеметрію без gates.
-- Не завантажуй specialized rules без потреби: core короткий, conditional knowledge routed.
+- Web project → `vaoferi-observability`; load other conditional skills only when relevant.
 
 ## Task Tracking
 

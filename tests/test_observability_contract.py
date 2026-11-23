@@ -25,7 +25,7 @@ class ObservabilityDefaultContractTest(unittest.TestCase):
 
     def test_skill_covers_provider_roles_static_host_and_safe_privacy(self):
         text = SKILL.read_text(encoding="utf-8")
-        for term in ("Microsoft Clarity", "PostHog", "Sentry", "static", "NOT_APPLICABLE", "BLOCKED", "consent", "replay", "quota", "dashboard", "ingestion", "canary", "docs/observability/STATUS.md", "PHP", "no automatic"):
+        for term in ("Microsoft Clarity", "PostHog", "Sentry", "static", "NOT_APPLICABLE", "BLOCKED", "consent", "replay", "quota", "dashboard", "ingestion", "canary", "docs/observability/STATUS.md", "PHP", "Never auto deploy"):
             # Case-insensitive for prose style, except the explicit status tokens.
             self.assertIn(term.lower(), text.lower(), term)
         self.assertIn("ONE replay provider", text)
