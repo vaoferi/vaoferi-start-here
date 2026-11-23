@@ -68,6 +68,10 @@ tests, active Linear decisions і canonical project docs.
 
 Не вигадуй значення для "повноти".
 
+## Web observability discovery — Start Here 4.0
+
+Якщо repo містить web surface (статичний HTML, WordPress/CMS, SPA, Yii/PHP, server-rendered сайт), відразу завантаж `vaoferi-observability`. Перевір наявні SDK, кожен реальний домен/hostname та його власний dashboard/account, consent/privacy, безкоштовні ліміти й runtime ingestion. Збережи проектний стан у `docs/observability/STATUS.md` або наявному project-owned еквіваленті. Не вигадуй provider account/project ID і не запускай tracking на production без дозволеного релізу. Невідоме = BLOCKED, а не PASS; не затримуй поточний P0 customer-impact hotfix.
+
 ## Existing Repository Handoff
 
 Bootstrap discovers facts; it does not decide that old project documentation is disposable.

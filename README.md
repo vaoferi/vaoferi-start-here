@@ -1,6 +1,6 @@
 # Vaoferi Start Here
 
-**Current release: 0.3.4**
+**Current release: 4.0.0**
 
 Public canonical source for Vaoferi-wide AI-agent behavior, conditional local skills and repository bootstrap/sync rules.
 
@@ -13,6 +13,20 @@ Public canonical source for Vaoferi-wide AI-agent behavior, conditional local sk
 - Linear — active work tracker. Trello — incremental legacy input only: migrate relevant cards as they are encountered; delete when supported, otherwise archive/close after parity.
 
 The architecture is intentionally local-first: after bootstrap/update, ordinary work in a target repository must not depend on network access to this repository.
+
+## 4.0.0: Observability is part of every website's default lifecycle
+
+All eligible web repositories (static sites, SPA, CMS, Yii/PHP and similar) now receive the centrally-synced `vaoferi-observability` skill. During onboarding and relevant releases, agents classify providers, map each site to its correct vendor account/project, assess consent and PII scope, enforce free-tier cost caps and verify **real ingestion**, not just presence of a tracking script.
+
+- **Microsoft Clarity:** free public-site behavior analytics (https://clarity.microsoft.com/).
+- **PostHog:** product funnels/events and selectively sampled replay (https://posthog.com/pricing).
+- **Sentry:** errors/stack traces; error-triggered replay where an eligible site can stay within its free allowance (https://sentry.io/pricing/).
+- **One replay provider per surface by default**, unless an explicit evidence-based exception is approved. Triple SDK provisioning is not triple recording.
+- **No synthetic provider IDs, no default external transmission before required consent, no PII/raw inputs/docs in events, no automatic production deploy.**
+- Site state and dashboard links live in each project-owned `docs/observability/STATUS.md` or equivalent. If consent/account access/ingestion cannot be verified, state **BLOCKED** rather than claiming success.
+- Critical existing customer-impact hotfixes take priority; missing telemetry onboarding becomes an explicit follow-up, not an excuse to leave a live bug broken.
+
+See [`vaoferi-observability`](.agents/skills/vaoferi-observability/SKILL.md) for the implementation matrix, static-host setup, privacy checks, quota rules, dashboards and acceptance tests.
 
 ## 0.3.4: auxiliary worktrees have a lifecycle, not just a rule of thumb
 

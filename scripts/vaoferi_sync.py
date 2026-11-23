@@ -19,6 +19,7 @@ BASE_OWNED_SOURCES = {
     "DEFINITION_OF_DONE.md": ROOT / "DEFINITION_OF_DONE.md",
     "MEMORY.md": ROOT / "MEMORY.md",
     ".agents/skills/vaoferi-bootstrap/SKILL.md": ROOT / ".agents/skills/vaoferi-bootstrap/SKILL.md",
+    ".agents/skills/vaoferi-observability/SKILL.md": ROOT / ".agents/skills/vaoferi-observability/SKILL.md",
     ".agents/skills/vaoferi-engineering/SKILL.md": ROOT / ".agents/skills/vaoferi-engineering/SKILL.md",
     ".agents/skills/vaoferi-runtime-preview/SKILL.md": ROOT / ".agents/skills/vaoferi-runtime-preview/SKILL.md",
     ".agents/skills/vaoferi-dependencies/SKILL.md": ROOT / ".agents/skills/vaoferi-dependencies/SKILL.md",

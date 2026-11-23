@@ -16,6 +16,10 @@ description: Use for non-trivial implementation, bug fixes, refactors, tests, or
 7. Запусти релевантні tests/lint/build/runtime/browser checks, потім перевір diff і acceptance ledger.
 8. Поясни результат outcome-first; явно назви неперевірене.
 
+## Website observability default (Start Here 4.0)
+
+Для будь-якого eligible web project при onboarding і перед user-facing release перевір `vaoferi-observability`: мінімальні помилки + продуктова подія + реальний ingestion proof, коректність домену/project binding, privacy/consent, квоти та replay strategy. Інструменти Clarity, PostHog, Sentry не взаємозамінні: не запускай три always-on replay SDK. Підключення нової інтеграції — окрема вузька задача; критичний product fix не блокуй через відсутні provider accounts, але записуй non-PASS статус. Не підміняй browser/network evidence тим, що JS snippet присутній у коді.
+
 ## Canonical-route stop
 
 Коли current `PROJECT_RULES.md` / ADR / runbook задає canonical route, а він не працює, **не обходь його за інерцією**.
