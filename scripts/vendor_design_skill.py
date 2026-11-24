@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VENDOR_ROOT = ROOT / "vendor" / "vaoferi-design-skill"
 LOCK_PATH = ROOT / "vendor" / "design-skill.lock.json"
 REPOSITORY = "vaoferi/vaoferi-design-skill"
-GIT_PATHS = ("SKILL.md", "references", "scripts", "config/component-libraries.json")
+GIT_PATHS = ("SKILL.md", "references", "scripts", "config/component-libraries.json", "config/design-upstreams.json", "examples/geometry-spec.example.json")
 REQUIRED = {
     "SKILL.md",
     "references/action-contract.md",
@@ -75,6 +75,12 @@ def verify_source(source: Path, commit: str, version: str) -> list[str]:
     missing = sorted(REQUIRED - set(rels))
     if missing:
         raise VendorError("required design files are not tracked: " + ", ".join(missing))
+
+    if "references/workflow.md" in rels:
+        workflow_required = {"references/workflow.md", "references/grid-and-motion.md", "references/upstream-tools.md", "references/immersive.md", "config/design-upstreams.json", "examples/geometry-spec.example.json", "scripts/design_upstreams.py", "scripts/design_geometry.mjs", "scripts/design_grid_plan.mjs", "scripts/design_canon_ui.mjs"}
+        missing_workflow = sorted(workflow_required - set(rels))
+        if missing_workflow:
+            raise VendorError("unified design workflow files missing: " + ", ".join(missing_workflow))
 
     skill = (source / "SKILL.md").read_text(encoding="utf-8")
     match = re.search(r"(?m)^  version: ([^\s]+)$", skill)
